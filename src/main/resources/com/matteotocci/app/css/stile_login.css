@@ -1,0 +1,44 @@
+.linear-grad{
+    -fx-background-color: linear-gradient(to bottom left,#2d912d,#57f05f)
+}
+
+.bottone1{
+    -fx-background-color: linear-gradient(to bottom left, #075c07, #129f18);
+    -fx-text-fill: white;
+    -fx-background-radius: 15;
+
+
+}
+.bottoneSpento{
+    -fx-background-color: #cdf1cd;
+    -fx-text-fill: #075c07;
+    -fx-background-radius: 0 15 15 0;
+    -fx-border-color: #075c07;
+    -fx-border-radius: 0 15 15 0;
+}
+.bottoneAttivo{
+    -fx-background-color: linear-gradient(to bottom left, #075c07, #129f18);
+    -fx-text-fill: white;
+    -fx-background-radius: 0 15 15 0;
+}
+.pagina-tonda {
+    -fx-background-radius: 20;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0.5, 0, 4);
+}
+
+
+.bottone1:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.bottone2:hover {
+    -fx-background-color: #bafabb;
+    -fx-underline: true;
+}
+
+.border-color{
+    -fx-border-color: #034e03;
+}
+

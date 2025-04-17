@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="551.0" prefWidth="531.0" style="-fx-background-color: green;" stylesheets="@css/stile_login.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.login">
+   <children>
+      <BorderPane layoutX="51.0" prefHeight="551.0" prefWidth="478.0" style="-fx-background-color: white;">
+         <styleClass>
+            <String fx:value="pagina-tonda" />
+            <String fx:value="border-color" />
+         </styleClass>
+         <top>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox fx:id="loginBox" alignment="TOP_CENTER" prefHeight="548.0" prefWidth="476.0" spacing="15.0" styleClass="pagina-tonda">
+                     <children>
+                        <ImageView fitHeight="224.0" fitWidth="277.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@immagini/logo.jpg" />
+                           </image>
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </ImageView>
+                        <TextField prefHeight="40.0" prefWidth="305.0" promptText="Email" style="-fx-background-radius: 15;">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <PasswordField prefHeight="40.0" prefWidth="305.0" promptText="Password" style="-fx-background-radius: 15;">
+                           <VBox.margin>
+                              <Insets bottom="15.0" />
+                           </VBox.margin>
+                        </PasswordField>
+                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Accedi">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets left="60.0" right="60.0" top="40.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="registerBox" alignment="TOP_CENTER" prefHeight="548.0" prefWidth="476.0" spacing="15.0" styleClass="pagina-tonda" visible="false">
+                     <children>
+                        <ImageView fitHeight="224.0" fitWidth="277.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@immagini/logo.jpg" />
+                           </image>
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </ImageView>
+                        <HBox prefHeight="38.0" prefWidth="358.0">
+                           <children>
+                              <TextField prefHeight="40.0" prefWidth="305.0" promptText="Nome" style="-fx-background-radius: 15;" />
+                              <PasswordField prefHeight="40.0" prefWidth="305.0" promptText="Cognome" style="-fx-background-radius: 15;" />
+                           </children>
+                        </HBox>
+                        <TextField prefHeight="40.0" prefWidth="305.0" promptText="Email" style="-fx-background-radius: 15;" />
+                        <TextField prefHeight="40.0" prefWidth="305.0" promptText="Password" style="-fx-background-radius: 15;" />
+                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Registrati">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets left="60.0" right="60.0" top="40.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </top>
+      </BorderPane>
+      <Button fx:id="btnAccedi" layoutY="75.0" mnemonicParsing="false" onAction="#switchToLogin" prefHeight="40.0" prefWidth="77.0" styleClass="bottoneAttivo" stylesheets="@css/stile_login.css" text="Accedi" />
+      <Button fx:id="btnRegistrati" layoutX="-1.0" layoutY="115.0" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="40.0" prefWidth="78.0" styleClass="bottoneSpento" stylesheets="@css/stile_login.css" text="Registrati" />
+   </children>
+   <styleClass>
+      <String fx:value="pagina-tonda" />
+      <String fx:value="border-color" />
+   </styleClass>
+</AnchorPane>
