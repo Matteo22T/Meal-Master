@@ -43,7 +43,7 @@
                               <Insets bottom="15.0" />
                            </VBox.margin>
                         </PasswordField>
-                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Accedi">
+                        <Button fx:id="BottoneAccedi" mnemonicParsing="false" onAction="#AccessoHomePage" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Accedi">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -71,7 +71,7 @@
                         </HBox>
                         <TextField prefHeight="40.0" prefWidth="305.0" promptText="Email" style="-fx-background-radius: 15;" />
                         <TextField prefHeight="40.0" prefWidth="305.0" promptText="Password" style="-fx-background-radius: 15;" />
-                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Registrati">
+                        <Button fx:id="BottoneRegistrati" mnemonicParsing="false" onAction="#Registrato" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Registrati">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
