@@ -1,31 +1,38 @@
 package com.matteotocci.app.controller;
 
-
+import com.matteotocci.app.model.LoginModel;
 import javafx.animation.FadeTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.event.ActionEvent;
+
 import java.io.IOException;
+import java.net.URL;
+import java.sql.*;
+import java.util.ResourceBundle;
 
-public class login {
-    @FXML
-    private VBox loginBox;
+public class login implements Initializable {
 
-    @FXML
-    private VBox registerBox;
+    @FXML private VBox loginBox;
+    @FXML private VBox registerBox;
 
-    @FXML
-    private Button btnAccedi;
+    @FXML private Button btnAccedi;
+    @FXML private Button btnRegistrati;
 
-    @FXML
-    private Button btnRegistrati;
+    @FXML private Button BottoneAccedi;
+    @FXML private Button BottoneRegistrati;
 
+    @FXML private TextField nomeField;
+    @FXML private TextField cognomeField;
+    @FXML private TextField emailField;
+    @FXML private PasswordField passwordField;
     @FXML
     private void switchToLogin() {
         if (!loginBox.isVisible()) {
@@ -58,59 +65,109 @@ public class login {
         }
         ft.play();
     }
+
     private void highlightButton(Button active, Button inactive) {
-        // Rimuove classe da entrambi
         active.getStyleClass().remove("bottoneSpento");
         inactive.getStyleClass().remove("bottoneAttivo");
 
         active.getStyleClass().add("bottoneAttivo");
-
         inactive.getStyleClass().add("bottoneSpento");
     }
 
     @FXML
-    private Button BottoneAccedi;
-    @FXML
-    private Button BottoneRegistrati;
+    private void AccessoHomePage(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
+            Parent loginRoot = fxmlLoader.load();
+            Stage loginStage = new Stage();
+            loginStage.setScene(new Scene(loginRoot));
+            loginStage.show();
+            ((Stage) BottoneAccedi.getScene().getWindow()).close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public LoginModel loginModel = new LoginModel();
 
     @FXML
     private void Registrato(ActionEvent event) {
-        try {
-            // Carica il file login.fxml
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PrimaPagina.fxml"));
-            Parent loginRoot = fxmlLoader.load();
+        // --- Inizio Logica di Registrazione ---
 
-            // Crea un nuovo stage (nuova finestra)
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(loginRoot));
-            loginStage.show();
+        // Controlla se i campi FXML sono stati iniettati correttamente
+        if (nomeField == null || cognomeField == null || emailField == null || passwordField == null) {
+            System.err.println("Errore: Campi FXML non inizializzati nel controller!");
+            showAlert(Alert.AlertType.ERROR, "Errore Interno", "Errore nell'interfaccia utente.");
+            return;
+        }
 
-            // SE vuoi chiudere la finestra attuale, togli il commento qui sotto:
-            ((Stage) BottoneRegistrati.getScene().getWindow()).close();
+        String nome = nomeField.getText();
+        String cognome = cognomeField.getText();
+        String email = emailField.getText();
+        String password = passwordField.getText(); // Considera sempre l'hashing per sicurezza!
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Validazione semplice campi vuoti
+        if (nome.isEmpty() || cognome.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Tutti i campi devono essere compilati.");
+            return; // Interrompe l'esecuzione qui se i campi non sono validi
+        }
+
+        // Chiamata al modello per tentare la registrazione
+        boolean successo = loginModel.registraUtente(nome, cognome, email, password);
+
+        // --- Fine Logica di Registrazione ---
+
+
+        // --- Gestione Risultato e Navigazione ---
+        if (successo) {
+            // Registrazione riuscita!
+            showAlert(Alert.AlertType.INFORMATION, "Registrazione completata", "Utente registrato con successo!");
+
+            // Ora esegui l'azione originale di "Registrato": carica la nuova pagina
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PrimaPagina.fxml")); // Assicurati che il percorso sia corretto
+                Parent root = fxmlLoader.load();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Benvenuto!"); // Puoi impostare un titolo per la nuova finestra
+                stage.show();
+
+                if (BottoneRegistrati != null && BottoneRegistrati.getScene() != null && BottoneRegistrati.getScene().getWindow() != null) {
+                    ((Stage) BottoneRegistrati.getScene().getWindow()).close();
+                } else {
+                    System.err.println("Impossibile ottenere la finestra corrente per chiuderla.");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Mostra un errore se il caricamento della nuova pagina fallisce
+                showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina successiva dopo la registrazione.");
+            }
+
+        } else {
+            // Registrazione fallita (es. email duplicata, errore DB)
+            showAlert(Alert.AlertType.ERROR, "Errore di registrazione", "Impossibile registrare l'utente. L'email potrebbe essere già in uso o si è verificato un problema.");
+            // In caso di fallimento, l'utente rimane sulla schermata di registrazione
         }
     }
-    @FXML
-    private void AccessoHomePage(ActionEvent event) {
-        try {
-            // Carica il file login.fxml
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
-            Parent loginRoot = fxmlLoader.load();
 
-            // Crea un nuovo stage (nuova finestra)
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(loginRoot));
-            loginStage.show();
-
-            // SE vuoi chiudere la finestra attuale, togli il commento qui sotto:
-            ((Stage) BottoneAccedi.getScene().getWindow()).close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    // Il metodo showAlert rimane invariato
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+         if (loginModel.isDbConnected()){
+             System.out.println("Connected");
+         } else{
+             System.out.println("Not connected");
+         }
+    }
+
 
 }

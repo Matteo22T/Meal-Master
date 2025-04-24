@@ -65,13 +65,13 @@
                         </ImageView>
                         <HBox prefHeight="38.0" prefWidth="358.0">
                            <children>
-                              <TextField prefHeight="40.0" prefWidth="305.0" promptText="Nome" style="-fx-background-radius: 15;" />
-                              <PasswordField prefHeight="40.0" prefWidth="305.0" promptText="Cognome" style="-fx-background-radius: 15;" />
+                              <TextField fx:id="nomeField" prefHeight="40.0" prefWidth="305.0" promptText="Nome" style="-fx-background-radius: 15;" />
+                              <TextField fx:id="cognomeField" prefHeight="40.0" prefWidth="305.0" promptText="Cognome" style="-fx-background-radius: 15;" />
                            </children>
                         </HBox>
-                        <TextField prefHeight="40.0" prefWidth="305.0" promptText="Email" style="-fx-background-radius: 15;" />
-                        <TextField prefHeight="40.0" prefWidth="305.0" promptText="Password" style="-fx-background-radius: 15;" />
-                        <Button fx:id="BottoneRegistrati" mnemonicParsing="false" onAction="#Registrato" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Registrati">
+                        <TextField fx:id="emailField" prefHeight="40.0" prefWidth="305.0" promptText="Email" style="-fx-background-radius: 15;" />
+                        <PasswordField fx:id="passwordField" prefHeight="40.0" prefWidth="305.0" promptText="Password" style="-fx-background-radius: 15;" />
+                        <Button fx:id="BottoneRegistrati" mnemonicParsing="false" onAction="#Registrato" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Registrati" >
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>

@@ -38,11 +38,11 @@
                               <Font name="System Bold" size="37.0" />
                            </font>
                         </Label>
-                        <TextField prefHeight="40.0" prefWidth="305.0" promptText="Nome" />
-                        <TextField prefHeight="40.0" prefWidth="305.0" promptText="Cognome" />
-                        <TextField prefHeight="40.0" prefWidth="305.0" promptText="Email" />
-                        <PasswordField prefHeight="40.0" prefWidth="305.0" promptText="Password" />
-                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Sing up">
+                        <TextField fx:id="nomeField" prefHeight="40.0" prefWidth="305.0" promptText="Nome" />
+                        <TextField fx:id="cognomeField" prefHeight="40.0" prefWidth="305.0" promptText="Cognome" />
+                        <TextField fx:id="emailField" prefHeight="40.0" prefWidth="305.0" promptText="Email" />
+                        <PasswordField fx:id="passwordField" prefHeight="40.0" prefWidth="305.0" promptText="Password" />
+                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Sign up">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
