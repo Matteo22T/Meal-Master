@@ -33,6 +33,10 @@ public class login implements Initializable {
     @FXML private TextField cognomeField;
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
+
+    @FXML private TextField loginEmailField;
+    @FXML private PasswordField loginPasswordField;
+
     @FXML
     private void switchToLogin() {
         if (!loginBox.isVisible()) {
@@ -76,15 +80,33 @@ public class login implements Initializable {
 
     @FXML
     private void AccessoHomePage(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
-            Parent loginRoot = fxmlLoader.load();
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(loginRoot));
-            loginStage.show();
-            ((Stage) BottoneAccedi.getScene().getWindow()).close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        String email = loginEmailField.getText();
+        String password = loginPasswordField.getText();
+
+        // Controllo campi vuoti
+        if (email.isEmpty() || password.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Inserisci email e password.");
+            return;
+        }
+
+        // Verifica credenziali nel database
+        boolean loginRiuscito = loginModel.verificaCredenziali(email, password);
+
+        if (loginRiuscito) {
+            showAlert(Alert.AlertType.INFORMATION, "Accesso riuscito", "Benvenuto!");
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
+                Parent loginRoot = fxmlLoader.load();
+                Stage loginStage = new Stage();
+                loginStage.setScene(new Scene(loginRoot));
+                loginStage.show();
+                ((Stage) BottoneAccedi.getScene().getWindow()).close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile caricare la Home Page.");
+            }
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Accesso fallito", "Email o password errati.");
         }
     }
 
@@ -109,7 +131,17 @@ public class login implements Initializable {
         // Validazione semplice campi vuoti
         if (nome.isEmpty() || cognome.isEmpty() || email.isEmpty() || password.isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Errore", "Tutti i campi devono essere compilati.");
-            return; // Interrompe l'esecuzione qui se i campi non sono validi
+            return;
+        }
+
+        if (!email.matches("^[A-Za-z0-9._%+-]+@gmail\\.com$")) {
+            showAlert(Alert.AlertType.ERROR, "Email non valida", "L'email deve essere un indirizzo @gmail.com valido.");
+            return;
+        }
+
+        if (!password.matches("^(?=.*[A-Z])(?=.*\\d).{8,}$")) {
+            showAlert(Alert.AlertType.ERROR, "Password non valida", "La password deve contenere almeno 8 caratteri, una lettera maiuscola e un numero.");
+            return;
         }
 
         // Chiamata al modello per tentare la registrazione
