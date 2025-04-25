@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane prefHeight="578.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePage">
+<AnchorPane prefHeight="578.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePage">
     <children>
         <VBox layoutX="52.0" layoutY="107.0" prefHeight="578.0" prefWidth="180.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -27,7 +26,7 @@
                 <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="75.0" prefWidth="180.0" text="Button" />
                 <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="80.0" prefWidth="180.0" text="Button" />
                 <Button mnemonicParsing="false" prefHeight="79.0" prefWidth="198.0" text="Button" />
-                <Button mnemonicParsing="false" prefHeight="83.0" prefWidth="212.0" text="Alimenti">
+                <Button fx:id="BottoneAlimenti" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="83.0" prefWidth="212.0" text="Alimenti">
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>

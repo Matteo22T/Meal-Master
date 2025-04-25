@@ -1,8 +1,227 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="578.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePage">
-
+<AnchorPane prefHeight="531.0" prefWidth="922.0" stylesheets="@css/stile_HomePage.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePage">
+    <children>
+      <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+              <VBox prefHeight="578.0" prefWidth="180.0">
+                  <children>
+                      <HBox prefHeight="69.0" prefWidth="180.0">
+                          <children>
+                              <ImageView fitHeight="70.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
+                                  <image>
+                                      <Image url="@immagini/omino_profilo.jpg" />
+                                  </image>
+                              </ImageView>
+                              <Label prefHeight="74.0" prefWidth="114.0" text="Nome e Cognome" />
+                          </children>
+                      </HBox>
+                      <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="75.0" prefWidth="180.0" text="Button" />
+                      <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="80.0" prefWidth="180.0" text="Button" />
+                      <Button mnemonicParsing="false" prefHeight="79.0" prefWidth="198.0" text="Button" />
+                      <Button fx:id="BottoneAlimenti" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="83.0" prefWidth="212.0" text="Alimenti">
+                          <cursor>
+                              <Cursor fx:constant="HAND" />
+                          </cursor>
+                      </Button>
+                  </children>
+              </VBox>
+            <VBox maxWidth="1.7976931348623157E308" prefHeight="531.0" prefWidth="744.0">
+               <children>
+                  <HBox prefHeight="152.0" prefWidth="743.0">
+                     <children>
+                        <StackPane prefHeight="150.0" prefWidth="200.0">
+                           <children>
+                              <Circle fill="DODGERBLUE" radius="42.0" stroke="BLACK" strokeType="INSIDE" styleClass="cerchio" />
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="2000">
+                                       <font>
+                                          <Font name="Segoe UI Bold" size="24.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Cal Left">
+                                       <font>
+                                          <Font name="Segoe UI" size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </StackPane>
+                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="548.0">
+                           <children>
+                              <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="59.0" prefWidth="546.0" text="MACRONUTRIENTI">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                       <children>
+                                          <StackPane prefHeight="150.0" prefWidth="200.0">
+                                             <children>
+                                                <Circle fill="#ffffff00" radius="30.0" stroke="#2a2dbf" strokeType="INSIDE" strokeWidth="5.0" />
+                                                <Label text="0/120g">
+                                                   <font>
+                                                      <Font name="Segoe UI" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </StackPane>
+                                          <Label text="Proteine">
+                                             <font>
+                                                <Font name="Segoe UI" size="15.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                       <children>
+                                          <StackPane prefHeight="150.0" prefWidth="200.0">
+                                             <children>
+                                                <Circle fill="#ffffff00" radius="30.0" stroke="#efd633" strokeType="INSIDE" strokeWidth="5.0" />
+                                                <Label text="0/120g">
+                                                   <font>
+                                                      <Font name="Segoe UI" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </StackPane>
+                                          <Label text="Carboidrati">
+                                             <font>
+                                                <Font name="Segoe UI" size="15.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                       <children>
+                                          <StackPane prefHeight="150.0" prefWidth="200.0">
+                                             <children>
+                                                <Circle fill="#ffffff00" radius="30.0" stroke="#c12a2a" strokeType="INSIDE" strokeWidth="5.0" />
+                                                <Label text="0/120g">
+                                                   <font>
+                                                      <Font name="Segoe UI" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </StackPane>
+                                          <Label text="Grassi">
+                                             <font>
+                                                <Font name="Segoe UI" size="15.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                       <children>
+                                          <StackPane prefHeight="150.0" prefWidth="200.0">
+                                             <children>
+                                                <Circle fill="#ffffff00" radius="30.0" stroke="#3cbf2a" strokeType="INSIDE" strokeWidth="5.0" />
+                                                <Label text="0/120g">
+                                                   <font>
+                                                      <Font name="Segoe UI" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </StackPane>
+                                          <Label text="Fibre">
+                                             <font>
+                                                <Font name="Segoe UI" size="15.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <VBox prefHeight="381.0" prefWidth="743.0">
+                     <children>
+                        <HBox prefHeight="194.0" prefWidth="743.0">
+                           <children>
+                              <HBox alignment="CENTER" prefHeight="194.0" prefWidth="743.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label text="Colazione" />
+                                          <Label text="0/100kcal" />
+                                       </children>
+                                    </VBox>
+                                    <Button mnemonicParsing="false" styleClass="bottone" text="+" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="194.0" prefWidth="743.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label text="Spuntino" />
+                                          <Label text="0/100kcal" />
+                                       </children>
+                                    </VBox>
+                                    <Button mnemonicParsing="false" styleClass="bottone" text="+" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="194.0" prefWidth="743.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label text="Pranzo" />
+                                          <Label text="0/100kcal" />
+                                       </children>
+                                    </VBox>
+                                    <Button mnemonicParsing="false" styleClass="bottone" text="+" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="190.0" prefWidth="743.0">
+                           <children>
+                              <HBox alignment="CENTER" prefHeight="194.0" prefWidth="743.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label text="Merenda" />
+                                          <Label text="0/100kcal" />
+                                       </children>
+                                    </VBox>
+                                    <Button mnemonicParsing="false" styleClass="bottone" text="+" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="194.0" prefWidth="743.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label text="Cena" />
+                                          <Label text="0/100kcal" />
+                                       </children>
+                                    </VBox>
+                                    <Button mnemonicParsing="false" styleClass="bottone" text="+" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+    </children>
 </AnchorPane>
