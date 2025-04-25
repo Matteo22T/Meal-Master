@@ -33,12 +33,12 @@
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </ImageView>
-                        <TextField prefHeight="40.0" prefWidth="305.0" promptText="Email" style="-fx-background-radius: 15;">
+                        <TextField fx:id="loginEmailField" prefHeight="40.0" prefWidth="305.0" promptText="Email" style="-fx-background-radius: 15;">
                            <VBox.margin>
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </TextField>
-                        <PasswordField prefHeight="40.0" prefWidth="305.0" promptText="Password" style="-fx-background-radius: 15;">
+                        <PasswordField fx:id="loginPasswordField" prefHeight="40.0" prefWidth="305.0" promptText="Password" style="-fx-background-radius: 15;">
                            <VBox.margin>
                               <Insets bottom="15.0" />
                            </VBox.margin>
