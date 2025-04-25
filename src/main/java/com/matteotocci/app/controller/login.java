@@ -152,12 +152,11 @@ public class login implements Initializable {
 
         // --- Gestione Risultato e Navigazione ---
         if (successo) {
-            // Registrazione riuscita!
-            showAlert(Alert.AlertType.INFORMATION, "Registrazione completata", "Utente registrato con successo!");
+
 
             // Ora esegui l'azione originale di "Registrato": carica la nuova pagina
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PrimaPagina.fxml")); // Assicurati che il percorso sia corretto
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ConfermaRegistrazione.fxml")); // Assicurati che il percorso sia corretto
                 Parent root = fxmlLoader.load();
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
