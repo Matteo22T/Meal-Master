@@ -10,10 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:controller="com.matteotocci.app.controller.RegistrazioneConferma"
-            prefHeight="400.0" prefWidth="354.0"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="400.0" prefWidth="354.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.RegistrazioneConferma">
     <children>
         <BorderPane prefHeight="400.0" prefWidth="354.0">
 
@@ -24,22 +21,19 @@
 
             <!-- Contenuto principale -->
             <right>
-                <AnchorPane prefHeight="400.0" prefWidth="321.0" BorderPane.alignment="CENTER">
+                <AnchorPane prefHeight="400.0" prefWidth="321.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
                     <children>
-                        <ImageView fitHeight="224.0" fitWidth="277.0" layoutX="22.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="224.0" fitWidth="277.0" layoutX="34.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@immagini/logo.jpg" />
                             </image>
                         </ImageView>
-                        <Text layoutX="44.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                              text="Registrazione avvenuta con successo!" wrappingWidth="232.41754150390625">
+                        <Text layoutX="44.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registrazione avvenuta con successo!" wrappingWidth="232.41754150390625">
                             <font>
                                 <Font size="14.0" />
                             </font>
                         </Text>
-                        <Button layoutX="100.0" layoutY="322.0" mnemonicParsing="false"
-                                prefHeight="40.0" prefWidth="120.0" text="Torna al login" onAction="#tornaAlLogin"
-                                style="-fx-background-color: linear-gradient(#35a500, #006400); -fx-text-fill: white; -fx-background-radius: 10;">
+                        <Button layoutX="100.0" layoutY="322.0" mnemonicParsing="false" onAction="#tornaAlLogin" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: linear-gradient(#35a500, #006400); -fx-text-fill: white; -fx-background-radius: 10;" text="Torna al login">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>

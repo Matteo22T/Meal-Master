@@ -38,6 +38,16 @@ public class login implements Initializable {
     @FXML private PasswordField loginPasswordField;
 
     @FXML
+    private RadioButton Cliente;
+
+    @FXML
+    private RadioButton Nutrizionista;
+
+    @FXML
+    private ToggleGroup Ruolo;
+
+
+    @FXML
     private void switchToLogin() {
         if (!loginBox.isVisible()) {
             fade(registerBox, false);
@@ -117,7 +127,7 @@ public class login implements Initializable {
         // --- Inizio Logica di Registrazione ---
 
         // Controlla se i campi FXML sono stati iniettati correttamente
-        if (nomeField == null || cognomeField == null || emailField == null || passwordField == null) {
+        if (nomeField == null || cognomeField == null || emailField == null || passwordField == null || Ruolo==null) {
             System.err.println("Errore: Campi FXML non inizializzati nel controller!");
             showAlert(Alert.AlertType.ERROR, "Errore Interno", "Errore nell'interfaccia utente.");
             return;
@@ -144,8 +154,14 @@ public class login implements Initializable {
             return;
         }
 
+        Toggle selectedToggle = Ruolo.getSelectedToggle();
+
+        RadioButton selectedRadioButton = (RadioButton) selectedToggle;
+
+        String ruolo = selectedRadioButton.getText().toLowerCase();
+
         // Chiamata al modello per tentare la registrazione
-        boolean successo = loginModel.registraUtente(nome, cognome, email, password);
+        boolean successo = loginModel.registraUtente(nome, cognome, email, password,ruolo);
 
         // --- Fine Logica di Registrazione ---
 
@@ -153,11 +169,34 @@ public class login implements Initializable {
         // --- Gestione Risultato e Navigazione ---
         if (successo) {
 
+            int idUtente = loginModel.getIdUtente(email);
+            if (idUtente == -1) {
+                showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile recuperare l'ID dell'utente.");
+                return;
+            }
+
 
             // Ora esegui l'azione originale di "Registrato": carica la nuova pagina
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ConfermaRegistrazione.fxml")); // Assicurati che il percorso sia corretto
-                Parent root = fxmlLoader.load();
+                FXMLLoader fxmlLoader;
+                Parent root;
+                if (ruolo.equals("nutrizionista")) {
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ConfermaRegistrazione.fxml"));
+                    root = fxmlLoader.load();
+                }
+                else{
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DatiCliente.fxml"));
+                    // **Prendi il controller di DatiCliente**
+                    root = fxmlLoader.load();
+                    DatiCliente datiClienteController = fxmlLoader.getController();
+                    if (datiClienteController != null) {
+                        datiClienteController.setIdUtente(idUtente);
+                    } else {
+                        System.err.println("Errore: Controller non caricato correttamente.");
+                        showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile caricare il controller.");
+                        return;
+                    }
+                }
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.setTitle("Benvenuto!"); // Puoi impostare un titolo per la nuova finestra

@@ -5,7 +5,9 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -63,6 +65,16 @@
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </ImageView>
+                        <HBox alignment="CENTER" prefHeight="18.0" prefWidth="356.0" spacing="40.0">
+                           <children>
+                              <RadioButton fx:id="Cliente" mnemonicParsing="false" text="Cliente">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="Ruolo" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="Nutrizionista" mnemonicParsing="false" text="Nutrizionista" toggleGroup="$Ruolo" />
+                           </children>
+                        </HBox>
                         <HBox prefHeight="38.0" prefWidth="358.0">
                            <children>
                               <TextField fx:id="nomeField" prefHeight="40.0" prefWidth="305.0" promptText="Nome" style="-fx-background-radius: 15;" />
@@ -71,7 +83,7 @@
                         </HBox>
                         <TextField fx:id="emailField" prefHeight="40.0" prefWidth="305.0" promptText="Email" style="-fx-background-radius: 15;" />
                         <PasswordField fx:id="passwordField" prefHeight="40.0" prefWidth="305.0" promptText="Password" style="-fx-background-radius: 15;" />
-                        <Button fx:id="BottoneRegistrati" mnemonicParsing="false" onAction="#Registrato" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Registrati" >
+                        <Button fx:id="BottoneRegistrati" mnemonicParsing="false" onAction="#Registrato" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Registrati">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>

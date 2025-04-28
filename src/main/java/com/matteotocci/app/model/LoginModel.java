@@ -25,8 +25,23 @@ public class LoginModel {
         }
     }
 
-    public boolean registraUtente(String nome, String cognome, String email, String password) {
-        String query = "INSERT INTO Utente (nome, cognome, email, password) VALUES (?, ?, ?, ?)";
+    public int getIdUtente(String email) {
+        String query = "SELECT id FROM Utente WHERE email = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // errore
+    }
+
+
+    public boolean registraUtente(String nome, String cognome, String email, String password, String ruolo) {
+        String query = "INSERT INTO Utente (nome, cognome, email, password, ruolo) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement ps = null; // Inizializza a null prima del try
         try {
             ps = conn.prepareStatement(query);
@@ -34,6 +49,7 @@ public class LoginModel {
             ps.setString(2, cognome);
             ps.setString(3, email);
             ps.setString(4, password);
+            ps.setString(5, ruolo);
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Utente registrato con successo nel database."); // Aggiungi un log di successo
