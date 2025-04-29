@@ -40,6 +40,21 @@ public class LoginModel {
     }
 
 
+    public String getRuoloUtente(String email) {
+        String query = "SELECT ruolo FROM Utente WHERE email = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("Ruolo");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+
     public boolean registraUtente(String nome, String cognome, String email, String password, String ruolo) {
         String query = "INSERT INTO Utente (nome, cognome, email, password, ruolo) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement ps = null; // Inizializza a null prima del try

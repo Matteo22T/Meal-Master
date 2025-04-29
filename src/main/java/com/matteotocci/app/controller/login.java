@@ -103,9 +103,26 @@ public class login implements Initializable {
         boolean loginRiuscito = loginModel.verificaCredenziali(email, password);
 
         if (loginRiuscito) {
+            String ruolo = loginModel.getRuoloUtente(email);
+
+            if (ruolo == null) {
+                showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo non trovato per questo utente.");
+                return;
+            }
+            String fxmlPath;
+            if (ruolo.equalsIgnoreCase("nutrizionista")) {
+                fxmlPath = "/com/matteotocci/app/HomePageNutrizionista.fxml";
+            } else if (ruolo.equalsIgnoreCase("cliente")) {
+                fxmlPath = "/com/matteotocci/app/HomePage.fxml";
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.");
+                return;
+            }
+
             showAlert(Alert.AlertType.INFORMATION, "Accesso riuscito", "Benvenuto!");
+
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
                 Parent loginRoot = fxmlLoader.load();
                 Stage loginStage = new Stage();
                 loginStage.setScene(new Scene(loginRoot));
