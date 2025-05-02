@@ -20,7 +20,7 @@
                   <children>
                       <HBox prefHeight="69.0" prefWidth="180.0">
                           <children>
-                              <ImageView fitHeight="70.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView  onMouseClicked="#AccessoProfilo" fitHeight="70.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
                                   <image>
                                       <Image url="@immagini/omino_profilo.jpg" />
                                   </image>

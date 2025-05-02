@@ -46,12 +46,12 @@ public class LoginModel {
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getString("Ruolo");
+                return rs.getString("ruolo");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "";
+        return null;
     }
 
 
@@ -88,12 +88,12 @@ public class LoginModel {
         }
     }
     public boolean verificaCredenziali(String email, String password) {
-        String query = "SELECT * FROM Utente WHERE email = ? AND password = ?";
+        String query = "SELECT id FROM Utente WHERE email = ? AND password = ?";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, email);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
-            return rs.next(); // true se esiste almeno una riga
+            return rs.next();
         } catch (SQLException e) {
             System.err.println("Errore durante la verifica delle credenziali: " + e.getMessage());
             return false;

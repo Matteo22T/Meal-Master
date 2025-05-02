@@ -123,11 +123,28 @@ public class login implements Initializable {
 
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
-                Parent loginRoot = fxmlLoader.load();
-                Stage loginStage = new Stage();
-                loginStage.setScene(new Scene(loginRoot));
-                loginStage.show();
+                Parent homePageRoot = fxmlLoader.load();
+
+                // **Ottieni il controller HomePage**
+                HomePage homePageController = fxmlLoader.getController();
+
+                // **Recupera l'ID utente basato sull'email di login**
+                int loggedInUserId = loginModel.getIdUtente(email);
+
+                // **Passa l'ID utente al controller HomePage**
+                if (homePageController != null && loggedInUserId != -1) {
+                    homePageController.setLoggedInUserId(String.valueOf(loggedInUserId));
+                } else {
+                    System.err.println("Errore: Impossibile ottenere il controller HomePage o l'ID utente.");
+                    showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile caricare la Home Page con le informazioni dell'utente.");
+                    return;
+                }
+
+                Stage homePageStage = new Stage();
+                homePageStage.setScene(new Scene(homePageRoot));
+                homePageStage.show();
                 ((Stage) BottoneAccedi.getScene().getWindow()).close();
+
             } catch (IOException e) {
                 e.printStackTrace();
                 showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile caricare la Home Page.");
@@ -249,12 +266,10 @@ public class login implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-         if (loginModel.isDbConnected()){
-             System.out.println("Connected");
-         } else{
-             System.out.println("Not connected");
-         }
+        if (loginModel.isDbConnected()){
+            System.out.println("Connected");
+        } else{
+            System.out.println("Not connected");
+        }
     }
-
-
 }
