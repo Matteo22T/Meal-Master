@@ -8,17 +8,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 
@@ -36,27 +37,55 @@ public class PaginaProfilo implements Initializable {
     @FXML
     private ImageView ImmagineOmino;
 
-    // Dovresti avere un modo per identificare l'utente corrente.
-    // Potrebbe essere una variabile di istanza impostata al login o passata.
-    private String utenteCorrenteId = "user123"; // Sostituisci con l'ID utente effettivo
+    @FXML
+    private TextField nomeTextField;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Recupera il nome utente dal database e lo imposta nella label
-        String nomeUtente = getNomeUtenteDalDatabase(utenteCorrenteId);
-        if (nomeUtente != null && !nomeUtente.isEmpty()) {
-            nomeUtenteSidebarLabel.setText(nomeUtente);
-            benvenutoLabel.setText("Benvenuto " + nomeUtente); // Aggiorna anche la label di benvenuto
-        } else {
-            nomeUtenteSidebarLabel.setText("Utente Sconosciuto"); // Gestisci il caso in cui non trovi il nome
-            benvenutoLabel.setText("Benvenuto Utente");
+    @FXML
+    private TextField cognomeTextField;
+
+    private String utenteCorrenteId; // L'ID utente verrà impostato esternamente
+
+    public void setUtenteCorrenteId(String userId) {
+        System.out.println("[DEBUG] setUtenteCorrenteId chiamato con ID: " + userId);
+        this.utenteCorrenteId = userId;
+        // Ora che abbiamo l'ID, possiamo inizializzare i dati
+        inizializzaDatiUtente();
+    }
+
+    private void inizializzaDatiUtente() {
+        System.out.println("[DEBUG] inizializzaDatiUtente chiamato con ID: " + utenteCorrenteId);
+        if (utenteCorrenteId != null) {
+            // Recupera il nome utente per la sidebar
+            String nomeUtenteSidebar = getDatoUtenteDalDatabase(utenteCorrenteId, "Nome");
+            System.out.println("[DEBUG] Nome utente sidebar recuperato: " + nomeUtenteSidebar);
+            if (nomeUtenteSidebar != null && !nomeUtenteSidebar.isEmpty()) {
+                nomeUtenteSidebarLabel.setText(nomeUtenteSidebar);
+                benvenutoLabel.setText("Benvenuto " + nomeUtenteSidebar);
+            } else {
+                nomeUtenteSidebarLabel.setText("Utente Sconosciuto");
+                benvenutoLabel.setText("Benvenuto Utente");
+            }
+
+            // Recupera nome e cognome per i campi non modificabili
+            String nome = getDatoUtenteDalDatabase(utenteCorrenteId, "Nome");
+            System.out.println("[DEBUG] Nome recuperato: " + nome);
+            String cognome = getDatoUtenteDalDatabase(utenteCorrenteId, "Cognome");
+            System.out.println("[DEBUG] Cognome recuperato: " + cognome);
+
+            if (nome != null) {
+                nomeTextField.setText(nome);
+            }
+            if (cognome != null) {
+                cognomeTextField.setText(cognome);
+            }
         }
     }
 
-    private String getNomeUtenteDalDatabase(String userId) {
-        String nomeUtente = null;
-        String url = "jdbc:sqlite:database.db"; // Sostituisci con il percorso del tuo database
-        String query = "SELECT nome FROM utenti WHERE id_utente = ?"; // Adatta la query e i nomi delle colonne
+    private String getDatoUtenteDalDatabase(String userId, String campo) {
+        String valore = null;
+        String url = "jdbc:sqlite:database.db";
+        String query = "SELECT " + campo + " FROM Utente WHERE id = ?";
+        System.out.println("[DEBUG] Query eseguita: " + query + " con ID: " + userId + ", Campo: " + campo);
 
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -64,13 +93,23 @@ public class PaginaProfilo implements Initializable {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                nomeUtente = rs.getString("nome"); // Recupera il nome dalla colonna "nome"
+                valore = rs.getString(campo);
+                System.out.println("[DEBUG] Valore recuperato per " + campo + ": " + valore);
+            } else {
+                System.out.println("[DEBUG] Nessun utente trovato con ID: " + userId + " per il campo " + campo);
             }
 
         } catch (SQLException e) {
-            System.err.println("Errore durante la lettura del nome utente dal database: " + e.getMessage());
+            System.err.println("[ERROR] Errore durante la lettura del " + campo + " dal database: " + e.getMessage());
         }
-        return nomeUtente;
+        return valore;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        // L'inizializzazione dei dati ora avviene dopo aver ricevuto l'ID
+        // tramite il metodo setUtenteCorrenteId
+        System.out.println("[DEBUG] initialize chiamato.");
     }
 
     @FXML
@@ -78,6 +117,13 @@ public class PaginaProfilo implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
             Parent profileRoot = fxmlLoader.load();
+
+            // Ottieni il controller della pagina del profilo appena caricata
+            PaginaProfilo profileController = fxmlLoader.getController();
+
+            // Imposta l'ID dell'utente corrente nel controller
+            profileController.setUtenteCorrenteId(utenteCorrenteId);
+
             Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             profileStage.setScene(new Scene(profileRoot));
             profileStage.show();
@@ -108,6 +154,13 @@ public class PaginaProfilo implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ModificaPassword.fxml"));
             Parent modificaPasswordRoot = fxmlLoader.load();
+
+            // **Ottieni il controller di ModificaPassword**
+            ModificaPassword modificaPasswordController = fxmlLoader.getController();
+
+            // **Imposta l'ID utente nel controller di ModificaPassword**
+            modificaPasswordController.setUtenteCorrenteId(utenteCorrenteId);
+
             Stage modificaPasswordStage = new Stage();
             modificaPasswordStage.setTitle("Modifica Password");
             modificaPasswordStage.setScene(new Scene(modificaPasswordRoot));
@@ -117,4 +170,3 @@ public class PaginaProfilo implements Initializable {
         }
     }
 }
-

@@ -22,7 +22,10 @@
                                         <Image url="@immagini/omino_profilo.jpg" />
                                     </image>
                                 </ImageView>
-                                <Label prefHeight="74.0" prefWidth="114.0" text="Nome e Cognome" />
+                                <VBox>
+                                    <Label fx:id="nomeUtenteLabelHomePage" prefHeight="35.0" prefWidth="114.0" text="Benvenuto" />
+                                    <Label prefHeight="39.0" prefWidth="113.0" text="Nutrizionista" />
+                                </VBox>
                             </children>
                         </HBox>
                         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="75.0" prefWidth="180.0" text="Home Page" />

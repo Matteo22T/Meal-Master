@@ -13,13 +13,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="500.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.PaginaProfilo">
+<AnchorPane prefHeight="500.0" prefWidth="900.0" stylesheets="@css/stile_PaginaProfilo.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.PaginaProfilo">
     <children>
         <VBox layoutX="0.0" layoutY="0.0" prefHeight="500.0" prefWidth="180.0" style="-fx-background-color: #f0f0f0;">
             <children>
-                <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="180.0" style="-fx-padding: 10;">
+                <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="180.0" style="-fx-padding: 10;">
                     <children>
-                        <ImageView fx:id="profileImage" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#AccessoProfilo" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="profileImage" fitHeight="60.0" fitWidth="60.0" onMouseClicked="#AccessoProfilo" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@immagini/omino_profilo.jpg" />
                             </image>
@@ -57,9 +57,9 @@
                             </columnConstraints>
                             <children>
                                 <Label style="-fx-font-weight: bold;" text="Nome:" GridPane.rowIndex="0" />
-                                <TextField prefHeight="35.0" prefWidth="564.0" promptText="Inserisci il nome" style="-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 8;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                <TextField fx:id="nomeTextField" prefHeight="35.0" prefWidth="564.0" promptText="Inserisci il nome" style="-fx-border-color: transparent; -fx-background-color: transparent; -fx-padding: 8;" GridPane.columnIndex="1" GridPane.rowIndex="0" editable="false" focusTraversable="false" />
                                 <Label style="-fx-font-weight: bold;" text="Cognome:" GridPane.rowIndex="1" />
-                                <TextField promptText="Inserisci il cognome" style="-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 8;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <TextField fx:id="cognomeTextField" promptText="Inserisci il cognome" style="-fx-border-color: transparent; -fx-background-color: transparent; -fx-padding: 8;" GridPane.columnIndex="1" GridPane.rowIndex="1" editable="false" focusTraversable="false" />
                                 <Label style="-fx-font-weight: bold;" text="Sesso:" GridPane.rowIndex="2" />
                                 <TextField promptText="Inserisci il sesso" style="-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 8;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                 <Label style="-fx-font-weight: bold;" text="Data Nascita:" GridPane.rowIndex="3" />
@@ -76,16 +76,16 @@
                             <padding>
                                 <Insets bottom="15.0" top="10.0" />
                             </padding>
-                     <rowConstraints>
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                     </rowConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                            </rowConstraints>
                         </GridPane>
                         <Label onMouseClicked="#mostraSchermataModificaPassword" style="-fx-text-fill: #007bff; -fx-underline: true; -fx-font-size: 14px; -fx-cursor: hand;" text="Modifica Password" />
                         <HBox alignment="BOTTOM_RIGHT" spacing="15.0" VBox.vgrow="NEVER">
