@@ -13,31 +13,31 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="531.0" prefWidth="922.0" stylesheets="@css/stile_HomePage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePage">
-    <children>
+   <children>
       <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-              <VBox prefHeight="578.0" prefWidth="180.0">
-                  <children>
-                      <HBox prefHeight="69.0" prefWidth="180.0">
-                          <children>
-                              <ImageView  onMouseClicked="#AccessoProfilo" fitHeight="70.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
-                                  <image>
-                                      <Image url="@immagini/omino_profilo.jpg" />
-                                  </image>
-                              </ImageView>
-                              <Label prefHeight="74.0" prefWidth="114.0" text="Nome e Cognome" />
-                          </children>
-                      </HBox>
-                      <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="75.0" prefWidth="180.0" text="Home Page" />
-                      <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="80.0" prefWidth="180.0" text="Ricette" />
-                      <Button mnemonicParsing="false" prefHeight="79.0" prefWidth="198.0" text="Piano Alimentare" />
-                      <Button fx:id="BottoneAlimenti" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="83.0" prefWidth="212.0" text="Alimenti">
-                          <cursor>
-                              <Cursor fx:constant="HAND" />
-                          </cursor>
-                      </Button>
-                  </children>
-              </VBox>
+            <VBox prefHeight="578.0" prefWidth="180.0">
+               <children>
+                  <HBox prefHeight="69.0" prefWidth="180.0">
+                     <children>
+                        <ImageView  onMouseClicked="#AccessoProfilo" fitHeight="70.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@immagini/omino_profilo.jpg" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="nomeUtenteLabelHomePage" prefHeight="74.0" prefWidth="114.0" text="Nome e Cognome" />
+                     </children>
+                  </HBox>
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="75.0" prefWidth="180.0" text="Home Page" />
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="80.0" prefWidth="180.0" text="Ricette" />
+                  <Button mnemonicParsing="false" prefHeight="79.0" prefWidth="198.0" text="Piano Alimentare" />
+                  <Button fx:id="BottoneAlimenti" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="83.0" prefWidth="212.0" text="Alimenti">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </VBox>
             <VBox maxWidth="1.7976931348623157E308" prefHeight="531.0" prefWidth="744.0">
                <children>
                   <HBox prefHeight="152.0" prefWidth="743.0">
@@ -223,5 +223,5 @@
             </VBox>
          </children>
       </HBox>
-    </children>
+   </children>
 </AnchorPane>

@@ -117,6 +117,13 @@ public class PaginaProfilo implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
             Parent profileRoot = fxmlLoader.load();
+
+            // Ottieni il controller della pagina del profilo appena caricata
+            PaginaProfilo profileController = fxmlLoader.getController();
+
+            // Imposta l'ID dell'utente corrente nel controller
+            profileController.setUtenteCorrenteId(utenteCorrenteId);
+
             Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             profileStage.setScene(new Scene(profileRoot));
             profileStage.show();

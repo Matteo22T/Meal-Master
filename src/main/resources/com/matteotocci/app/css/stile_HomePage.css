@@ -1,15 +1,104 @@
-.cerchio{
+.cerchio {
     -fx-border-radius: 60;
-    -fx-stroke: "lightgray";
-    -fx-stroke-width: 9;
-    -fx-fill: "transparent";
-
+    -fx-stroke: #4CAF50; /* Verde più vivace */
+    -fx-stroke-width: 10; /* Leggermente più spesso */
+    -fx-fill: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 3); /* Aggiunge un'ombra leggera */
 }
 
-.bottone{
+.bottone {
+    -fx-background-radius: 25; /* Meno "cerchio perfetto", più moderno */
+    -fx-font-size: 16px; /* Leggermente ridotto per un aspetto più pulito */
+    -fx-font-weight: bold;
+    -fx-background-color: #4CAF50; /* Verde più vivace */
+    -fx-text-fill: white;
+    -fx-cursor: hand; /* Indica interattività */
+    -fx-padding: 8 15; /* Aggiunge un po' di spazio interno */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2); /* Aggiunge un'ombra leggera */
+    -fx-transition: background-color 0.3s ease; /* Transizione fluida al hover */
+}
+
+.bottone:hover {
+    -fx-background-color: #45a049; /* Scurisce leggermente al hover */
+}
+
+/* Stili per i contenitori dei macronutrienti */
+.macro-container {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+}
+
+.macro-circle {
+    -fx-fill: transparent;
+    -fx-stroke-width: 5;
+    -fx-radius: 30;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 5, 0, 0, 2);
+}
+
+.proteine {
+    -fx-stroke: #2a2dbf; /* Blu */
+}
+
+.carboidrati {
+    -fx-stroke: #efd633; /* Giallo */
+}
+
+.grassi {
+    -fx-stroke: #c12a2a; /* Rosso */
+}
+
+.fibre {
+    -fx-stroke: #3cbf2a; /* Verde */
+}
+
+.macro-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555;
+}
+
+.macro-value {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+/* Stili per le sezioni dei pasti */
+.meal-section {
+    -fx-alignment: center;
+    -fx-spacing: 8px;
+    -fx-padding: 15px;
+    -fx-background-color: #f9f9f9;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);
+}
+
+.meal-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.meal-kcal {
+    -fx-font-size: 14px;
+    -fx-text-fill: #777;
+}
+
+.add-button {
     -fx-background-radius: 50%;
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-background-color: #0e0e0e;
+    -fx-background-color: #4CAF50;
     -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+    -fx-background-color: #45a049;
 }

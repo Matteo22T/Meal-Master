@@ -10,15 +10,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox; // Assicurati che il layout principale sia un VBox o adatta di conseguenza
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class DatiCliente {
     @FXML
@@ -45,8 +49,17 @@ public class DatiCliente {
     @FXML
     private Slider pesoSlider;
 
-    private Map<String, Integer> mappaNutrizionisti = new HashMap<>();
+    @FXML
+    private VBox registerBox; // Ottieni il riferimento al VBox principale
 
+    private Map<String, Integer> mappaNutrizionisti = new HashMap<>();
+    private int idUtente;
+    public DatiClienteModel datiCliente = new DatiClienteModel();
+
+    public void setIdUtente(int idUtente) {
+        this.idUtente = idUtente;
+        System.out.println("Id utente ricevuto: " + idUtente); // Debug
+    }
 
     private ObservableList<String> getNutrizionisti() {
         ObservableList<String> nutrizionisti = FXCollections.observableArrayList();
@@ -58,24 +71,15 @@ public class DatiCliente {
 
             while (rs.next()) {
                 int id = rs.getInt("id");
-                String nome = rs.getString("Nome")+" "+rs.getString("Cognome");
+                String nome = rs.getString("Nome") + " " + rs.getString("Cognome");
                 nutrizionisti.add(nome); // Aggiungi il nome alla lista
                 mappaNutrizionisti.put(nome, id); // Salva il nome associato all'ID
-
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return nutrizionisti;
-    }
-
-    private int idUtente;
-
-    public void setIdUtente(int idUtente) {
-        this.idUtente = idUtente;
-        System.out.println("Id utente ricevuto: " + idUtente); // Debug
     }
 
     @FXML
@@ -93,24 +97,52 @@ public class DatiCliente {
             pesoLabel.setText(String.format("%.0f kg", valore));
         });
 
-
-
         ObservableList<String> livelliAttivita = FXCollections.observableArrayList("Sedentario", "Leggermente Attivo", "Moderatamente Attivo", "Molto Attivo", "Estremamente Attivo");
         livelloattivitàBox.setItems(livelliAttivita);
+
+        // Aggiungi un listener di eventi al VBox principale per intercettare il tasto "Invio"
+        if (registerBox != null) {
+            registerBox.setOnKeyPressed(this::handleEnterKeyPressed);
+        } else {
+            System.err.println("Errore: registerBox non è stato iniettato!");
+        }
     }
 
-
-    public DatiClienteModel datiCliente = new DatiClienteModel();
+    @FXML
+    private void handleEnterKeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            confermaDati(new ActionEvent()); // Simula un click sul pulsante
+            event.consume(); // Impedisce ad altri elementi di rispondere allo stesso evento
+        }
+    }
 
     @FXML
-    private void Conferma(ActionEvent event) {
-
-
-
+    private void confermaDati(ActionEvent event) {
         // Controlla se i campi FXML sono stati iniettati correttamente
-        if (altezzaSlider == null || pesoSlider == null || datadinascitaPicker == null || livelloattivitàBox == null || nutrizionistaBox==null) {
+        if (altezzaSlider == null || pesoSlider == null || datadinascitaPicker == null || livelloattivitàBox == null || nutrizionistaBox == null) {
             System.err.println("Errore: Campi FXML non inizializzati nel controller!");
             showAlert(Alert.AlertType.ERROR, "Errore Interno", "Errore nell'interfaccia utente.");
+            return;
+        }
+
+        if (altezzaSlider.getValue() == 0) {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Inserisci la tua altezza.");
+            return;
+        }
+        if (pesoSlider.getValue() == 0) {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Inserisci il tuo peso.");
+            return;
+        }
+        if (livelloattivitàBox.getValue() == null || livelloattivitàBox.getValue().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Seleziona il tuo livello di attività.");
+            return;
+        }
+        if (datadinascitaPicker.getValue() == null) {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Inserisci la tua data di nascita.");
+            return;
+        }
+        if (nutrizionistaBox.getValue() == null || nutrizionistaBox.getValue().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Seleziona un nutrizionista.");
             return;
         }
 
@@ -121,16 +153,11 @@ public class DatiCliente {
         String nutrizionistaSelezionato = nutrizionistaBox.getValue();
         Integer idNutrizionista = mappaNutrizionisti.get(nutrizionistaSelezionato);
 
-
-
-
-        boolean successo = datiCliente.registraCliente(altezza, peso, dataDiNascita, livelloAttivita,idNutrizionista,idUtente);        // --- Fine Logica di Registrazione ---
-
+        boolean successo = datiCliente.registraCliente(altezza, peso, dataDiNascita, livelloAttivita, idNutrizionista, idUtente);
+        // --- Fine Logica di Registrazione ---
 
         // --- Gestione Risultato e Navigazione ---
         if (successo) {
-
-
             // Ora esegui l'azione originale di "Registrato": carica la nuova pagina
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ConfermaRegistrazione.fxml"));
@@ -153,12 +180,15 @@ public class DatiCliente {
             }
 
         } else {
-            // Registrazione fallita (es. email duplicata, errore DB)
-            showAlert(Alert.AlertType.ERROR, "Errore di registrazione", "Impossibile registrare l'utente. L'email potrebbe essere già in uso o si è verificato un problema.");
-            // In caso di fallimento, l'utente rimane sulla schermata di registrazione
+            // Registrazione fallita (es. errore DB)
+            showAlert(Alert.AlertType.ERROR, "Errore di registrazione", "Impossibile registrare i dati del cliente. Si è verificato un problema.");
+            // In caso di fallimento, l'utente rimane sulla schermata di inserimento dati
         }
+    }
 
-
+    @FXML
+    private void Conferma(ActionEvent event) {
+        confermaDati(event); // Chiama lo stesso metodo di handleEnterKeyPressed
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
@@ -168,6 +198,4 @@ public class DatiCliente {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 }
-

@@ -1,5 +1,6 @@
 package com.matteotocci.app.model;
 
+import org.mindrot.jbcrypt.BCrypt; // Importa la libreria bcrypt
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +11,7 @@ public class UtenteModel {
     Connection conn;
 
     public UtenteModel() {
-        conn = SQLiteConnessione.connector(); // Assicurati che la tua connessione sia gestita correttamente
+        conn = SQLiteConnessione.connector();
         if (conn == null) {
             System.out.println("Connessione al database fallita.");
             System.exit(1);
@@ -24,9 +25,8 @@ public class UtenteModel {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 String passwordDatabase = rs.getString("password");
-                // **IMPORTANTE: Qui dovresti confrontare la vecchiaPasswordInserita (HASHED) con passwordDatabase**
-                // Per ora, per semplicità, faccio un confronto diretto (NON SICURO PER LA PRODUZIONE)
-                return vecchiaPasswordInserita.equals(passwordDatabase);
+                // Usa BCrypt.checkpw per confrontare la password inserita con l'hash del database
+                return BCrypt.checkpw(vecchiaPasswordInserita, passwordDatabase);
             }
             return false;
         } catch (SQLException e) {
@@ -38,13 +38,12 @@ public class UtenteModel {
     public boolean aggiornaPassword(String userId, String nuovaPassword) throws SQLException {
         String query = "UPDATE Utente SET password = ? WHERE id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            // **IMPORTANTE: Qui dovresti fare l'HASH della nuovaPassword prima di salvarla nel database**
-            pstmt.setString(1, nuovaPassword);
+            // **IMPORTANTE: Hash della nuova password PRIMA di salvarla**
+            String hashedPassword = BCrypt.hashpw(nuovaPassword, BCrypt.gensalt());
+            pstmt.setString(1, hashedPassword);
             pstmt.setString(2, userId);
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
         }
     }
-
-    // Potresti aggiungere altri metodi qui per gestire i dati dell'utente (es. recuperare il nome, l'email, ecc.)
 }

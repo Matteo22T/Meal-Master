@@ -9,6 +9,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -90,6 +92,17 @@ public class login implements Initializable {
 
     @FXML
     private void AccessoHomePage(ActionEvent event) {
+        effettuaLogin();
+    }
+
+    @FXML
+    private void handleLoginEnter(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            effettuaLogin();
+        }
+    }
+
+    private void effettuaLogin() {
         String email = loginEmailField.getText();
         String password = loginPasswordField.getText();
 
@@ -158,10 +171,21 @@ public class login implements Initializable {
 
     @FXML
     private void Registrato(ActionEvent event) {
+        effettuaRegistrazione();
+    }
+
+    @FXML
+    private void handleRegisterEnter(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            effettuaRegistrazione();
+        }
+    }
+
+    private void effettuaRegistrazione() {
         // --- Inizio Logica di Registrazione ---
 
         // Controlla se i campi FXML sono stati iniettati correttamente
-        if (nomeField == null || cognomeField == null || emailField == null || passwordField == null || Ruolo==null) {
+        if (nomeField == null || cognomeField == null || emailField == null || passwordField == null || Ruolo == null) {
             System.err.println("Errore: Campi FXML non inizializzati nel controller!");
             showAlert(Alert.AlertType.ERROR, "Errore Interno", "Errore nell'interfaccia utente.");
             return;
@@ -172,43 +196,60 @@ public class login implements Initializable {
         String email = emailField.getText();
         String password = passwordField.getText(); // Considera sempre l'hashing per sicurezza!
 
-        // Validazione semplice campi vuoti
-        if (nome.isEmpty() || cognome.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Errore", "Tutti i campi devono essere compilati.");
-            return;
-        }
+        boolean campiValidi = true;
+        String messaggioErrore = "";
 
-        if (!email.matches("^[A-Za-z0-9._%+-]+@gmail\\.com$")) {
-            showAlert(Alert.AlertType.ERROR, "Email non valida", "L'email deve essere un indirizzo @gmail.com valido.");
-            return;
+        // Validazione campi vuoti e formato
+        if (nome.isEmpty()) {
+            messaggioErrore += "Il campo Nome è obbligatorio.\n";
+            campiValidi = false;
         }
-
-        if (!password.matches("^(?=.*[A-Z])(?=.*\\d).{8,}$")) {
-            showAlert(Alert.AlertType.ERROR, "Password non valida", "La password deve contenere almeno 8 caratteri, una lettera maiuscola e un numero.");
-            return;
+        if (cognome.isEmpty()) {
+            messaggioErrore += "Il campo Cognome è obbligatorio.\n";
+            campiValidi = false;
+        }
+        if (email.isEmpty()) {
+            messaggioErrore += "Il campo Email è obbligatorio.\n";
+            campiValidi = false;
+        } else if (!email.matches("^[A-Za-z0-9._%+-]+@gmail\\.com$")) {
+            messaggioErrore += "L'email deve essere un indirizzo @gmail.com valido.\n";
+            campiValidi = false;
+        }
+        if (password.isEmpty()) {
+            messaggioErrore += "Il campo Password è obbligatorio.\n";
+            campiValidi = false;
+        } else if (!password.matches("^(?=.*[A-Z])(?=.*\\d).{8,}$")) {
+            messaggioErrore += "La password deve contenere almeno 8 caratteri, una lettera maiuscola e un numero.\n";
+            campiValidi = false;
         }
 
         Toggle selectedToggle = Ruolo.getSelectedToggle();
+        if (selectedToggle == null) {
+            messaggioErrore += "Seleziona un ruolo (Cliente o Nutrizionista).\n";
+            campiValidi = false;
+        }
+
+        if (!campiValidi) {
+            showAlert(Alert.AlertType.ERROR, "Registrazione Incompleta", messaggioErrore);
+            return; // Interrompi la registrazione se ci sono errori
+        }
 
         RadioButton selectedRadioButton = (RadioButton) selectedToggle;
-
         String ruolo = selectedRadioButton.getText().toLowerCase();
 
         // Chiamata al modello per tentare la registrazione
-        boolean successo = loginModel.registraUtente(nome, cognome, email, password,ruolo);
+        boolean successo = loginModel.registraUtente(nome, cognome, email, password, ruolo);
 
         // --- Fine Logica di Registrazione ---
 
 
         // --- Gestione Risultato e Navigazione ---
         if (successo) {
-
             int idUtente = loginModel.getIdUtente(email);
             if (idUtente == -1) {
                 showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile recuperare l'ID dell'utente.");
                 return;
             }
-
 
             // Ora esegui l'azione originale di "Registrato": carica la nuova pagina
             try {
@@ -217,8 +258,7 @@ public class login implements Initializable {
                 if (ruolo.equals("nutrizionista")) {
                     fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ConfermaRegistrazione.fxml"));
                     root = fxmlLoader.load();
-                }
-                else{
+                } else {
                     fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DatiCliente.fxml"));
                     // **Prendi il controller di DatiCliente**
                     root = fxmlLoader.load();
@@ -271,5 +311,15 @@ public class login implements Initializable {
         } else{
             System.out.println("Not connected");
         }
+
+        // Aggiungi listener per intercettare la pressione del tasto Invio nei campi di login
+        loginPasswordField.setOnKeyPressed(this::handleLoginEnter);
+        loginEmailField.setOnKeyPressed(this::handleLoginEnter);
+
+        // Aggiungi listener per intercettare la pressione del tasto Invio nei campi di registrazione
+        nomeField.setOnKeyPressed(this::handleRegisterEnter);
+        cognomeField.setOnKeyPressed(this::handleRegisterEnter);
+        emailField.setOnKeyPressed(this::handleRegisterEnter);
+        passwordField.setOnKeyPressed(this::handleRegisterEnter);
     }
 }
