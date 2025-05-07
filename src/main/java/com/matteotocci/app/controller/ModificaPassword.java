@@ -8,26 +8,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane; // Import AnchorPane
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
 
-public class ModificaPassword {
+public class ModificaPassword implements Initializable {
 
-    @FXML
-    private AnchorPane modificaPasswordRoot; // Riferimento al layout principale
     @FXML
     private ImageView ImmagineOmino;
     @FXML
@@ -41,13 +39,21 @@ public class ModificaPassword {
     @FXML
     private Button BottoneAlimenti;
     @FXML
+    private CheckBox mostraVecchiaPasswordCheckBox;
+    @FXML
+    private CheckBox mostraNuovaPasswordCheckBox;
+    @FXML
+    private CheckBox mostraConfermaPasswordCheckBox;
+    @FXML
+    private TextField vecchiaPasswordFieldVisible;
+    @FXML
+    private TextField nuovaPasswordFieldVisible;
+    @FXML
+    private TextField confermaPasswordFieldVisible;
+    @FXML
     private Label nomeUtenteSidebarLabelLeft;
     @FXML
-    private ImageView profileImageLeft;
-    @FXML
     private Button BottonePianoAlimentareLeft;
-    @FXML
-    private Button BottoneAlimentiLeft;
 
     private String utenteCorrenteId;
     private UtenteModel utenteModel;
@@ -55,51 +61,38 @@ public class ModificaPassword {
     public void setUtenteCorrenteId(String userId) {
         this.utenteCorrenteId = userId;
         this.utenteModel = new UtenteModel(); // Inizializza il modello quando hai l'ID
-        setNomeUtenteSidebar();
     }
 
-    private void setNomeUtenteSidebar() {
-        String nomeUtente = getNomeUtenteDalDatabase(utenteCorrenteId);
-        if (nomeUtente != null && !nomeUtente.isEmpty()) {
-            nomeUtenteSidebarLabelLeft.setText(nomeUtente);
-        } else {
-            nomeUtenteSidebarLabelLeft.setText("Utente Sconosciuto");
-        }
-    }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Inizializza la visibilità dei TextField per la password visibile
+        vecchiaPasswordFieldVisible.managedProperty().bind(mostraVecchiaPasswordCheckBox.selectedProperty());
+        vecchiaPasswordFieldVisible.visibleProperty().bind(mostraVecchiaPasswordCheckBox.selectedProperty());
 
-    private String getNomeUtenteDalDatabase(String userId) {
-        String nome = null;
-        String url = "jdbc:sqlite:database.db"; // Assicurati che sia il percorso corretto
-        String query = "SELECT Nome FROM Utente WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                nome = rs.getString("Nome");
-            }
-        } catch (SQLException e) {
-            System.err.println("Errore durante la lettura del nome utente dal database: " + e.getMessage());
-        }
-        return nome;
-    }
+        nuovaPasswordFieldVisible.managedProperty().bind(mostraNuovaPasswordCheckBox.selectedProperty());
+        nuovaPasswordFieldVisible.visibleProperty().bind(mostraNuovaPasswordCheckBox.selectedProperty());
 
-    @FXML
-    private void initialize() {
-        // Aggiungi un listener di eventi all'AnchorPane principale per intercettare il tasto "Invio"
-        if (modificaPasswordRoot != null) {
-            modificaPasswordRoot.setOnKeyPressed(this::handleEnterKeyPressed);
-        } else {
-            System.err.println("Errore: modificaPasswordRoot non è stato iniettato!");
-        }
+        confermaPasswordFieldVisible.managedProperty().bind(mostraConfermaPasswordCheckBox.selectedProperty());
+        confermaPasswordFieldVisible.visibleProperty().bind(mostraConfermaPasswordCheckBox.selectedProperty());
+
+        // Binda il testo tra PasswordField e TextField
+        vecchiaPasswordFieldVisible.textProperty().bindBidirectional(vecchiaPasswordField.textProperty());
+        nuovaPasswordFieldVisible.textProperty().bindBidirectional(nuovaPasswordField.textProperty());
+        confermaPasswordFieldVisible.textProperty().bindBidirectional(confermaPasswordField.textProperty());
+
+        // Imposta l'azione per il tasto Invio sui campi password
+        vecchiaPasswordField.setOnAction(this::handleInvio);
+        nuovaPasswordField.setOnAction(this::handleInvio);
+        confermaPasswordField.setOnAction(this::handleInvio);
+        vecchiaPasswordFieldVisible.setOnAction(this::handleInvio);
+        nuovaPasswordFieldVisible.setOnAction(this::handleInvio);
+        confermaPasswordFieldVisible.setOnAction(this::handleInvio);
     }
 
     @FXML
-    private void handleEnterKeyPressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER) {
-            salvaNuovaPasswordAction(new ActionEvent()); // Simula un click sul pulsante
-            event.consume(); // Impedisce ad altri elementi di rispondere allo stesso evento
-        }
+    private void handleInvio(ActionEvent event) {
+        salvaNuovaPassword(null); // Chiama il metodo per salvare la password
+        // Passa null come MouseEvent perché l'azione è stata triggered dall'Invio, non dal click del mouse
     }
 
     @FXML
@@ -131,12 +124,7 @@ public class ModificaPassword {
 
     @FXML
     private void salvaNuovaPassword(MouseEvent event) {
-        salvaNuovaPasswordAction(new ActionEvent()); // Chiama il metodo con ActionEvent
-    }
-
-    @FXML
-    private void salvaNuovaPasswordAction(ActionEvent event) {
-        System.out.println("Tentativo di salvataggio password");
+        System.out.println("Cliccato");
         if (utenteCorrenteId == null || utenteCorrenteId.isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Errore", "ID utente non valido.");
             return;
@@ -172,7 +160,7 @@ public class ModificaPassword {
             if (utenteModel.aggiornaPassword(utenteCorrenteId, nuovaPassword)) {
                 showAlert(Alert.AlertType.INFORMATION, "Successo", "Password correttamente modificata!");
                 // Chiudi la finestra
-                Stage stage = (Stage) modificaPasswordRoot.getScene().getWindow();
+                Stage stage = (Stage) ((javafx.scene.Node) (event == null ? salvaPasswordButton : event.getSource())).getScene().getWindow();
                 stage.close();
             } else {
                 showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile aggiornare la password.");
@@ -181,6 +169,21 @@ public class ModificaPassword {
             showAlert(Alert.AlertType.ERROR, "Errore del Database", "Si è verificato un errore durante l'aggiornamento della password.");
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void mostraNascondiVecchiaPassword(ActionEvent event) {
+        // La visibilità è gestita dai binding nell'initialize
+    }
+
+    @FXML
+    private void mostraNascondiNuovaPassword(ActionEvent event) {
+        // La visibilità è gestita dai binding nell'initialize
+    }
+
+    @FXML
+    private void mostraNascondiConfermaPassword(ActionEvent event) {
+        // La visibilità è gestita dai binding nell'initialize
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {

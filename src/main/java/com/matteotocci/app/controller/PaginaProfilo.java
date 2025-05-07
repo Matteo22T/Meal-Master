@@ -6,9 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -20,6 +18,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 
@@ -167,6 +166,52 @@ public class PaginaProfilo implements Initializable {
             modificaPasswordStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private Button homePageButton;
+
+    public void vaiAllaHomePage(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
+        Parent root = loader.load();
+
+        // Ottieni il controller della HomePage
+        HomePage homePageController = loader.getController();
+
+        // Passa l'ID utente al controller della HomePage
+        homePageController.setLoggedInUserId(this.utenteCorrenteId);
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    private Button LogoutButton;
+
+    public void eseguiLogout(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma Logout");
+        alert.setHeaderText("Sei sicuro di voler uscire?");
+        alert.setContentText("Clicca OK per confermare o Annulla per rimanere.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // L'utente ha cliccato OK, procedi con il logout
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PrimaPagina.fxml"));
+                Parent loginRoot = fxmlLoader.load();
+                Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Scene loginScene = new Scene(loginRoot);
+                currentStage.setScene(loginScene);
+                currentStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // L'utente ha cliccato Annulla o ha chiuso la finestra, non fare nulla
         }
     }
 }
