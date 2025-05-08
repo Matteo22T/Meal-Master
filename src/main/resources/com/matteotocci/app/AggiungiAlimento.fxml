@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="400.0" spacing="10" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiAlimentoController">
+
+    <HBox spacing="5">
+        <TextField fx:id="nomeField" prefHeight="26.0" prefWidth="350.0" promptText="Nome Alimento" />
+        <Label text="*" textFill="red" />
+    </HBox>
+
+    <HBox spacing="5">
+        <TextField fx:id="brandField" prefHeight="26.0" prefWidth="350.0" promptText="Marca" />
+        <Label text="*" textFill="red" />
+    </HBox>
+
+    <HBox spacing="5">
+        <TextField fx:id="kcalField" prefWidth="350.0" promptText="Calorie" />
+        <Label text="*" textFill="red" />
+    </HBox>
+
+    <HBox spacing="5">
+        <TextField fx:id="proteineField" prefWidth="350.0" promptText="Proteine" />
+        <Label text="*" textFill="red" />
+    </HBox>
+
+    <HBox spacing="5">
+        <TextField fx:id="carboidratiField" prefWidth="350.0" promptText="Carboidrati" />
+        <Label text="*" textFill="red" />
+    </HBox>
+
+    <HBox spacing="5">
+        <TextField fx:id="grassiField" prefWidth="350.0" promptText="Grassi" />
+        <Label text="*" textFill="red" />
+    </HBox>
+
+    <HBox spacing="5">
+        <TextField fx:id="grassiSatField" prefWidth="350.0" promptText="Grassi Saturi" />
+        <Label text="*" textFill="red" />
+    </HBox>
+
+    <HBox spacing="5">
+        <TextField fx:id="saleField" prefWidth="350.0" promptText="Sale" />
+        <Label text="*" textFill="red" />
+    </HBox>
+
+    <HBox spacing="5">
+        <TextField fx:id="fibreField" prefWidth="350.0" promptText="Fibre" />
+        <Label text="*" textFill="red" />
+    </HBox>
+
+    <HBox spacing="5">
+        <TextField fx:id="zuccheriField" prefWidth="350.0" promptText="Zuccheri" />
+        <Label text="*" textFill="red" />
+    </HBox>
+
+    <TextField fx:id="immaginePiccolaField" promptText="URL immagine piccola (opzionale)" />
+    <TextField fx:id="immagineGrandeField" promptText="URL immagine grande (opzionale)" />
+
+    <Button onAction="#handleSalva" text="Salva" />
+
+    <Label style="-fx-font-style: italic" text="* Campi obbligatori" textFill="red" />
+</VBox>

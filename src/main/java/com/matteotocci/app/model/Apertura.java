@@ -10,7 +10,7 @@ import java.io.IOException;
 public class Apertura extends Application {
     @Override
     public void start(Stage stage)throws IOException{
-        FXMLLoader fxmlLoader = new FXMLLoader(Apertura.class.getResource("/com/matteotocci/app/Alimenti.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Apertura.class.getResource("/com/matteotocci/app/PrimaPagina.fxml"));
         Scene scene=new Scene(fxmlLoader.load());
         stage.setScene(scene);
         stage.setResizable(false);

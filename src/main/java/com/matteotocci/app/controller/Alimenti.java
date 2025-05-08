@@ -101,6 +101,7 @@ public class Alimenti {
             DettagliAlimentoController controller = loader.getController();
             controller.setAlimento(alimento);
 
+
             Stage stage = new Stage();
             stage.setTitle("Dettaglio Alimento");
             stage.setScene(new Scene(root));
@@ -230,7 +231,9 @@ public class Alimenti {
                             rs.getDouble("fibre"),
                             rs.getDouble("zuccheri"),
                             rs.getString("immaginePiccola"),
-                            rs.getString("immagineGrande")
+                            rs.getString("immagineGrande"),
+                            rs.getInt("user_id"),
+                            rs.getInt("id")
                     ));
                 }
 
@@ -271,6 +274,22 @@ public class Alimenti {
             profileStage.setScene(new Scene(profileRoot));
             profileStage.show();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    @FXML
+    private void handleApriAggiunta(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/AggiungiAlimento.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Aggiungi Alimento");
+            stage.setScene(new Scene(root));
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

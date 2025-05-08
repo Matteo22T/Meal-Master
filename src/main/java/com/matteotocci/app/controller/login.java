@@ -144,6 +144,8 @@ public class login implements Initializable {
                 // **Recupera l'ID utente basato sull'email di login**
                 int loggedInUserId = loginModel.getIdUtente(email);
 
+                Session.setUserId(loggedInUserId);
+
                 // **Passa l'ID utente al controller HomePage**
                 if (homePageController != null && loggedInUserId != -1) {
                     homePageController.setLoggedInUserId(String.valueOf(loggedInUserId));

@@ -44,7 +44,8 @@
                      <children>
                   
                           <TextField fx:id="cercaAlimento" prefHeight="42.0" prefWidth="774.0" promptText="Cerca alimento.." />
-                         <Button fx:id="bottoneCerca" onAction="#handleCercaAlimento" prefHeight="43.0" prefWidth="173.0" text="Cerca" />
+                         <Button fx:id="bottoneCerca" onAction="#handleCercaAlimento" prefHeight="43.0" prefWidth="190.0" text="Cerca" />
+                        <Button fx:id="bottoneAggiungi" onAction="#handleApriAggiunta" prefHeight="43.0" prefWidth="110.0" text="+" />
 
                      </children>
                   </HBox>
