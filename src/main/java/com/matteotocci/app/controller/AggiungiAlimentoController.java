@@ -2,12 +2,14 @@ package com.matteotocci.app.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import com.matteotocci.app.model.SQLiteConnessione;
+import javafx.stage.Stage;
 
 public class AggiungiAlimentoController {
 
@@ -67,7 +69,8 @@ public class AggiungiAlimentoController {
 
             mostraInfo("Alimento aggiunto con successo!");
             // (Facoltativo) pulisci i campi dopo il salvataggio
-            pulisciCampi();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.close();
 
         } catch (NumberFormatException e) {
             mostraErrore("Assicurati che tutti i valori nutrizionali siano numeri validi.");

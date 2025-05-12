@@ -25,8 +25,13 @@ import java.sql.*;
 import java.io.IOException;
 
 public class Alimenti {
-    @FXML
-    private Button BottoneAlimenti;
+    @FXML private Button BottoneAlimenti;
+    @FXML private ComboBox<String> categoriaComboBox;
+    @FXML private CheckBox mieiAlimentiCheckBox;
+    @FXML private Button BottoneHome;
+    @FXML private Label nomeUtenteLabelHomePage;
+
+
     @FXML
     private void AccessoAlimenti(ActionEvent event) {
         try {
@@ -40,8 +45,7 @@ public class Alimenti {
             e.printStackTrace();
         }
     }
-    @FXML
-    private Button BottoneHome;
+
     @FXML
     private void AccessoHome(ActionEvent event) {
         try {
@@ -57,9 +61,6 @@ public class Alimenti {
     }
 
     private String loggedInUserId; // Variabile per memorizzare l'ID dell'utente loggato
-
-    @FXML
-    private Label nomeUtenteLabelHomePage;
 
     public void setLoggedInUserId(String userId) {
         this.loggedInUserId = userId;
@@ -184,6 +185,21 @@ public class Alimenti {
             return row;
         });
 
+        popolaCategorie();
+
+        categoriaComboBox.setOnAction(e -> {
+            offset = 0;
+            tableView.getItems().clear();
+            cercaAlimenti(cercaAlimento.getText(), false);
+        });
+
+        mieiAlimentiCheckBox.setOnAction(e -> {
+            offset = 0;
+            tableView.getItems().clear();
+            cercaAlimenti(cercaAlimento.getText(), false);
+        });
+
+
 
 
         Platform.runLater(() -> {
@@ -198,25 +214,41 @@ public class Alimenti {
             }
         });
 
-
+        cercaAlimenti("", false);
     }
 
 
 
 
     private void cercaAlimenti(String filtro, boolean append) {
-        ObservableList<Alimento> alimenti = append ? tableView.getItems(): FXCollections.observableArrayList();
+        ObservableList<Alimento> alimenti = append ? tableView.getItems() : FXCollections.observableArrayList();
 
-        String query = "SELECT * FROM foods WHERE LOWER(nome) LIKE ? LIMIT ? OFFSET ?";
+        String categoria = categoriaComboBox.getSelectionModel().getSelectedItem();
+        boolean soloMiei = mieiAlimentiCheckBox.isSelected();
+
+        StringBuilder query = new StringBuilder("SELECT * FROM foods WHERE LOWER(nome) LIKE ?");
+        if (categoria != null && !categoria.equals("Tutte")) {
+            query.append(" AND categoria = ?");
+        }
+        if (soloMiei && Session.getUserId() != null) {
+            query.append(" AND user_id = ?");
+        }
+        query.append(" LIMIT ? OFFSET ?");
+
         try (Connection conn = SQLiteConnessione.connector();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+             PreparedStatement stmt = conn.prepareStatement(query.toString())) {
 
-            // Imposta il parametro del filtro nella query
-            stmt.setString(1, "%" + filtro.toLowerCase() + "%");
-            stmt.setInt(2, LIMIT);
-            stmt.setInt(3, offset);
+            int paramIndex = 1;
+            stmt.setString(paramIndex++, "%" + filtro.toLowerCase() + "%");
+            if (categoria != null && !categoria.equals("Tutte")) {
+                stmt.setString(paramIndex++, categoria);
+            }
+            if (soloMiei && Session.getUserId() != null) {
+                stmt.setInt(paramIndex++, Session.getUserId());
+            }
+            stmt.setInt(paramIndex++, LIMIT);
+            stmt.setInt(paramIndex++, offset);
 
-            // Esegui la query
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     alimenti.add(new Alimento(
@@ -237,19 +269,15 @@ public class Alimenti {
                     ));
                 }
 
-                // Imposta gli alimenti nella TableView
                 tableView.setItems(alimenti);
                 offset += LIMIT;
-
-
-            } catch (SQLException e) {
-                e.printStackTrace();  // Gestisci eventuali errori di ResultSet
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();  // Gestisci eventuali errori di connessione o query
+            e.printStackTrace();
         }
     }
+
 
 
     @FXML
@@ -294,6 +322,25 @@ public class Alimenti {
             e.printStackTrace();
         }
     }
+
+    private void popolaCategorie() {
+        String query = "SELECT DISTINCT categoria FROM foods WHERE categoria IS NOT NULL";
+        try (Connection conn = SQLiteConnessione.connector();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            ObservableList<String> categorie = FXCollections.observableArrayList();
+            categorie.add("Tutte"); // opzione iniziale
+            while (rs.next()) {
+                categorie.add(rs.getString("categoria"));
+            }
+            categoriaComboBox.setItems(categorie);
+            categoriaComboBox.getSelectionModel().selectFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 }

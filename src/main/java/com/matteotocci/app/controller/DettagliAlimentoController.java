@@ -69,9 +69,18 @@ public class DettagliAlimentoController {
             stmt.setInt(1, alimento.getId());
             int affected = stmt.executeUpdate();
             System.out.println("Righe eliminate: " + affected);
+
+            if (affected > 0) {
+                // Chiudi la finestra se l'eliminazione è andata a buon fine
+                Stage stage = (Stage) immagineGrande.getScene().getWindow();
+                stage.close();
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
-        }    }
+        }
+    }
+
 
     private void mostraMessaggio(String messaggio) {
         // Logica per mostrare un messaggio (ad esempio usando un `Alert`)

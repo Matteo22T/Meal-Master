@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -43,9 +46,14 @@
                   <HBox prefHeight="52.0" prefWidth="861.0">
                      <children>
                   
-                          <TextField fx:id="cercaAlimento" prefHeight="42.0" prefWidth="774.0" promptText="Cerca alimento.." />
+                          <TextField fx:id="cercaAlimento" prefHeight="42.0" prefWidth="493.0" promptText="Cerca alimento.." />
                          <Button fx:id="bottoneCerca" onAction="#handleCercaAlimento" prefHeight="43.0" prefWidth="190.0" text="Cerca" />
-                        <Button fx:id="bottoneAggiungi" onAction="#handleApriAggiunta" prefHeight="43.0" prefWidth="110.0" text="+" />
+                         <ComboBox fx:id="categoriaComboBox" prefHeight="43.0" prefWidth="150.0" promptText="Categoria" />
+                        <Button fx:id="bottoneAggiungi" onAction="#handleApriAggiunta" prefHeight="43.0" prefWidth="97.0" text="+" />
+                         <CheckBox fx:id="mieiAlimentiCheckBox" prefHeight="43.0" prefWidth="197.0" text=" Solo i miei alimenti">
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding></CheckBox>
 
                      </children>
                   </HBox>
