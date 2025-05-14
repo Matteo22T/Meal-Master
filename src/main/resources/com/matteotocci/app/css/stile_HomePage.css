@@ -102,3 +102,42 @@
 .add-button:hover {
     -fx-background-color: #45a049;
 }
+.page-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4CAF50;
+    -fx-padding-bottom: 20px;
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2196F3;
+    -fx-margin-bottom: 10px;
+}
+
+.dashboard-section {
+    -fx-background-color: #ffffff;
+    -fx-padding: 15px;
+    -fx-border-radius: 15px;
+    -fx-border-color: #ddd;
+    -fx-effect: dropshadow(three-pixel-shadow, rgba(0,0,0,0.05));
+}
+
+.list-view {
+    -fx-border-radius: 8px;
+    -fx-border-color: #e0e0e0;
+    -fx-pref-height: 200px;
+    -fx-pref-width: 100%;
+}
+
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555;
+}
+
+.value {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #795548;
+}

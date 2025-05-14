@@ -3,6 +3,7 @@ package com.matteotocci.app.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.scene.layout.GridPane; // Import aggiunto
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,7 +22,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.fxml.Initializable;
 
 public class PaginaProfilo implements Initializable {
 
@@ -42,6 +43,33 @@ public class PaginaProfilo implements Initializable {
     @FXML
     private TextField cognomeTextField;
 
+    @FXML
+    private TextField sessoTextField;
+
+    @FXML
+    private TextField dataNascitaTextField;
+
+    @FXML
+    private TextField altezzaTextField;
+
+    @FXML
+    private TextField pesoAttualeTextField;
+
+    @FXML
+    private TextField pesoIdealeTextField;
+
+    @FXML
+    private TextField dietaTextField;
+
+    @FXML
+    private TextField livelloAttivitaTextField;
+
+    @FXML
+    private TextField nutrizionistaTextField;
+
+    @FXML
+    private GridPane gridPane;
+
     private String utenteCorrenteId; // L'ID utente verrà impostato esternamente
 
     public void setUtenteCorrenteId(String userId) {
@@ -54,8 +82,10 @@ public class PaginaProfilo implements Initializable {
     private void inizializzaDatiUtente() {
         System.out.println("[DEBUG] inizializzaDatiUtente chiamato con ID: " + utenteCorrenteId);
         if (utenteCorrenteId != null) {
-            // Recupera il nome utente per la sidebar
-            String nomeUtenteSidebar = getDatoUtenteDalDatabase(utenteCorrenteId, "Nome");
+            System.out.println("[DEBUG] Tentativo di recupero dati per l'utente con ID: " + utenteCorrenteId);
+
+            // Recupera il nome utente per la sidebar dalla tabella Utente
+            String nomeUtenteSidebar = getDatoUtenteDalDatabase("Utente", utenteCorrenteId, "Nome");
             System.out.println("[DEBUG] Nome utente sidebar recuperato: " + nomeUtenteSidebar);
             if (nomeUtenteSidebar != null && !nomeUtenteSidebar.isEmpty()) {
                 nomeUtenteSidebarLabel.setText(nomeUtenteSidebar);
@@ -65,26 +95,65 @@ public class PaginaProfilo implements Initializable {
                 benvenutoLabel.setText("Benvenuto Utente");
             }
 
-            // Recupera nome e cognome per i campi non modificabili
-            String nome = getDatoUtenteDalDatabase(utenteCorrenteId, "Nome");
-            System.out.println("[DEBUG] Nome recuperato: " + nome);
-            String cognome = getDatoUtenteDalDatabase(utenteCorrenteId, "Cognome");
-            System.out.println("[DEBUG] Cognome recuperato: " + cognome);
-
+            // Recupera nome e cognome dalla tabella Utente
+            String nome = getDatoUtenteDalDatabase("Utente", utenteCorrenteId, "Nome");
+            String cognome = getDatoUtenteDalDatabase("Utente", utenteCorrenteId, "Cognome");
             if (nome != null) {
                 nomeTextField.setText(nome);
             }
             if (cognome != null) {
                 cognomeTextField.setText(cognome);
             }
+
+            // Recupera i dati del cliente dalla tabella Clienti
+            String altezza = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "altezza_cm");
+            String peso = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "peso_kg");
+            String livelloAttivita = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "livello_attivita");
+            String dataNascita = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "data_di_nascita");
+
+            // Imposta i valori nei rispettivi TextField
+            if (altezzaTextField != null) {
+                altezzaTextField.setText(altezza);
+            }
+            if (pesoAttualeTextField != null) {
+                pesoAttualeTextField.setText(peso);
+            }
+            if (livelloAttivitaTextField != null) {
+                livelloAttivitaTextField.setText(livelloAttivita);
+            }
+            if (dataNascitaTextField != null) {
+                dataNascitaTextField.setText(dataNascita);
+            }
+
+            // Imposta anche gli altri campi se hai i riferimenti FXML
+            // Esempio per gli altri (decommenta e usa se necessario)
+            // if (sessoTextField != null) {
+            //     sessoTextField.setText(getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "sesso")); // Assumi che ci sia una colonna 'sesso'
+            // }
+            // if (pesoIdealeTextField != null) {
+            //     pesoIdealeTextField.setText(getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "peso_ideale_kg")); // Assumi una colonna 'peso_ideale_kg'
+            // }
+            // if (dietaTextField != null) {
+            //     dietaTextField.setText(getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "dieta")); // Assumi una colonna 'dieta'
+            // }
+            // if (nutrizionistaTextField != null) {
+            //     nutrizionistaTextField.setText(getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "id_nutrizionista")); // Recupera l'ID del nutrizionista
+            // }
+        } else {
+            System.out.println("[DEBUG] ID utente non valido (null). Impossibile recuperare i dati.");
         }
     }
 
-    private String getDatoUtenteDalDatabase(String userId, String campo) {
+    private String getDatoUtenteDalDatabase(String tabella, String userId, String campo) {
         String valore = null;
         String url = "jdbc:sqlite:database.db";
-        String query = "SELECT " + campo + " FROM Utente WHERE id = ?";
-        System.out.println("[DEBUG] Query eseguita: " + query + " con ID: " + userId + ", Campo: " + campo);
+        String query;
+        String idColumn = "id"; // Default per la tabella Utente
+        if (tabella.equals("Clienti")) {
+            idColumn = "id_cliente";
+        }
+        query = "SELECT " + campo + " FROM " + tabella + " WHERE " + idColumn + " = ?";
+        System.out.println("[DEBUG] Query per " + tabella + " eseguita: " + query + " con ID: " + userId + ", Campo: " + campo);
 
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -93,13 +162,13 @@ public class PaginaProfilo implements Initializable {
 
             if (rs.next()) {
                 valore = rs.getString(campo);
-                System.out.println("[DEBUG] Valore recuperato per " + campo + ": " + valore);
+                System.out.println("[DEBUG] Valore recuperato per " + campo + " da " + tabella + ": " + valore);
             } else {
-                System.out.println("[DEBUG] Nessun utente trovato con ID: " + userId + " per il campo " + campo);
+                System.out.println("[DEBUG] Nessun utente trovato con ID: " + userId + " nella tabella " + tabella + " per il campo " + campo);
             }
 
         } catch (SQLException e) {
-            System.err.println("[ERROR] Errore durante la lettura del " + campo + " dal database: " + e.getMessage());
+            System.err.println("[ERROR] Errore durante la lettura del " + campo + " dalla tabella " + tabella + ": " + e.getMessage());
         }
         return valore;
     }
