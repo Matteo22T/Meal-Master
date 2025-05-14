@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="578.0" prefWidth="539.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.matteotocci.app.controller.DettaglioRicettaController">
+    <VBox spacing="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+        </padding>
+
+        <Label fx:id="titoloRicetta" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+        <HBox spacing="10">
+            <Label text="Categoria:" />
+            <Label fx:id="categoriaLabel" />
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Autore:" />
+            <Label fx:id="autoreLabel" />
+        </HBox>
+
+        <Label style="-fx-font-weight: bold;" text="Descrizione:" />
+        <TextArea fx:id="descrizioneArea" editable="false" prefRowCount="4" wrapText="true" />
+
+        <Label style="-fx-font-weight: bold;" text="Ingredienti:" />
+        <TableView fx:id="tabellaIngredienti" prefHeight="200">
+            <columns>
+                <TableColumn fx:id="colNomeAlimento" text="Alimento" />
+                <TableColumn fx:id="colQuantita" text="Quantità (g)" />
+            </columns>
+        </TableView>
+
+        <Label style="-fx-font-weight: bold;" text="Valori nutrizionali totali (per quantità totale):" />
+        <GridPane hgap="10" vgap="5">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" />
+                <ColumnConstraints halignment="LEFT" />
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+
+            <Label text="Kcal:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label fx:id="kcalLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label text="Proteine:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label fx:id="proteineLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <Label text="Carboidrati:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <Label fx:id="carboidratiLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+            <Label text="Zuccheri:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <Label fx:id="zuccheriLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+            <Label text="Grassi:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <Label fx:id="grassiLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+            <Label text="Grassi Saturi:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <Label fx:id="grassiSaturiLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+            <Label text="Fibre:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+            <Label fx:id="fibreLabel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+            <Label text="Sale:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+            <Label fx:id="saleLabel" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+        </GridPane>
+
+
+    </VBox>
+</AnchorPane>

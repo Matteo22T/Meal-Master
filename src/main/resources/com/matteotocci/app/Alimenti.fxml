@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="578.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.Alimenti">
+<AnchorPane prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.Alimenti">
     <children>
       <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -32,7 +32,7 @@
                          </children>
                      </HBox>
                      <Button fx:id="BottoneHome" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoHome" prefHeight="75.0" prefWidth="180.0" text="Home Page" />
-                     <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="80.0" prefWidth="180.0" text="Ricette" />
+                     <Button fx:id="BottoneRicette" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoRicette" prefHeight="80.0" prefWidth="180.0" text="Ricette" />
                      <Button mnemonicParsing="false" prefHeight="79.0" prefWidth="198.0" text="Piano Alimentare" />
                      <Button fx:id="BottoneAlimenti" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="83.0" prefWidth="212.0" text="Alimenti">
                          <cursor>
@@ -43,7 +43,7 @@
              </VBox>
             <VBox prefHeight="578.0" prefWidth="863.0">
                <children>
-                  <HBox prefHeight="52.0" prefWidth="861.0">
+                  <HBox prefHeight="130.0" prefWidth="842.0">
                      <children>
                   
                           <TextField fx:id="cercaAlimento" prefHeight="42.0" prefWidth="493.0" promptText="Cerca alimento.." />

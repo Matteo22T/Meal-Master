@@ -1,5 +1,6 @@
 package com.matteotocci.app.controller;
 
+import com.matteotocci.app.model.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

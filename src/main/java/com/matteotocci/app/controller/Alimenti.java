@@ -2,6 +2,7 @@ package com.matteotocci.app.controller;
 
 import com.matteotocci.app.model.Alimento;
 import com.matteotocci.app.model.SQLiteConnessione;
+import com.matteotocci.app.model.Session;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,6 +31,9 @@ public class Alimenti {
     @FXML private CheckBox mieiAlimentiCheckBox;
     @FXML private Button BottoneHome;
     @FXML private Label nomeUtenteLabelHomePage;
+    @FXML private Button BottoneRicette;
+    private String loggedInUserId; // Variabile per memorizzare l'ID dell'utente loggato
+
 
 
     @FXML
@@ -41,6 +45,20 @@ public class Alimenti {
             loginStage.setScene(new Scene(loginRoot));
             loginStage.show();
             ((Stage) BottoneAlimenti.getScene().getWindow()).close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void AccessoRicette(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Ricette.fxml"));
+            Parent loginRoot = fxmlLoader.load();
+            Stage loginStage = new Stage();
+            loginStage.setScene(new Scene(loginRoot));
+            loginStage.show();
+            ((Stage) BottoneRicette.getScene().getWindow()).close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,7 +78,35 @@ public class Alimenti {
         }
     }
 
-    private String loggedInUserId; // Variabile per memorizzare l'ID dell'utente loggato
+    @FXML
+    private void AccessoProfilo(MouseEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
+            Parent profileRoot = fxmlLoader.load();
+
+            // Ottieni il controller PaginaProfilo
+            PaginaProfilo profileController = fxmlLoader.getController();
+
+            // **Usa l'ID utente memorizzato invece della stringa statica**
+            if (loggedInUserId != null) {
+                System.out.println("[DEBUG - HomePage] ID utente da passare a Profilo: " + loggedInUserId);
+                profileController.setUtenteCorrenteId(loggedInUserId);
+            } else {
+                System.out.println("[DEBUG - HomePage] ID utente non ancora disponibile per il Profilo.");
+                // Potresti voler gestire questo caso mostrando un messaggio o disabilitando l'accesso al profilo
+            }
+
+            Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            profileStage.setScene(new Scene(profileRoot));
+            profileStage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     public void setLoggedInUserId(String userId) {
         this.loggedInUserId = userId;
@@ -279,33 +325,6 @@ public class Alimenti {
     }
 
 
-
-    @FXML
-    private void AccessoProfilo(MouseEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
-            Parent profileRoot = fxmlLoader.load();
-
-            // Ottieni il controller PaginaProfilo
-            PaginaProfilo profileController = fxmlLoader.getController();
-
-            // **Usa l'ID utente memorizzato invece della stringa statica**
-            if (loggedInUserId != null) {
-                System.out.println("[DEBUG - HomePage] ID utente da passare a Profilo: " + loggedInUserId);
-                profileController.setUtenteCorrenteId(loggedInUserId);
-            } else {
-                System.out.println("[DEBUG - HomePage] ID utente non ancora disponibile per il Profilo.");
-                // Potresti voler gestire questo caso mostrando un messaggio o disabilitando l'accesso al profilo
-            }
-
-            Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            profileStage.setScene(new Scene(profileRoot));
-            profileStage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
 

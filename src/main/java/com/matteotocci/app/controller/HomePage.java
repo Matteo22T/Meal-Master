@@ -22,6 +22,8 @@ public class HomePage {
     @FXML
     private Button BottoneAlimenti;
     @FXML
+    private Button BottoneRicette;
+    @FXML
     private Label nomeUtenteLabelHomePage;
 
     private String loggedInUserId; // Variabile per memorizzare l'ID dell'utente loggato
@@ -67,6 +69,20 @@ public class HomePage {
             loginStage.setScene(new Scene(loginRoot));
             loginStage.show();
             ((Stage) BottoneAlimenti.getScene().getWindow()).close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void AccessoRicette(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Ricette.fxml"));
+            Parent loginRoot = fxmlLoader.load();
+            Stage loginStage = new Stage();
+            loginStage.setScene(new Scene(loginRoot));
+            loginStage.show();
+            ((Stage) BottoneRicette.getScene().getWindow()).close();
         } catch (IOException e) {
             e.printStackTrace();
         }

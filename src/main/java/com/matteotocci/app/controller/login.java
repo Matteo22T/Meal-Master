@@ -1,6 +1,7 @@
 package com.matteotocci.app.controller;
 
 import com.matteotocci.app.model.LoginModel;
+import com.matteotocci.app.model.Session;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,7 +18,6 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.*;
 import java.util.ResourceBundle;
 
 public class login implements Initializable {
