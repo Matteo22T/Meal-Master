@@ -3,13 +3,17 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="531.0" prefWidth="922.0" stylesheets="@css/stile_HomePage.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePage">
+<AnchorPane prefHeight="531.0" prefWidth="922.0" stylesheets="@css/stile_HomePage.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePageNutrizionista">
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -28,15 +32,31 @@
                                 </VBox>
                             </children>
                         </HBox>
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="75.0" prefWidth="180.0" text="Home Page" />
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="80.0" prefWidth="180.0" text="Clienti" />
-                        <Button fx:id="BottoneAlimenti" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="83.0" prefWidth="212.0" text="Alimenti">
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="75.0" prefWidth="180.0" text="Clienti" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="80.0" prefWidth="180.0" text="Alimenti" />
+                        <Button fx:id="BottoneAlimenti" mnemonicParsing="false" prefHeight="83.0" prefWidth="212.0" text="Diete">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Button>
                     </children>
                 </VBox>
+                <AnchorPane prefHeight="531.0" prefWidth="742.0">
+                    <children>
+                        <Label layoutX="26.0" layoutY="25.0" text="Clienti" AnchorPane.leftAnchor="26.0" AnchorPane.topAnchor="25.0">
+                            <font>
+                                <Font size="24.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="ricercaClienteTextField" layoutX="26.0" layoutY="60.0" prefWidth="200.0" promptText="Cerca per nome..." AnchorPane.leftAnchor="26.0" AnchorPane.topAnchor="60.0" />
+                        <TableView fx:id="tabellaClienti" layoutX="26.0" layoutY="100.0" prefHeight="410.0" prefWidth="690.0" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="100.0">
+                            <columns>
+                                <TableColumn fx:id="nomeColonna" prefWidth="229.0" text="Nome" />
+                                <TableColumn fx:id="azioniColonna" prefWidth="460.0" text="Azioni" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </AnchorPane>
             </children>
         </HBox>
     </children>
