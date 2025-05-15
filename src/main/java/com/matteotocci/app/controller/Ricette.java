@@ -3,6 +3,7 @@ package com.matteotocci.app.controller;
 import com.matteotocci.app.model.Alimento;
 import com.matteotocci.app.model.Ricetta;
 import com.matteotocci.app.model.SQLiteConnessione;
+import com.matteotocci.app.model.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +28,8 @@ public class Ricette {
     private String loggedInUserId; // Variabile per memorizzare l'ID dell'utente loggato
     @FXML private Label nomeUtenteLabelHomePage;
     @FXML private Button BottoneRicette;
+    @FXML private ComboBox<String> categorieRicette;
+    @FXML private CheckBox mieiAlimentiCheckBox;
 
 
     @FXML
@@ -105,7 +108,7 @@ public class Ricette {
     }
     private String getNomeUtenteDalDatabase(String userId) {
         String nome = null;
-        String url = "jdbc:sqlite:database.db"; // Assicurati che sia il percorso corretto
+        String url = "jdbc:sqlite:database.db";
         String query = "SELECT Nome FROM Utente WHERE id = ?";
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -128,6 +131,7 @@ public class Ricette {
     @FXML private TableColumn<Ricetta, String> descrizioneCol;
     @FXML private TableColumn<Ricetta, String> categoriaCol;
 
+
     private int offset = 0;
     private final int LIMIT = 50;
     private boolean isLoading = false;
@@ -139,6 +143,20 @@ public class Ricette {
         categoriaCol.setCellValueFactory(new PropertyValueFactory<>("categoria"));
 
         cercaRicette("", false);
+
+        popolaCategorie();
+
+        categorieRicette.setOnAction(e -> {
+            offset = 0;
+            tableViewRicette.getItems().clear();
+            cercaRicette(cercaRicetta.getText(), false);
+        });
+
+        mieiAlimentiCheckBox.setOnAction(e -> {
+            offset = 0;
+            tableViewRicette.getItems().clear();
+            cercaRicette(cercaRicetta.getText(), false);
+        });
 
         ScrollBar scrollBar = getVerticalScrollbar(tableViewRicette);
         if (scrollBar != null) {
@@ -178,33 +196,60 @@ public class Ricette {
 
     private void cercaRicette(String filtro, boolean append) {
         ObservableList<Ricetta> ricette = append ? tableViewRicette.getItems() : FXCollections.observableArrayList();
-        String query = "SELECT * FROM Ricette WHERE LOWER(nome) LIKE ? LIMIT ? OFFSET ?";
 
+        String categoria = categorieRicette.getSelectionModel().getSelectedItem();
+        boolean soloMiei = mieiAlimentiCheckBox.isSelected();
+        StringBuilder query = new StringBuilder("SELECT * FROM Ricette WHERE LOWER(nome) LIKE ?");
+        if (categoria != null && !categoria.equals("Tutte")) {
+            query.append(" AND categoria = ?");
+        }
+        if (soloMiei && Session.getUserId() != null) {
+            query.append(" AND id_utente = ?");
+        }
+        query.append(" LIMIT ? OFFSET ?");
         try (Connection conn = SQLiteConnessione.connector();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+             PreparedStatement stmt = conn.prepareStatement(query.toString())) {
 
-            stmt.setString(1, "%" + filtro.toLowerCase() + "%");
-            stmt.setInt(2, LIMIT);
-            stmt.setInt(3, offset);
-
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Ricetta ricetta = new Ricetta(
-                        rs.getInt("id"),
-                        rs.getString("nome"),
-                        rs.getString("descrizione"),
-                        rs.getString("categoria"),
-                        rs.getInt("user_id")
-                );
-                ricette.add(ricetta);
+            int paramIndex = 1;
+            stmt.setString(paramIndex++, "%" + filtro.toLowerCase() + "%");
+            if (categoria != null && !categoria.equals("Tutte")) {
+                stmt.setString(paramIndex++, categoria);
             }
+            if (soloMiei && Session.getUserId() != null) {
+                stmt.setInt(paramIndex++, Session.getUserId());
+            }
+            stmt.setInt(paramIndex++, LIMIT);
+            stmt.setInt(paramIndex++, offset);
 
-            tableViewRicette.setItems(ricette);
-            offset += LIMIT;
+            try(ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Ricetta ricetta = new Ricetta(
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getString("descrizione"),
+                            rs.getString("categoria"),
+                            rs.getInt("id_utente")
+                    );
+                    ricette.add(ricetta);
+                }
+
+                tableViewRicette.setItems(ricette);
+                offset += LIMIT;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void popolaCategorie(){
+        ObservableList<String> categoriePrefissate = FXCollections.observableArrayList(
+                "Tutte","Colazione", "Spuntino", "Pranzo", "Merenda", "Cena"
+        );
+
+        categorieRicette.setItems(categoriePrefissate);
+        categorieRicette.getSelectionModel().selectFirst();
+
     }
 
 

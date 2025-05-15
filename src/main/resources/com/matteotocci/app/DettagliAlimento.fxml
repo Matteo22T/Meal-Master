@@ -27,7 +27,7 @@
                   <HBox alignment="CENTER" prefHeight="61.0" prefWidth="260.0">
                      <children>
                         <Button onAction="#chiudiFinestra" text="Chiudi" />
-                        <Button fx:id="BottoneElimina" onAction="#handleEliminaAlimento" text="Elimina">
+                        <Button fx:id="BottoneElimina" onAction="#handleEliminaAlimento" text="Elimina" visible="false">
                            <HBox.margin>
                               <Insets left="100.0" />
                            </HBox.margin>

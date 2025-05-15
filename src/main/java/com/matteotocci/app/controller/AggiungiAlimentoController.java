@@ -9,6 +9,9 @@ import javafx.scene.control.Alert;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+
 import com.matteotocci.app.model.SQLiteConnessione;
 import javafx.stage.Stage;
 
@@ -19,6 +22,43 @@ public class AggiungiAlimentoController {
     private TextField nomeField, brandField, kcalField, proteineField, carboidratiField, grassiField,
             grassiSatField, saleField, fibreField, zuccheriField,
             immaginePiccolaField, immagineGrandeField;
+
+    public void setupFocusTraversal() {
+        List<TextField> textFields = Arrays.asList(nomeField, brandField, kcalField, proteineField, carboidratiField, grassiField,
+                grassiSatField, saleField, fibreField, zuccheriField, immaginePiccolaField, immagineGrandeField);
+
+        for (int i = 0; i < textFields.size(); i++) {
+            final int index = i;
+            TextField tf = textFields.get(i);
+            tf.setFocusTraversable(true);
+            tf.setOnKeyPressed(event -> {
+                switch (event.getCode()) {
+                    case DOWN:
+                        if (index + 1 < textFields.size()) {
+                            textFields.get(index + 1).requestFocus();
+                        }
+                        break;
+                    case UP:
+                        if (index - 1 >= 0) {
+                            textFields.get(index - 1).requestFocus();
+                        }
+                        break;
+                }
+            });
+        }
+    }
+
+    public void initialize() {
+        setupFocusTraversal();
+    }
+
+
+
+
+    private Alimenti alimentiController;
+    public void setAlimentiController(Alimenti   controller) {
+        this.alimentiController = controller;
+    }
 
     @FXML
     private void handleSalva(ActionEvent event) {
@@ -69,7 +109,11 @@ public class AggiungiAlimentoController {
             stmt.executeUpdate();
 
             mostraInfo("Alimento aggiunto con successo!");
-            // (Facoltativo) pulisci i campi dopo il salvataggio
+            if (alimentiController != null) {
+                System.out.println("filtro: "+alimentiController.getFiltro());
+                alimentiController.resetRicerca();
+                alimentiController.cercaAlimenti(alimentiController.getFiltro(),false);
+            }
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.close();
 

@@ -12,32 +12,36 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="578.0" prefWidth="539.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.matteotocci.app.controller.DettaglioRicettaController">
+<AnchorPane prefHeight="578.0" prefWidth="539.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.DettaglioRicettaController">
     <VBox spacing="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
         <padding>
             <Insets bottom="20" left="20" right="20" top="20" />
         </padding>
-
-        <Label fx:id="titoloRicetta" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+      <HBox prefHeight="2.0" prefWidth="478.0">
+         <children>
+      
+              <Label fx:id="nomeRicettaLabel" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="484.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+         </children>
+      </HBox>
 
         <HBox spacing="10">
             <Label text="Categoria:" />
-            <Label fx:id="categoriaLabel" />
+            <Label fx:id="categoriaLabel" prefHeight="18.0" prefWidth="414.0" />
         </HBox>
 
         <HBox spacing="10">
             <Label text="Autore:" />
-            <Label fx:id="autoreLabel" />
+            <Label fx:id="autoreLabel" prefHeight="18.0" prefWidth="430.0" />
         </HBox>
 
         <Label style="-fx-font-weight: bold;" text="Descrizione:" />
         <TextArea fx:id="descrizioneArea" editable="false" prefRowCount="4" wrapText="true" />
 
         <Label style="-fx-font-weight: bold;" text="Ingredienti:" />
-        <TableView fx:id="tabellaIngredienti" prefHeight="200">
+        <TableView fx:id="ingredientiTable" prefHeight="200">
             <columns>
-                <TableColumn fx:id="colNomeAlimento" text="Alimento" />
-                <TableColumn fx:id="colQuantita" text="Quantità (g)" />
+                <TableColumn fx:id="nomeCol" text="Alimento" />
+                <TableColumn fx:id="quantitaCol" text="Quantità (g)" />
             </columns>
         </TableView>
 

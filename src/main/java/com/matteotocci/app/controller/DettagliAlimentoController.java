@@ -5,6 +5,7 @@ import com.matteotocci.app.model.SQLiteConnessione;
 import com.matteotocci.app.model.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,6 +19,7 @@ public class DettagliAlimentoController {
     @FXML private ImageView immagineGrande;
     @FXML private Label nomeLabel, kcalLabel, proteineLabel, carboidratiLabel, grassiLabel,
             grassiSatLabel, saleLabel, fibreLabel, zuccheriLabel;
+    @FXML private Button BottoneElimina;
 
     public void setAlimento(Alimento alimento) {
         this.alimento = alimento;
@@ -39,6 +41,23 @@ public class DettagliAlimentoController {
         fibreLabel.setText("Fibre: " + alimento.getFibre());
         zuccheriLabel.setText("Zuccheri: " + alimento.getZuccheri());
     }
+
+    private String origineFXML;
+
+    public void setOrigineFXML(String origineFXML) {
+        this.origineFXML = origineFXML;
+        aggiornaVisibilitaBottone();
+    }
+    private void aggiornaVisibilitaBottone() {
+        BottoneElimina.setVisible("Alimenti.fxml".equals(origineFXML) && Session.getUserId().equals(alimento.getUserId()));
+    }
+
+    private Alimenti alimentiController;
+
+    public void setAlimentiController(Alimenti   controller) {
+        this.alimentiController = controller;
+    }
+
 
     @FXML
     private void chiudiFinestra() {
@@ -72,6 +91,11 @@ public class DettagliAlimentoController {
             System.out.println("Righe eliminate: " + affected);
 
             if (affected > 0) {
+                if (alimentiController != null) {
+                    System.out.println("filtro: "+alimentiController.getFiltro());
+                    alimentiController.resetRicerca();
+                    alimentiController.cercaAlimenti(alimentiController.getFiltro(),false);
+                }
                 // Chiudi la finestra se l'eliminazione è andata a buon fine
                 Stage stage = (Stage) immagineGrande.getScene().getWindow();
                 stage.close();

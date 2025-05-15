@@ -5,6 +5,7 @@ import com.matteotocci.app.model.IngredienteRicetta;
 import com.matteotocci.app.model.SQLiteConnessione;
 import com.matteotocci.app.model.Session;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,13 +18,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.sql.*;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class AggiungiRicetteController {
 
@@ -35,6 +37,8 @@ public class AggiungiRicetteController {
     @FXML private Button salvaRicetta;
     @FXML private ComboBox<String> categoriaComboBox;
     @FXML private CheckBox mieiAlimentiCheckBox;
+    @FXML private ComboBox<String> categoriaRicetta;
+    @FXML private TextArea descrizioneRicetta;
 
     @FXML private TableView<Alimento> tableView;
     @FXML private TableColumn<Alimento, ImageView> immagineCol;
@@ -51,10 +55,9 @@ public class AggiungiRicetteController {
 
 
     @FXML private TableView<IngredienteRicetta> ingredientiTable;
-    @FXML private TableColumn<IngredienteRicetta, ?> ingredienteNomeCol;
-    @FXML private TableColumn<IngredienteRicetta, ?> modificaCol;
-    @FXML private TableColumn<IngredienteRicetta, ?> eliminaCol;
-    @FXML private TableColumn<IngredienteRicetta, ?> quantitaCol;
+    @FXML private TableColumn<IngredienteRicetta, String> ingredienteNomeCol;
+    @FXML private TableColumn<IngredienteRicetta, Void> azioniCol;
+    @FXML private TableColumn<IngredienteRicetta, Number> quantitaCol;
     @FXML private Label proteineTotaliLabel;
     @FXML private Label saleTotaliLabel;
     @FXML private Label zuccheriTotaliLabel;
@@ -100,6 +103,14 @@ public class AggiungiRicetteController {
             tableView.getItems().clear();
             cercaAlimenti(cercaAlimento.getText(), false);
         });
+
+        // Configura tableViewIngredienti
+        ingredienteNomeCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAlimento().getNome()));
+        quantitaCol.setCellValueFactory(data -> data.getValue().quantitaProperty());
+        ingredientiTable.setItems(ingredienti);
+
+        // Colonna per azioni (modifica/elimina)
+        azioniCol.setCellFactory(getAzioneCellFactory());
 
 
 
@@ -219,6 +230,11 @@ public class AggiungiRicetteController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        ObservableList<String> categoriePrefissate = FXCollections.observableArrayList(
+                "Colazione", "Spuntino", "Pranzo", "Merenda", "Cena"
+        );
+        categoriaRicetta.setItems(categoriePrefissate);
+
     }
     private void apriDettaglio(Alimento alimento) {
         try {
@@ -239,7 +255,9 @@ public class AggiungiRicetteController {
     }
 
 
-    private List<IngredienteRicetta> ingredientiRicettaList = new ArrayList<>();
+    private ObservableList<IngredienteRicetta> ingredienti = FXCollections.observableArrayList();
+    private double totKcal = 0, totProteine = 0, totCarboidrati = 0, totGrassi = 0,
+            totGrassiSaturi = 0, totSale = 0, totFibre = 0, totZuccheri = 0;
     @FXML
     private void handleAggiungiAlimento(ActionEvent event) {
         Alimento alimentoSelezionato = tableView.getSelectionModel().getSelectedItem();
@@ -248,10 +266,10 @@ public class AggiungiRicetteController {
             try {
                 double quantita = Double.parseDouble(quantitaField.getText());
                 IngredienteRicetta ingrediente = new IngredienteRicetta(alimentoSelezionato, quantita);
-                ingredientiRicettaList.add(ingrediente);
+                ingredienti.add(ingrediente);
 
                 // Aggiungi i valori nutrizionali
-                aggiornaValoriNutrizionali();
+                aggiornaValoriNutrizionali(alimentoSelezionato,quantita);
             } catch (NumberFormatException e) {
                 // Gestire l'errore se la quantità non è valida
                 showAlert("Errore", "Inserisci una quantità valida.");
@@ -260,33 +278,81 @@ public class AggiungiRicetteController {
             showAlert("Errore", "Seleziona un alimento e inserisci una quantità.");
         }
     }
-    private void aggiornaValoriNutrizionali() {
-        double calorieTotali = 0, carboidratiTotali = 0, grassiTotali = 0;
-        double proteineTotali = 0, zuccheriTotali = 0, saleTotali = 0, fibreTotali = 0;
+    private void aggiornaValoriNutrizionali(Alimento alimento, double quantita) {
+        double fattore = quantita / 100.0;
 
-        for (IngredienteRicetta ingrediente : ingredientiRicettaList) {
-            Alimento alimento = ingrediente.getAlimento();
-            double quantita = ingrediente.getQuantita();
+        totKcal += alimento.getKcal() * fattore;
+        totProteine += alimento.getProteine() * fattore;
+        totCarboidrati += alimento.getCarboidrati() * fattore;
+        totGrassi += alimento.getGrassi() * fattore;
+        totGrassiSaturi += alimento.getGrassiSaturi() * fattore;
+        totSale += alimento.getSale() * fattore;
+        totFibre += alimento.getFibre() * fattore;
+        totZuccheri += alimento.getZuccheri() * fattore;
 
-            // Calcolare i valori nutrizionali in base alla quantità
-            calorieTotali += alimento.getKcal() * quantita / 100;
-            carboidratiTotali += alimento.getCarboidrati() * quantita / 100;
-            grassiTotali += alimento.getGrassi() * quantita / 100;
-            proteineTotali += alimento.getProteine() * quantita / 100;
-            zuccheriTotali += alimento.getZuccheri() * quantita / 100;
-            saleTotali += alimento.getSale() * quantita / 100;
-            fibreTotali += alimento.getFibre() * quantita / 100;
-        }
-
-        // Impostare i valori nelle etichette
-        calorieTotaliLabel.setText(String.format("%.2f", calorieTotali));
-        carboidratiTotaliLabel.setText(String.format("%.2f", carboidratiTotali));
-        grassiTotaliLabel.setText(String.format("%.2f", grassiTotali));
-        proteineTotaliLabel.setText(String.format("%.2f", proteineTotali));
-        zuccheriTotaliLabel.setText(String.format("%.2f", zuccheriTotali));
-        saleTotaliLabel.setText(String.format("%.2f", saleTotali));
-        fibreTotaliLabel.setText(String.format("%.2f", fibreTotali));
+        aggiornaLabel();
     }
+    private void aggiornaLabel() {
+        calorieTotaliLabel.setText(String.format("%.2f", totKcal));
+        proteineTotaliLabel.setText(String.format("%.2f", totProteine));
+        carboidratiTotaliLabel.setText(String.format("%.2f", totCarboidrati));
+        grassiTotaliLabel.setText(String.format("%.2f", totGrassi));
+        grassiSaturiTotaliLabel.setText(String.format("%.2f", totGrassiSaturi));
+        saleTotaliLabel.setText(String.format("%.2f", totSale));
+        fibreTotaliLabel.setText(String.format("%.2f", totFibre));
+        zuccheriTotaliLabel.setText(String.format("%.2f", totZuccheri));
+    }
+    private void sottraiValoriNutrizionali(Alimento alimento, double quantita) {
+        double fattore = quantita / 100.0;
+
+        totKcal -= alimento.getKcal() * fattore;
+        totProteine -= alimento.getProteine() * fattore;
+        totCarboidrati -= alimento.getCarboidrati() * fattore;
+        totGrassi -= alimento.getGrassi() * fattore;
+        totGrassiSaturi -= alimento.getGrassiSaturi() * fattore;
+        totSale -= alimento.getSale() * fattore;
+        totFibre -= alimento.getFibre() * fattore;
+        totZuccheri -= alimento.getZuccheri() * fattore;
+
+        aggiornaLabel();
+    }
+    private Callback<TableColumn<IngredienteRicetta, Void>, TableCell<IngredienteRicetta, Void>> getAzioneCellFactory() {
+        return param -> new TableCell<>() {
+            private final Button btnModifica = new Button("mod");
+            private final Button btnElimina = new Button("-");
+            private final HBox pane = new HBox(5, btnModifica, btnElimina);
+
+            {
+                btnModifica.setOnAction(e -> {
+                    IngredienteRicetta ing = getTableView().getItems().get(getIndex());
+                    TextInputDialog dialog = new TextInputDialog(String.valueOf(ing.getQuantita()));
+                    dialog.setHeaderText("Modifica Quantità");
+                    dialog.setContentText("Inserisci nuova quantità:");
+                    dialog.showAndWait().ifPresent(nuova -> {
+                        try {
+                            double nuovaQuantita = Double.parseDouble(nuova);
+                            sottraiValoriNutrizionali(ing.getAlimento(), ing.getQuantita());
+                            ing.setQuantita(nuovaQuantita);
+                            aggiornaValoriNutrizionali(ing.getAlimento(), nuovaQuantita);
+                        } catch (NumberFormatException ignored) {}
+                    });
+                });
+
+                btnElimina.setOnAction(e -> {
+                    IngredienteRicetta ing = getTableView().getItems().get(getIndex());
+                    ingredienti.remove(ing);
+                    sottraiValoriNutrizionali(ing.getAlimento(), ing.getQuantita());
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : pane);
+            }
+        };
+    }
+
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -298,14 +364,99 @@ public class AggiungiRicetteController {
 
     @FXML
     void handleAnnulla(ActionEvent event) {
-
+        ((Stage) nomeRicetta.getScene().getWindow()).close();
     }
 
 
     @FXML
-    void handleSalvaRicetta(ActionEvent event) {
+    private void handleSalvaRicetta(ActionEvent event) {
+        // Validazione dei campi obbligatori
+        if (isEmpty(nomeRicetta) || isEmpty(descrizioneRicetta) || categoriaRicetta.getValue() == null || ingredienti.isEmpty()) {
+            mostraErrore("Tutti i campi devono essere compilati e devi aggiungere almeno un ingrediente.");
+            return;
+        }
 
+        try {
+            // Recupera dati dalla UI
+            String nome = nomeRicetta.getText();
+            String descrizione = descrizioneRicetta.getText();
+            String categoria = categoriaRicetta.getValue();
+            Integer userId = Session.getUserId(); // recupera l'utente loggato
+
+            // Connessione DB
+            Connection conn = SQLiteConnessione.connector();
+
+            // 1. Inserimento nella tabella Ricette
+            String insertRicettaSQL = "INSERT INTO Ricette (nome, descrizione, id_utente, categoria, kcal, proteine, carboidrati, grassi, grassi_saturi, sale, fibre, zuccheri) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement insertRicettaStmt = conn.prepareStatement(insertRicettaSQL, Statement.RETURN_GENERATED_KEYS);
+            insertRicettaStmt.setString(1, nome);
+            insertRicettaStmt.setString(2, descrizione);
+            insertRicettaStmt.setInt(3, userId);
+            insertRicettaStmt.setString(4, categoria);
+            insertRicettaStmt.setDouble(5, totKcal);
+            insertRicettaStmt.setDouble(6, totProteine);
+            insertRicettaStmt.setDouble(7, totCarboidrati);
+            insertRicettaStmt.setDouble(8, totGrassi);
+            insertRicettaStmt.setDouble(9, totGrassiSaturi);
+            insertRicettaStmt.setDouble(10, totSale);
+            insertRicettaStmt.setDouble(11, totFibre);
+            insertRicettaStmt.setDouble(12, totZuccheri);
+            insertRicettaStmt.executeUpdate();
+
+            // Recupera ID generato
+            ResultSet generatedKeys = insertRicettaStmt.getGeneratedKeys();
+            int idRicetta = -1;
+            if (generatedKeys.next()) {
+                idRicetta = generatedKeys.getInt(1);
+            } else {
+                throw new SQLException("Errore nel recupero dell'ID della ricetta appena inserita.");
+            }
+
+            // 2. Inserisci gli ingredienti nella tabella ingredienti_ricette
+            String insertIngredienteSQL = "INSERT INTO Ingredienti_ricette (id_ricetta, id_alimento, quantita_grammi) VALUES (?, ?, ?)";
+            PreparedStatement insertIngredienteStmt = conn.prepareStatement(insertIngredienteSQL);
+
+            for (IngredienteRicetta ingrediente : ingredienti) {
+                insertIngredienteStmt.setInt(1, idRicetta);
+                insertIngredienteStmt.setInt(2, ingrediente.getAlimento().getId());
+                insertIngredienteStmt.setDouble(3, ingrediente.getQuantita());
+                insertIngredienteStmt.addBatch();
+            }
+
+            insertIngredienteStmt.executeBatch();
+
+            mostraInfo("Ricetta salvata con successo!");
+
+            // Chiudi finestra
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            mostraErrore("Errore durante il salvataggio: " + e.getMessage());
+        }
     }
+
+    private boolean isEmpty(TextInputControl campo) {
+        return campo.getText() == null || campo.getText().trim().isEmpty();
+    }
+    private void mostraErrore(String messaggio) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Errore");
+        alert.setHeaderText(null);
+        alert.setContentText(messaggio);
+        alert.showAndWait();
+    }
+    private void mostraInfo(String messaggio) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Informazione");
+        alert.setHeaderText(null);
+        alert.setContentText(messaggio);
+        alert.showAndWait();
+    }
+
+
 
 
 }

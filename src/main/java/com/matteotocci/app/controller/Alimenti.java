@@ -147,6 +147,8 @@ public class Alimenti {
 
             DettagliAlimentoController controller = loader.getController();
             controller.setAlimento(alimento);
+            controller.setAlimentiController(this);
+            controller.setOrigineFXML("Alimenti.fxml");
 
 
             Stage stage = new Stage();
@@ -172,6 +174,15 @@ public class Alimenti {
     private int offset = 0;
     private final int LIMIT = 50;
 
+
+    @FXML
+    public void resetRicerca() {
+        offset = 0;
+        tableView.getItems().clear();
+    }
+    @FXML public String getFiltro(){
+        return cercaAlimento != null ? cercaAlimento.getText() : "";
+    }
 
     @FXML
     private void handleCercaAlimento(ActionEvent event) {
@@ -203,7 +214,6 @@ public class Alimenti {
         cercaAlimenti(filtro, true);
         isLoading = false;
     }
-
 
 
     @FXML
@@ -264,9 +274,7 @@ public class Alimenti {
     }
 
 
-
-
-    private void cercaAlimenti(String filtro, boolean append) {
+    public void cercaAlimenti(String filtro, boolean append) {
         ObservableList<Alimento> alimenti = append ? tableView.getItems() : FXCollections.observableArrayList();
 
         String categoria = categoriaComboBox.getSelectionModel().getSelectedItem();
@@ -325,14 +333,13 @@ public class Alimenti {
     }
 
 
-
-
-
     @FXML
     private void handleApriAggiunta(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/AggiungiAlimento.fxml"));
             Parent root = loader.load();
+            AggiungiAlimentoController controller = loader.getController();
+            controller.setAlimentiController(this);
             Stage stage = new Stage();
             stage.setTitle("Aggiungi Alimento");
             stage.setScene(new Scene(root));

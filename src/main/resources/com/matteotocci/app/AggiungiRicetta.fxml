@@ -7,23 +7,32 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="500.0" prefWidth="872.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiRicetteController">
+<AnchorPane prefHeight="500.0" prefWidth="872.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiRicetteController">
     <children>
       <HBox prefHeight="500.0" prefWidth="872.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <VBox fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="546.0" spacing="10.0">
+            <VBox fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="546.0" spacing="10.0">
                <children>
-                    <TextField fx:id="nomeRicetta" prefHeight="39.0" prefWidth="542.0" promptText="Nome nuova ricetta...">
+                  <HBox prefHeight="38.0" prefWidth="549.0">
+                     <children>
+                          <TextField fx:id="nomeRicetta" prefHeight="38.0" prefWidth="416.0" promptText="Nome nuova ricetta...">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </TextField>
+                        <ComboBox fx:id="categoriaRicetta" prefHeight="38.0" prefWidth="139.0" promptText="Categoria ricetta" />
+                     </children>
                      <VBox.margin>
-                        <Insets top="20.0" />
+                        <Insets top="5.0" />
                      </VBox.margin>
-                  </TextField>
+                  </HBox>
                    <HBox prefHeight="40.0" prefWidth="546.0">
                        <children>
 
@@ -37,7 +46,7 @@
 
                        </children>
                    </HBox>
-                    <TableView fx:id="tableView" editable="true" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="339.0" prefWidth="681.0">
+                    <TableView fx:id="tableView" editable="true" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="342.0" prefWidth="546.0">
                         <columns>
                             <TableColumn fx:id="immagineCol" text="Immagine" />
                             <TableColumn fx:id="nomeCol" prefWidth="141" text="Nome" />
@@ -74,82 +83,95 @@
                   </HBox>
                </children>
                <HBox.margin>
-                  <Insets top="-10.0" />
+                  <Insets />
                </HBox.margin>
             </VBox>
-            <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="500.0" prefWidth="331.0">
+            <VBox prefHeight="500.0" prefWidth="331.0">
                <children>
             
                           <!-- Calcoli nutrizionali -->
-                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Valori Nutrizionali Totali">
+                    <Label alignment="TOP_CENTER" prefHeight="26.0" prefWidth="318.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Valori Nutrizionali Totali">
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin></Label>
-                  <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="212.0">
+                  <HBox prefHeight="18.0" prefWidth="212.0">
                      <children>
-                        <Label text="Calorie:" />
-                        <Label fx:id="calorieTotaliLabel" prefHeight="18.0" prefWidth="74.0" />
+                        <Label text="Calorie:">
+                           <HBox.margin>
+                              <Insets left="40.0" />
+                           </HBox.margin></Label>
+                        <Label fx:id="calorieTotaliLabel" prefHeight="18.0" prefWidth="50.0" />
+                        <Region prefHeight="18.0" prefWidth="25.0" />
+                        <Label prefHeight="18.0" prefWidth="75.0" text="Carboidrati:" />
+                        <Label fx:id="carboidratiTotaliLabel" prefHeight="18.0" prefWidth="51.0" />
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>
                   </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="212.0">
+                  <HBox prefHeight="18.0" prefWidth="212.0">
                      <children>
-                        <Label prefHeight="18.0" prefWidth="65.0" text="Carboidrati:" />
-                        <Label fx:id="carboidratiTotaliLabel" prefHeight="18.0" prefWidth="51.0" />
+                        <Label prefHeight="18.0" prefWidth="37.0" text="Grassi:">
+                           <HBox.margin>
+                              <Insets left="40.0" />
+                           </HBox.margin></Label>
+                        <Label fx:id="grassiTotaliLabel" prefHeight="18.0" prefWidth="50.0" />
+                        <Region prefHeight="18.0" prefWidth="27.0" />
+                        <Label prefHeight="18.0" prefWidth="70.0" text="Proteine:" />
+                        <Label fx:id="proteineTotaliLabel" prefHeight="18.0" prefWidth="50.0" />
                      </children>
                   </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="212.0">
-                     <children>
-                        <Label text="Grassi:" />
-                        <Label fx:id="grassiSaturiTotaliLabel" prefHeight="18.0" prefWidth="84.0" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="212.0">
-                     <children>
-                        <Label text="Proteine:" />
-                        <Label fx:id="proteineTotaliLabel" prefHeight="18.0" prefWidth="73.0" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="212.0">
+                  <HBox prefHeight="18.0" prefWidth="212.0">
                      <children>
                         <Label prefHeight="11.0" prefWidth="71.0" text="Grassi Saturi:" />
-                        <Label fx:id="grassiTotaliLabel" prefHeight="18.0" prefWidth="51.0" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="212.0">
-                     <children>
+                        <Label fx:id="grassiSaturiTotaliLabel" prefHeight="18.0" prefWidth="32.0" />
+                        <Region prefHeight="18.0" prefWidth="11.0" />
                         <Label text="Sale:" />
                         <Label fx:id="saleTotaliLabel" prefHeight="18.0" prefWidth="94.0" />
                      </children>
+                     <VBox.margin>
+                        <Insets left="40.0" />
+                     </VBox.margin>
                   </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="212.0">
+                  <HBox prefHeight="18.0" prefWidth="212.0">
                      <children>
                         <Label text="Fibre:" />
-                        <Label fx:id="fibreTotaliLabel" prefHeight="18.0" prefWidth="91.0" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="212.0">
-                     <children>
+                        <Label fx:id="fibreTotaliLabel" prefHeight="18.0" prefWidth="64.0" />
+                        <Region prefHeight="18.0" prefWidth="20.0" />
                         <Label text="Zuccheri:" />
                         <Label fx:id="zuccheriTotaliLabel" prefHeight="18.0" prefWidth="72.0" />
                      </children>
+                     <VBox.margin>
+                        <Insets left="40.0" />
+                     </VBox.margin>
                   </HBox>
                    <Label prefHeight="18.0" prefWidth="294.0" style="-fx-font-weight: bold;" text="Ingredienti aggiunti:">
                      <VBox.margin>
-                        <Insets top="20.0" />
+                        <Insets top="5.0" />
                      </VBox.margin></Label>
-                   <TableView fx:id="ingredientiTable" prefHeight="208.0" prefWidth="294.0">
+                   <TableView fx:id="ingredientiTable" prefHeight="169.0" prefWidth="280.0">
                        <columns>
                            <TableColumn fx:id="ingredienteNomeCol" prefWidth="150" text="Nome" />
                            <TableColumn fx:id="quantitaCol" prefWidth="100" text="Quantità (g)" />
-                           <TableColumn fx:id="modificaCol" prefWidth="80" text="Modifica" />
-                           <TableColumn fx:id="eliminaCol" prefWidth="80" text="Elimina" />
+                           <TableColumn fx:id="azioniCol" prefWidth="80" text="Azioni" />
                        </columns>
+                     <VBox.margin>
+                        <Insets right="15.0" />
+                     </VBox.margin>
                    </TableView>
+                  <TextArea fx:id="descrizioneRicetta" prefHeight="154.0" prefWidth="295.0" promptText="Descrizione ricetta..">
+                     <padding>
+                        <Insets right="15.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </TextArea>
 
                </children>
+               <HBox.margin>
+                  <Insets left="15.0" />
+               </HBox.margin>
 
             </VBox>
          </children>
