@@ -48,7 +48,6 @@ public class login implements Initializable {
     @FXML
     private ToggleGroup Ruolo;
 
-
     @FXML
     private void switchToLogin() {
         if (!loginBox.isVisible()) {
@@ -138,23 +137,24 @@ public class login implements Initializable {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
                 Parent homePageRoot = fxmlLoader.load();
 
-                // **Ottieni il controller HomePage**
-                HomePage homePageController = fxmlLoader.getController();
-
-                // **Recupera l'ID utente basato sull'email di login**
+                // **Ottieni il controller HomePage o HomePageNutrizionista**
                 int loggedInUserId = loginModel.getIdUtente(email);
-
                 Session.setUserId(loggedInUserId);
 
-                // **Passa l'ID utente al controller HomePage**
-                if (homePageController != null && loggedInUserId != -1) {
-                    homePageController.setLoggedInUserId(String.valueOf(loggedInUserId));
-                } else {
-                    System.err.println("Errore: Impossibile ottenere il controller HomePage o l'ID utente.");
-                    showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile caricare la Home Page con le informazioni dell'utente.");
-                    return;
+                // Passa l'ID utente al controller corretto in base al ruolo
+                if (ruolo.equalsIgnoreCase("nutrizionista")) {
+                    HomePageNutrizionista homePageController = fxmlLoader.getController();
+                    if (homePageController != null && loggedInUserId != -1) {
+                        homePageController.setLoggedInUserId(String.valueOf(loggedInUserId));
+                    }
+                } else if (ruolo.equalsIgnoreCase("cliente")) {
+                    HomePage homePageController = fxmlLoader.getController();
+                    if (homePageController != null && loggedInUserId != -1) {
+                        homePageController.setLoggedInUserId(String.valueOf(loggedInUserId));
+                    }
                 }
 
+                // Carica la nuova finestra
                 Stage homePageStage = new Stage();
                 homePageStage.setScene(new Scene(homePageRoot));
                 homePageStage.show();
@@ -185,8 +185,6 @@ public class login implements Initializable {
 
     private void effettuaRegistrazione() {
         // --- Inizio Logica di Registrazione ---
-
-        // Controlla se i campi FXML sono stati iniettati correttamente
         if (nomeField == null || cognomeField == null || emailField == null || passwordField == null || Ruolo == null) {
             System.err.println("Errore: Campi FXML non inizializzati nel controller!");
             showAlert(Alert.AlertType.ERROR, "Errore Interno", "Errore nell'interfaccia utente.");
@@ -196,7 +194,7 @@ public class login implements Initializable {
         String nome = nomeField.getText();
         String cognome = cognomeField.getText();
         String email = emailField.getText();
-        String password = passwordField.getText(); // Considera sempre l'hashing per sicurezza!
+        String password = passwordField.getText();
 
         boolean campiValidi = true;
         String messaggioErrore = "";
@@ -233,19 +231,16 @@ public class login implements Initializable {
 
         if (!campiValidi) {
             showAlert(Alert.AlertType.ERROR, "Registrazione Incompleta", messaggioErrore);
-            return; // Interrompi la registrazione se ci sono errori
+            return;
         }
 
         RadioButton selectedRadioButton = (RadioButton) selectedToggle;
         String ruolo = selectedRadioButton.getText().toLowerCase();
 
-        // Chiamata al modello per tentare la registrazione
         boolean successo = loginModel.registraUtente(nome, cognome, email, password, ruolo);
 
         // --- Fine Logica di Registrazione ---
 
-
-        // --- Gestione Risultato e Navigazione ---
         if (successo) {
             int idUtente = loginModel.getIdUtente(email);
             if (idUtente == -1) {
@@ -253,7 +248,6 @@ public class login implements Initializable {
                 return;
             }
 
-            // Ora esegui l'azione originale di "Registrato": carica la nuova pagina
             try {
                 FXMLLoader fxmlLoader;
                 Parent root;
@@ -262,7 +256,6 @@ public class login implements Initializable {
                     root = fxmlLoader.load();
                 } else {
                     fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DatiCliente.fxml"));
-                    // **Prendi il controller di DatiCliente**
                     root = fxmlLoader.load();
                     DatiCliente datiClienteController = fxmlLoader.getController();
                     if (datiClienteController != null) {
@@ -275,7 +268,7 @@ public class login implements Initializable {
                 }
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
-                stage.setTitle("Benvenuto!"); // Puoi impostare un titolo per la nuova finestra
+                stage.setTitle("Benvenuto!");
                 stage.show();
 
                 if (BottoneRegistrati != null && BottoneRegistrati.getScene() != null && BottoneRegistrati.getScene().getWindow() != null) {
@@ -286,18 +279,14 @@ public class login implements Initializable {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                // Mostra un errore se il caricamento della nuova pagina fallisce
                 showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina successiva dopo la registrazione.");
             }
 
         } else {
-            // Registrazione fallita (es. email duplicata, errore DB)
             showAlert(Alert.AlertType.ERROR, "Errore di registrazione", "Impossibile registrare l'utente. L'email potrebbe essere già in uso o si è verificato un problema.");
-            // In caso di fallimento, l'utente rimane sulla schermata di registrazione
         }
     }
 
-    // Il metodo showAlert rimane invariato
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -314,11 +303,9 @@ public class login implements Initializable {
             System.out.println("Not connected");
         }
 
-        // Aggiungi listener per intercettare la pressione del tasto Invio nei campi di login
         loginPasswordField.setOnKeyPressed(this::handleLoginEnter);
         loginEmailField.setOnKeyPressed(this::handleLoginEnter);
 
-        // Aggiungi listener per intercettare la pressione del tasto Invio nei campi di registrazione
         nomeField.setOnKeyPressed(this::handleRegisterEnter);
         cognomeField.setOnKeyPressed(this::handleRegisterEnter);
         emailField.setOnKeyPressed(this::handleRegisterEnter);
