@@ -182,5 +182,22 @@ public class HomePageNutrizionista {
         }
 
     }
+    @FXML
+    private void openProfiloNutrizionista(MouseEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ProfiloNutrizionista.fxml"));
+            Parent profileRoot = fxmlLoader.load();
+
+            // Ottieni il controller della pagina del profilo appena caricata
+            ProfiloNutrizionista profileController = fxmlLoader.getController();
+
+            Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            profileStage.setScene(new Scene(profileRoot));
+            profileStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
