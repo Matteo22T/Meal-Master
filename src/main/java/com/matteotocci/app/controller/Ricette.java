@@ -194,7 +194,7 @@ public class Ricette {
     }
 
 
-    private void cercaRicette(String filtro, boolean append) {
+    public void cercaRicette(String filtro, boolean append) {
         ObservableList<Ricetta> ricette = append ? tableViewRicette.getItems() : FXCollections.observableArrayList();
 
         String categoria = categorieRicette.getSelectionModel().getSelectedItem();
@@ -253,6 +253,15 @@ public class Ricette {
     }
 
 
+    @FXML
+    public void resetRicerca() {
+        offset = 0;
+        tableViewRicette.getItems().clear();
+    }
+    @FXML public String getFiltro(){
+        return cercaRicetta != null ? cercaRicetta.getText() : "";
+    }
+
 
     @FXML
     private void apriDettaglioRicetta(MouseEvent event) {
@@ -264,6 +273,8 @@ public class Ricette {
 
                 DettaglioRicettaController controller = loader.getController();
                 controller.setRicetta(ricettaSelezionata);
+                controller.setRicettaController(this);
+                controller.setOrigineFXML("Ricette.fxml");
 
                 Stage stage = new Stage();
                 stage.setTitle("Dettaglio Ricetta");
@@ -283,6 +294,8 @@ public class Ricette {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/AggiungiRicetta.fxml"));
             Parent root = loader.load();
+            AggiungiRicetteController controller = loader.getController();
+            controller.setRicettaController(this);
             Stage stage = new Stage();
             stage.setTitle("Aggiungi Ricetta");
             stage.setScene(new Scene(root));

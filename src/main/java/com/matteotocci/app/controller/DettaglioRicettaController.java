@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,6 +30,8 @@ public class DettaglioRicettaController {
     @FXML private Label zuccheriLabel;
     @FXML private Label fibreLabel;
     @FXML private Label saleLabel;
+
+    @FXML private Button bottoneElimina;
 
     @FXML private TableView<IngredienteVisuale> ingredientiTable;
     @FXML private TableColumn<IngredienteVisuale, String> nomeCol;
@@ -129,6 +132,76 @@ public class DettaglioRicettaController {
             return quantita.get();
         }
 
+    }
+
+    private Ricette ricettaController;
+
+    public void setRicettaController(Ricette   controller) {
+        this.ricettaController = controller;
+    }
+
+    @FXML
+    private void handleEliminaRicetta(ActionEvent event) {
+        System.out.println("User corrente: " + Session.getUserId());
+        System.out.println("User dell'alimento: " + ricetta.getUserId());
+
+        // Verifica se l'utente loggato è lo stesso che ha aggiunto l'alimento
+        if (ricetta.getUserId()==(Session.getUserId())) {
+            eliminaRicetta(ricetta); // Elimina l'alimento
+        } else {
+            mostraMessaggio("Puoi eliminare solo gli alimenti che hai aggiunto.");
+        }
+    }
+
+    private void eliminaRicetta(Ricetta ricetta) {
+        System.out.println("Alimento eliminato: " + ricetta.getNome());
+        String query = "DELETE FROM Ricette WHERE id = ?";
+        try (Connection conn = SQLiteConnessione.connector();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            System.out.println("ID eliminato: " + ricetta.getId());
+            stmt.setInt(1, ricetta.getId());
+            int affected = stmt.executeUpdate();
+            System.out.println("Righe eliminate: " + affected);
+
+            if (affected > 0) {
+                if (ricettaController != null) {
+                    System.out.println("filtro: "+ricettaController.getFiltro());
+                    ricettaController.resetRicerca();
+                    ricettaController.cercaRicette(ricettaController.getFiltro(),false);
+                }
+                // Chiudi la finestra se l'eliminazione è andata a buon fine
+                chiudiFinestra();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    private void mostraMessaggio(String messaggio) {
+        // Logica per mostrare un messaggio (ad esempio usando un `Alert`)
+        System.out.println(messaggio);  // Qui puoi sostituire con un'alert di JavaFX
+    }
+
+
+
+
+
+    @FXML
+    private void chiudiFinestra() {
+        ((Stage) nomeRicettaLabel.getScene().getWindow()).close();
+    }
+
+    private String origineFXML;
+
+    public void setOrigineFXML(String origineFXML) {
+        this.origineFXML = origineFXML;
+        aggiornaVisibilitaBottone();
+    }
+    private void aggiornaVisibilitaBottone() {
+        bottoneElimina.setVisible("Ricette.fxml".equals(origineFXML) && Session.getUserId().equals(ricetta.getUserId()));
     }
 
 

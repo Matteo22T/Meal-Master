@@ -367,6 +367,11 @@ public class AggiungiRicetteController {
         ((Stage) nomeRicetta.getScene().getWindow()).close();
     }
 
+    private Ricette ricettaController;
+
+    public void setRicettaController(Ricette   controller) {
+        this.ricettaController = controller;
+    }
 
     @FXML
     private void handleSalvaRicetta(ActionEvent event) {
@@ -427,7 +432,11 @@ public class AggiungiRicetteController {
             insertIngredienteStmt.executeBatch();
 
             mostraInfo("Ricetta salvata con successo!");
-
+            if (ricettaController != null) {
+                System.out.println("filtro: "+ricettaController.getFiltro());
+                ricettaController.resetRicerca();
+                ricettaController.cercaRicette(ricettaController.getFiltro(),false);
+            }
             // Chiudi finestra
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.close();
