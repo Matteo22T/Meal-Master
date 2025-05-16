@@ -13,8 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -91,8 +89,7 @@ public class ModificaPassword implements Initializable {
 
     @FXML
     private void handleInvio(ActionEvent event) {
-        salvaNuovaPassword(null); // Chiama il metodo per salvare la password
-        // Passa null come MouseEvent perché l'azione è stata triggered dall'Invio, non dal click del mouse
+        salvaNuovaPassword((MouseEvent) null); // Indica che l'evento non è un MouseEvent
     }
 
     @FXML
@@ -160,7 +157,7 @@ public class ModificaPassword implements Initializable {
             if (utenteModel.aggiornaPassword(utenteCorrenteId, nuovaPassword)) {
                 showAlert(Alert.AlertType.INFORMATION, "Successo", "Password correttamente modificata!");
                 // Chiudi la finestra
-                Stage stage = (Stage) ((javafx.scene.Node) (event == null ? salvaPasswordButton : event.getSource())).getScene().getWindow();
+                Stage stage = (Stage) vecchiaPasswordField.getScene().getWindow();
                 stage.close();
             } else {
                 showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile aggiornare la password.");

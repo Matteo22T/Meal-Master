@@ -3,25 +3,34 @@ package com.matteotocci.app.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
-public class ProfiloNutrizionista {
+public class ProfiloNutrizionista implements Initializable {
 
     @FXML
     private ImageView profileImage;
     @FXML
     private Label nomeUtenteSidebarLabel;
     @FXML
-    private Button homePageButton;
+    private Button ClientiButton;
     @FXML
     private Button BottoneAlimenti;
     @FXML
@@ -38,35 +47,56 @@ public class ProfiloNutrizionista {
     private Label modificaPasswordLabel;
     @FXML
     private Button LogoutButton;
+    @FXML
+    private Label ruoloUtenteLabel;
 
     private String loggedInUserId;
+    private String nomeUtenteCompleto;
 
     public void setLoggedInUserId(String userId) {
         this.loggedInUserId = userId;
-        // Inizializza i dati del profilo quando si riceve l'ID utente
         inizializzaProfilo();
     }
 
     @FXML
     public void initialize() {
-        // Inizializza i componenti dell'interfaccia utente
-        // Questo metodo viene chiamato automaticamente da FXMLLoader
+        ruoloUtenteLabel.setText("Nutrizionista");
     }
 
     private void inizializzaProfilo() {
-        // Carica i dati del profilo dal database e popola i campi
-        // Usa il loggedInUserId per recuperare le informazioni dell'utente
-        String nome = "Nome Di Esempio";  // Sostituisci con la query al database
-        String cognome = "Cognome Di Esempio"; // Sostituisci
-        String sesso = "Sesso Di Esempio";     // Sostituisci
-        String dataNascita = "01/01/2000"; // Sostituisci
+        if (loggedInUserId != null) {
+            String nome = getDatoUtenteDalDatabase("Utente", loggedInUserId, "Nome");
+            String cognome = getDatoUtenteDalDatabase("Utente", loggedInUserId, "Cognome");
 
-        nomeUtenteSidebarLabel.setText(nome + " " + cognome);
-        benvenutoLabel.setText("Bentornato " + nome);
-        nomeTextField.setText(nome);
-        cognomeTextField.setText(cognome);
-        sessoTextField.setText(sesso);
-        dataNascitaTextField.setText(dataNascita);
+            nomeUtenteCompleto = (nome != null ? nome : "") + " " + (cognome != null ? cognome : "");
+            nomeUtenteSidebarLabel.setText(nomeUtenteCompleto.trim());
+            benvenutoLabel.setText("Bentornato " + (nome != null ? nome : "Utente"));
+            nomeTextField.setText(nome);
+            cognomeTextField.setText(cognome);
+
+        } else {
+            System.out.println("[DEBUG] ID utente non valido (null) in inizializzaProfilo.");
+        }
+    }
+
+    private String getDatoUtenteDalDatabase(String tabella, String userId, String campo) {
+        String valore = null;
+        String url = "jdbc:sqlite:database.db";
+        String query = "SELECT " + campo + " FROM " + tabella + " WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                valore = rs.getString(campo);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("[ERROR] Errore durante la lettura del " + campo + " dalla tabella " + tabella + ": " + e.getMessage());
+        }
+        return valore;
     }
 
     @FXML
@@ -75,10 +105,7 @@ public class ProfiloNutrizionista {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePageNutrizionista.fxml"));
             Parent homePageRoot = fxmlLoader.load();
             HomePageNutrizionista homePageController = fxmlLoader.getController();
-
-            // Passa l'ID utente alla HomePageNutrizionista
             homePageController.setLoggedInUserId(loggedInUserId);
-
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(homePageRoot));
             stage.show();
@@ -89,7 +116,16 @@ public class ProfiloNutrizionista {
 
     @FXML
     private void AccessoAlimenti(ActionEvent event) {
-        // accesso alla schermata alimenti
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
+            Parent loginRoot = fxmlLoader.load();
+            Stage loginStage = new Stage();
+            loginStage.setScene(new Scene(loginRoot));
+            loginStage.show();
+            ((Stage) BottoneAlimenti.getScene().getWindow()).close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -97,10 +133,8 @@ public class ProfiloNutrizionista {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ModificaPassword.fxml"));
             Parent modificaPasswordRoot = fxmlLoader.load();
-
-            // **Ottieni il controller di ModificaPassword**
             ModificaPassword modificaPasswordController = fxmlLoader.getController();
-
+            modificaPasswordController.setUtenteCorrenteId(loggedInUserId);
             Stage modificaPasswordStage = new Stage();
             modificaPasswordStage.setTitle("Modifica Password");
             modificaPasswordStage.setScene(new Scene(modificaPasswordRoot));
@@ -109,6 +143,7 @@ public class ProfiloNutrizionista {
             e.printStackTrace();
         }
     }
+
     public void eseguiLogout(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Conferma Logout");
@@ -117,7 +152,6 @@ public class ProfiloNutrizionista {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // L'utente ha cliccato OK, procedi con il logout
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PrimaPagina.fxml"));
                 Parent loginRoot = fxmlLoader.load();
@@ -128,9 +162,13 @@ public class ProfiloNutrizionista {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            // L'utente ha cliccato Annulla o ha chiuso la finestra, non fare nulla
         }
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        // L'inizializzazione statica del ruolo avviene qui
+        ruoloUtenteLabel.setText("Nutrizionista");
     }
 }
 

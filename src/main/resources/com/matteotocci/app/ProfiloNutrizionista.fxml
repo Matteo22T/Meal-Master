@@ -24,7 +24,10 @@
                                 <Image url="@immagini/omino_profilo.jpg" />
                             </image>
                         </ImageView>
-                        <Label fx:id="nomeUtenteSidebarLabel" style="-fx-padding: 0 0 0 10; -fx-font-size: 14px;" text="Nome Utente" />
+                        <VBox>
+                            <Label fx:id="ruoloUtenteLabel" style="-fx-padding: 0 0 0 10; -fx-font-size: 14px; -fx-font-weight: bold;" text="Nutrizionista" />
+                            <Label fx:id="nomeUtenteSidebarLabel" style="-fx-padding: 0 0 0 10; -fx-font-size: 13px;" text="Nome Utente" />
+                        </VBox>
                     </children>
                 </HBox>
                 <Button fx:id="ClientiButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#vaiAiClienti" prefHeight="60.0" style="-fx-cursor: hand;" text="Clienti" />
@@ -59,13 +62,13 @@
                             </columnConstraints>
                             <children>
                                 <Label style="-fx-font-weight: bold; -fx-font-size: 13px;" text="Nome:" GridPane.rowIndex="0" />
-                                <TextField fx:id="nomeTextField" editable="false" prefHeight="28.0" promptText="Inserisci il nome" style="-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 5; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                <TextField fx:id="nomeTextField" editable="false" prefHeight="28.0" style="-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 5; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                                 <Label style="-fx-font-weight: bold; -fx-font-size: 13px;" text="Cognome:" GridPane.rowIndex="1" />
-                                <TextField fx:id="cognomeTextField" editable="false" prefHeight="28.0" promptText="Inserisci il cognome" style="-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 5; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <TextField fx:id="cognomeTextField" editable="false" prefHeight="28.0" style="-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 5; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                 <Label style="-fx-font-weight: bold; -fx-font-size: 13px;" text="Sesso:" GridPane.rowIndex="2" />
-                                <TextField fx:id="sessoTextField" editable="false" prefHeight="28.0" promptText="Inserisci il sesso" style="-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 5; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                <TextField fx:id="sessoTextField" editable="false" prefHeight="28.0" style="-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 5; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                 <Label style="-fx-font-weight: bold; -fx-font-size: 13px;" text="Data Nascita:" GridPane.rowIndex="3" />
-                                <TextField fx:id="dataNascitaTextField" editable="false" prefHeight="28.0" promptText="GG/MM/AAAA" style="-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 5; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                <TextField fx:id="dataNascitaTextField" editable="false" prefHeight="28.0" style="-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 5; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                             </children>
                             <padding>
                                 <Insets bottom="10.0" top="8.0" />
