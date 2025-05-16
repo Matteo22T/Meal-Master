@@ -141,3 +141,134 @@
     -fx-font-weight: bold;
     -fx-text-fill: #795548;
 }
+/* Stili generali della pagina */
+.anchor-pane {
+    -fx-background-color: #f4f4f4; /* Sfondo grigio chiaro */
+}
+
+.page-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding-bottom: 20px;
+}
+
+/* Stili per il menu laterale (Bottoni tutti con lo stesso schema cromatico) */
+.vbox {
+    -fx-background-color: #f0f0f0; /* Grigio chiaro per il menu */
+    -fx-pref-width: 212.0; /* Imposta la larghezza preferita del VBox */
+}
+
+.hbox {
+    -fx-padding: 10px;
+    -fx-alignment: center-left;
+}
+
+.image-view {
+    /* Stili per l'immagine del profilo se necessario */
+}
+
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555;
+}
+
+.sidebar-button {
+    -fx-background-color: #e0e0e0; /* Sfondo grigio chiaro per tutti i bottoni */
+    -fx-text-fill: #333; /* Testo grigio scuro */
+    -fx-font-size: 16px;
+    -fx-padding: 15px;
+    -fx-border-color: #ccc; /* Bordo grigio chiaro per i bottoni inattivi */
+    -fx-border-width: 1px;
+    -fx-alignment: center; /* Allinea il testo al centro */
+    -fx-cursor: hand;
+    -fx-pref-width: 212.0; /* Larghezza uniforme dei bottoni */
+}
+
+.sidebar-button:hover {
+    -fx-background-color: #d0d0d0; /* Grigio leggermente più scuro al passaggio del mouse */
+}
+
+/* Stili per la sezione centrale (Diete) */
+.center-vbox {
+    -fx-padding: 20px;
+}
+
+/* Stili per la ListView delle diete (e altri elementi centrali) rimangono invariati */
+.diet-list {
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-color: white;
+    -fx-padding: 0;
+    -fx-pref-height: 350px;
+}
+
+.diet-list .list-cell {
+    -fx-padding: 15px;
+    -fx-font-size: 16px;
+    -fx-border-color: #eee;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.diet-list .list-cell:first-child {
+    -fx-font-weight: bold;
+    -fx-text-fill: #555;
+}
+
+.diet-list .list-cell:last-child {
+    -fx-border-width: 0;
+}
+
+.diet-list .list-cell:odd {
+    -fx-background-color: white;
+}
+
+.diet-list .list-cell:even {
+    -fx-background-color: white;
+}
+
+.diet-list .list-cell:selected {
+    -fx-background-color: #e0f7fa;
+    -fx-text-fill: #333;
+}
+
+.search-field {
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+    -fx-pref-width: 200px;
+}
+
+.button-positive {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 15px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+}
+
+.button-positive:hover {
+    -fx-background-color: #45a049;
+}
+
+.button-negative {
+    -fx-background-color: #f44336;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 15px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+}
+
+.button-negative:hover {
+    -fx-background-color: #d32f2f;
+}
+
+#nomeUtenteLabelDieta {
+    -fx-min-width: 150px; /* Prova con una larghezza minima (modifica il valore se necessario) */
+}}

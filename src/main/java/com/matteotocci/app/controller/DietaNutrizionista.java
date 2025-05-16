@@ -59,15 +59,22 @@ public class DietaNutrizionista {
     }
 
     private void setNomeUtenteLabel() {
-        String nomeUtente = getNomeUtenteDalDatabase(loggedInUserId);
-        ruoloUtenteLabelDieta.setText(
-                (nomeUtente != null && !nomeUtente.isEmpty()) ? nomeUtente : "Nome e Cognome"
-        );
-        nomeUtenteLabelDieta.setText("Benvenuto");
+        if (ruoloUtenteLabelDieta != null && nomeUtenteLabelDieta != null && loggedInUserId != null) {
+            String nomeUtenteCompleto = getNomeUtenteDalDatabase(loggedInUserId);
+            nomeUtenteLabelDieta.setText(
+                    (nomeUtenteCompleto != null && !nomeUtenteCompleto.isEmpty()) ? nomeUtenteCompleto : "Nome e Cognome"
+            );
+            // La Label ruoloUtenteLabelDieta ora conterrà "Nutrizionista" direttamente dall'FXML
+        } else {
+            System.err.println("Errore: ruoloUtenteLabelDieta o nomeUtenteLabelDieta o loggedInUserId sono null.");
+            if (ruoloUtenteLabelDieta == null) System.err.println("ruoloUtenteLabelDieta è null");
+            if (nomeUtenteLabelDieta == null) System.err.println("nomeUtenteLabelDieta è null");
+            if (loggedInUserId == null) System.err.println("loggedInUserId è null");
+        }
     }
 
     private String getNomeUtenteDalDatabase(String userId) {
-        String nomeUtente = null;
+        String nomeUtenteCompleto = null;
         String url = "jdbc:sqlite:database.db";
         String query = "SELECT Nome, Cognome FROM Utente WHERE id = ?";
         try (Connection conn = DriverManager.getConnection(url);
@@ -75,11 +82,11 @@ public class DietaNutrizionista {
             pstmt.setString(1, userId);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                nomeUtente = rs.getString("Nome") + " " + rs.getString("Cognome");
+                nomeUtenteCompleto = rs.getString("Nome") + " " + rs.getString("Cognome");
             }
         } catch (SQLException e) {
             System.err.println("Errore DB (nome utente): " + e.getMessage());
         }
-        return nomeUtente;
+        return nomeUtenteCompleto;
     }
 }
