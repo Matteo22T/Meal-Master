@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.Node?>
+
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.matteotocci.app.controller.AggiungiGiornoDieta">
+    <top>
+        <Label fx:id="giornoCorrenteLabel" text="Giorno 1" style="-fx-font-size: 18pt; -fx-font-weight: bold;"
+               BorderPane.alignment="CENTER">
+            <font>
+                <Font name="Arial Bold" size="18.0"/>
+            </font>
+        </Label>
+    </top>
+    <left>
+        <HBox prefWidth="0.0" prefHeight="0.0"/>
+    </left>
+    <right>
+        <Button fx:id="prossimoGiornoButton" text="&gt;" BorderPane.alignment="CENTER">
+            <font>
+                <Font name="Arial Bold" size="14.0"/>
+            </font>
+        </Button>
+    </right>
+    <center>
+        <GridPane hgap="10.0" vgap="10.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="250.0" prefWidth="250.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="150.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" minHeight="50.0" prefHeight="80.0"/>
+                <RowConstraints vgrow="SOMETIMES" minHeight="50.0" prefHeight="80.0"/>
+                <RowConstraints vgrow="SOMETIMES" minHeight="50.0" prefHeight="80.0"/>
+                <RowConstraints vgrow="SOMETIMES" minHeight="50.0" prefHeight="80.0"/>
+                <RowConstraints vgrow="SOMETIMES" minHeight="50.0" prefHeight="80.0"/>
+                <RowConstraints vgrow="SOMETIMES" minHeight="50.0" prefHeight="80.0"/>
+            </rowConstraints>
+            <children>
+                <VBox spacing="5.0" GridPane.rowIndex="0" GridPane.columnSpan="1">
+                    <Label text="Colazione">
+                        <font>
+                            <Font name="Arial Bold" size="12.0"/>
+                        </font>
+                    </Label>
+                    <ListView fx:id="colazioneListView" prefHeight="80.0" VBox.vgrow="ALWAYS"/>
+                    <HBox spacing="5.0">
+                        <Button fx:id="aggiungiColazioneButton" text="+" onAction="#openAggiungiAlimentoDieta">
+                            <font>
+                                <Font name="Arial Bold" size="12.0"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="rimuoviColazioneButton" text="-">
+                            <font>
+                                <Font name="Arial Bold" size="12.0"/>
+                            </font>
+                        </Button>
+                    </HBox>
+                </VBox>
+                <VBox spacing="5.0" GridPane.rowIndex="1">
+                    <Label text="Spuntino Mattina">
+                        <font>
+                            <Font name="Arial Bold" size="12.0"/>
+                        </font>
+                    </Label>
+                    <ListView fx:id="spuntinoMattinaListView" prefHeight="80.0" VBox.vgrow="ALWAYS"/>
+                    <HBox spacing="5.0">
+                        <Button fx:id="aggiungiSpuntinoMattinaButton" text="+">
+                            <font>
+                                <Font name="Arial Bold" size="12.0"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="rimuoviSpuntinoMattinaButton" text="-">
+                            <font>
+                                <Font name="Arial Bold" size="12.0"/>
+                            </font>
+                        </Button>
+                    </HBox>
+                </VBox>
+                <VBox spacing="5.0" GridPane.rowIndex="2">
+                    <Label text="Pranzo">
+                        <font>
+                            <Font name="Arial Bold" size="12.0"/>
+                        </font>
+                    </Label>
+                    <ListView fx:id="pranzoListView" prefHeight="80.0" VBox.vgrow="ALWAYS"/>
+                    <HBox spacing="5.0">
+                        <Button fx:id="aggiungiPranzoButton" text="+">
+                            <font>
+                                <Font name="Arial Bold" size="12.0"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="rimuoviPranzoButton" text="-">
+                            <font>
+                                <Font name="Arial Bold" size="12.0"/>
+                            </font>
+                        </Button>
+                    </HBox>
+                </VBox>
+                <VBox spacing="5.0" GridPane.rowIndex="3">
+                    <Label text="Spuntino Pomeriggio">
+                        <font>
+                            <Font name="Arial Bold" size="12.0"/>
+                        </font>
+                    </Label>
+                    <ListView fx:id="spuntinoPomeriggioListView" prefHeight="80.0" VBox.vgrow="ALWAYS"/>
+                    <HBox spacing="5.0">
+                        <Button fx:id="aggiungiSpuntinoPomeriggioButton" text="+">
+                            <font>
+                                <Font name="Arial Bold" size="12.0"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="rimuoviSpuntinoPomeriggioButton" text="-">
+                            <font>
+                                <Font name="Arial Bold" size="12.0"/>
+                            </font>
+                        </Button>
+                    </HBox>
+                </VBox>
+                <VBox spacing="5.0" GridPane.rowIndex="4">
+                    <Label text="Cena">
+                        <font>
+                            <Font name="Arial Bold" size="12.0"/>
+                        </font>
+                    </Label>
+                    <ListView fx:id="cenaListView" prefHeight="80.0" VBox.vgrow="ALWAYS"/>
+                    <HBox spacing="5.0">
+                        <Button fx:id="aggiungiCenaButton" text="+">
+                            <font>
+                                <Font name="Arial Bold" size="12.0"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="rimuoviCenaButton" text="-">
+                            <font>
+                                <Font name="Arial Bold" size="12.0"/>
+                            </font>
+                        </Button>
+                    </HBox>
+                </VBox>
+
+                <VBox alignment="TOP_CENTER" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                      GridPane.rowSpan="5">
+                    <Label fx:id="titoloPianoLabel" text="Piano Alimentare:"
+                           style="-fx-font-weight: bold; -fx-font-size: 14px;">
+                        <font>
+                            <Font name="Arial Bold" size="14.0"/>
+                        </font>
+                    </Label>
+                    <Label fx:id="numeroGiorniLabel" text="Durata:" style="-fx-font-size: 12px;">
+                        <font>
+                            <Font name="Arial" size="12.0"/>
+                        </font>
+                    </Label>
+                    <Separator prefWidth="200.0"/>
+                    <Label text="Kcal Totali" style="-fx-font-size: 12px;">
+                        <font>
+                            <Font name="Arial" size="12.0"/>
+                        </font>
+                    </Label>
+                    <Label fx:id="kcalTotaliLabel" text="0" style="-fx-font-size: 12px;">
+                        <font>
+                            <Font name="Arial" size="12.0"/>
+                        </font>
+                    </Label>
+                    <Separator prefWidth="200.0"/>
+                    <Label text="Macronutrienti" style="-fx-font-weight: bold; -fx-font-size: 12px;">
+                        <font>
+                            <Font name="Arial Bold" size="12.0"/>
+                        </font>
+                    </Label>
+                    <HBox spacing="5.0" alignment="CENTER_LEFT">
+                        <Label text="Carboidrati:" style="-fx-font-size: 12px;">
+                            <font>
+                                <Font name="Arial" size="12.0"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="carboidratiLabel" text="0 g" style="-fx-font-size: 12px;">
+                            <font>
+                                <Font name="Arial" size="12.0"/>
+                            </font>
+                        </Label>
+                    </HBox>
+                    <HBox spacing="5.0" alignment="CENTER_LEFT">
+                        <Label text="Proteine:" style="-fx-font-size: 12px;">
+                            <font>
+                                <Font name="Arial" size="12.0"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="proteineLabel" text="0 g" style="-fx-font-size: 12px;">
+                            <font>
+                                <Font name="Arial" size="12.0"/>
+                            </font>
+                        </Label>
+                    </HBox>
+                    <HBox spacing="5.0" alignment="CENTER_LEFT">
+                        <Label text="Grassi:" style="-fx-font-size: 12px;">
+                            <font>
+                                <Font name="Arial" size="12.0"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="grassiLabel" text="0 g" style="-fx-font-size: 12px;">
+                            <font>
+                                <Font name="Arial" size="12.0"/>
+                            </font>
+                        </Label>
+                    </HBox>
+                </VBox>
+                <Button mnemonicParsing="false" fx:id="salvaPianoButton" text="Salva Piano"
+                        GridPane.rowIndex="5" GridPane.columnIndex="1" alignment="BOTTOM_RIGHT">
+                    <font>
+                        <Font name="Arial Bold" size="12.0"/>
+                    </font>
+                </Button>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </GridPane>
+    </center>
+    <bottom>
+        <Label text="Giorno corrente: 1/n" fx:id="indicatoreGiornoLabel" BorderPane.alignment="CENTER">
+            <font>
+                <Font name="Arial" size="12.0"/>
+            </font>
+        </Label>
+    </bottom>
+    <HBox alignment="CENTER_RIGHT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="6">
+        <Button mnemonicParsing="false" fx:id="annullaButton" text="Annulla">
+            <font>
+                <Font name="Arial Bold" size="12.0"/>
+            </font>
+        </Button>
+    </HBox>
+</BorderPane>

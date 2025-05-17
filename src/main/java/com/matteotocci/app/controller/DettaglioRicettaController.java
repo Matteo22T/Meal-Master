@@ -136,7 +136,7 @@ public class DettaglioRicettaController {
 
     private Ricette ricettaController;
 
-    public void setRicettaController(Ricette   controller) {
+    public void setRicettaController(Ricette controller) {
         this.ricettaController = controller;
     }
 

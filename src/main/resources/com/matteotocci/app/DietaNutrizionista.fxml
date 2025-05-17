@@ -22,7 +22,7 @@
                     <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="69.0" style="-fx-padding: 10;">
                             <children>
-                                <ImageView fx:id="profileImage" fitHeight="70.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fx:id="profileImage" onMouseClicked="#openProfiloNutrizionista" fitHeight="70.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
                                         <Image url="@immagini/omino_profilo.jpg" />
                                     </image>
@@ -33,7 +33,7 @@
                                 </VBox>
                             </children>
                         </HBox>
-                        <Button fx:id="BottoneAlimenti" mnemonicParsing="false" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Clienti">
+                        <Button fx:id="BottoneAlimenti" onAction="#vaiAiClienti" mnemonicParsing="false" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Clienti">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
@@ -66,7 +66,7 @@
                         <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-padding: 10 0 0 0;">
                             <children>
                                 <TextField fx:id="filtroNomeDietaTextField" promptText="Filtra per nome..." styleClass="search-field" />
-                                <Button mnemonicParsing="false" styleClass="button-positive" text="+ Nuova dieta" />
+                                <Button mnemonicParsing="false" styleClass="button-positive" text="+ Nuova dieta" onAction="#vaiAggiungiNuovaDieta" />
                                 <Button mnemonicParsing="false" styleClass="button-negative" text="-" />
                             </children>
                         </HBox>
