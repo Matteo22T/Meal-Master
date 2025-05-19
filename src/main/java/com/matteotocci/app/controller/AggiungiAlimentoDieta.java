@@ -5,7 +5,6 @@ import com.matteotocci.app.model.Ricetta;
 import com.matteotocci.app.model.SQLiteConnessione;
 import com.matteotocci.app.model.Session;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,52 +24,59 @@ import java.io.IOException;
 import java.sql.*;
 
 public class AggiungiAlimentoDieta {
-    @FXML private TableColumn<Alimento, ImageView> immagineCol;
-    @FXML private TableColumn<Alimento, String> nomeCol, brandCol;
-    @FXML private TableColumn<Alimento, Double> calorieCol, proteineCol, carboidratiCol, grassiCol;
-    @FXML private TableColumn<Alimento, Double> grassiSatCol, saleCol, fibreCol, zuccheriCol;
+    @FXML
+    private TableColumn<Alimento, ImageView> immagineCol;
+    @FXML
+    private TableColumn<Alimento, String> nomeCol, brandCol;
+    @FXML
+    private TableColumn<Alimento, Double> calorieCol, proteineCol, carboidratiCol, grassiCol;
+    @FXML
+    private TableColumn<Alimento, Double> grassiSatCol, saleCol, fibreCol, zuccheriCol;
     @FXML
     private Button ButtonCercaAlimento;
-
     @FXML
     private Button ButtonCercaRicetta;
-
     @FXML
     private ComboBox<String> ComboBoxAlimento;
-
     @FXML
     private ComboBox<String> ComboBoxRicetta;
-
     @FXML
     private CheckBox CheckBoxAlimenti;
-
     @FXML
     private CheckBox CheckBoxRicette;
-
     @FXML
     private Button confermaAlimentiButton;
-
     @FXML
     private Button confermaRicetteButton;
-
     @FXML
     private TableView<Alimento> tableViewAlimenti;
-
     @FXML
     private TableView<Ricetta> tableViewRicette;
-
     @FXML
     private TextField textCercaAlimento;
-
     @FXML
     private TextField textCercaRicetta;
-
-    @FXML private TableColumn<Ricetta, String> nomeColRic;
-    @FXML private TableColumn<Ricetta, String> descrizioneColRic;
-    @FXML private TableColumn<Ricetta, String> categoriaColRic;
+    @FXML
+    private TableColumn<Ricetta, String> nomeColRic;
+    @FXML
+    private TableColumn<Ricetta, String> descrizioneColRic;
+    @FXML
+    private TableColumn<Ricetta, String> categoriaColRic;
+    @FXML
+    private Spinner<Integer> quantitaSpinner; // Aggiunto per la quantità
 
     private int offset = 0;
     private final int LIMIT = 50;
+    private AggiungiGiornoDieta giornoDietaController;
+    private String pastoCorrente;
+
+    public void setGiornoDietaController(AggiungiGiornoDieta controller) {
+        this.giornoDietaController = controller;
+    }
+
+    public void setPastoCorrente(String pasto) {
+        this.pastoCorrente = pasto;
+    }
 
     @FXML
     private void mostraTabellaAlimenti(ActionEvent event) {
@@ -132,6 +138,8 @@ public class AggiungiAlimentoDieta {
             return row;
         });
 
+        tableViewRicette.setOnMouseClicked(this::apriDettaglioRicetta);
+
         popolaCategorie();
 
         ComboBoxAlimento.setOnAction(e -> {
@@ -148,13 +156,13 @@ public class AggiungiAlimentoDieta {
 
         ComboBoxRicetta.setOnAction(e -> {
             offset = 0;
-            tableViewAlimenti.getItems().clear();
+            tableViewRicette.getItems().clear();
             cercaRicette(textCercaRicetta.getText(), false);
         });
 
         CheckBoxRicette.setOnAction(e -> {
             offset = 0;
-            tableViewAlimenti.getItems().clear();
+            tableViewRicette.getItems().clear();
             cercaRicette(textCercaRicetta.getText(), false);
         });
 
@@ -181,6 +189,7 @@ public class AggiungiAlimentoDieta {
         });
 
         cercaAlimenti("", false);
+        cercaRicette("", false); // Carica anche le ricette all'avvio
     }
 
     @FXML
@@ -190,6 +199,7 @@ public class AggiungiAlimentoDieta {
         String filtro = textCercaAlimento.getText();
         cercaAlimenti(filtro, false);
     }
+
     private void cercaAlimenti(String filtro, boolean append) {
         ObservableList<Alimento> alimenti = append ? tableViewAlimenti.getItems() : FXCollections.observableArrayList();
 
@@ -249,6 +259,7 @@ public class AggiungiAlimentoDieta {
     }
 
     private boolean isLoading = false;
+
     private void caricaAltriAlimenti() {
         if (isLoading) return;
         isLoading = true;
@@ -258,6 +269,7 @@ public class AggiungiAlimentoDieta {
     }
 
     private boolean isLoading2 = false;
+
     private void caricaAltreRicette() {
         if (isLoading2) return;
         isLoading2 = true;
@@ -265,6 +277,7 @@ public class AggiungiAlimentoDieta {
         cercaRicette(filtro, true);
         isLoading2 = false;
     }
+
     @FXML
     private void handleCercaRicetta(ActionEvent event) {
         offset = 0;
@@ -300,7 +313,7 @@ public class AggiungiAlimentoDieta {
             stmt.setInt(paramIndex++, LIMIT);
             stmt.setInt(paramIndex++, offset);
 
-            try(ResultSet rs = stmt.executeQuery()) {
+            try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Ricetta ricetta = new Ricetta(
                             rs.getInt("id"),
@@ -396,4 +409,65 @@ public class AggiungiAlimentoDieta {
 
     }
 
+    @FXML
+    private void confermaAlimenti(ActionEvent event) {
+        Alimento alimentoSelezionato = tableViewAlimenti.getSelectionModel().getSelectedItem();
+        Integer quantita = quantitaSpinner.getValue(); // Recupera la quantità dallo Spinner
+
+        if (alimentoSelezionato != null && giornoDietaController != null && pastoCorrente != null && quantita != null && quantita > 0) {
+            giornoDietaController.aggiungiAlimentoAllaLista(pastoCorrente, alimentoSelezionato, quantita);
+            // La finestra rimane aperta ora (come da richiesta precedente)
+        } else {
+            System.out.println("Seleziona un alimento e specifica una quantità valida!"); // Gestione degli errori
+        }
+    }
+
+    @FXML
+    private void confermaRicette(ActionEvent event) {
+        Ricetta ricettaSelezionata = tableViewRicette.getSelectionModel().getSelectedItem();
+        if (ricettaSelezionata != null && giornoDietaController != null && pastoCorrente != null) {
+            //giornoDietaController.aggiungiAlimentoAllaLista(pastoCorrente, ricettaSelezionata.getNome(), 1);  CORREZIONE
+            //Recupero la ricetta completa dal DB per passare un oggetto Alimento
+            Alimento alimentoRicetta = getAlimentoFromRicetta(ricettaSelezionata);
+            if(alimentoRicetta != null){
+                giornoDietaController.aggiungiAlimentoAllaLista(pastoCorrente, alimentoRicetta, 1);
+            }
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.close();
+        } else {
+            System.out.println("Seleziona una ricetta!");
+        }
+    }
+
+    private Alimento getAlimentoFromRicetta(Ricetta ricetta) {
+        String query = "SELECT * FROM foods WHERE nome = ?";
+        try (Connection conn = SQLiteConnessione.connector();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, ricetta.getNome());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Alimento(
+                        rs.getString("nome"),
+                        rs.getString("brand"),
+                        rs.getDouble("kcal"),
+                        rs.getDouble("proteine"),
+                        rs.getDouble("carboidrati"),
+                        rs.getDouble("grassi"),
+                        rs.getDouble("grassiSaturi"),
+                        rs.getDouble("sale"),
+                        rs.getDouble("fibre"),
+                        rs.getDouble("zuccheri"),
+                        rs.getString("immaginePiccola"),
+                        rs.getString("immagineGrande"),
+                        rs.getInt("user_id"),
+                        rs.getInt("id")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
+
