@@ -22,6 +22,7 @@ public class AggiungiGiornoDieta {
     private String titoloPiano;
     private int numeroGiorni;
     private int giornoCorrente = 1;
+
     @FXML
     private Label giornoCorrenteLabel;
     @FXML
@@ -44,9 +45,10 @@ public class AggiungiGiornoDieta {
     private Label grassiLabel;
 
     private String pastoSelezionato;
-    private Map<String, ObservableList<AlimentoQuantificato>> pastiAlimenti = new HashMap<>();
 
-    // Nuova classe per tenere traccia dell'alimento e della sua quantità
+    // Map<giorno, Map<pasto, lista di alimenti>>
+    private Map<Integer, Map<String, ObservableList<AlimentoQuantificato>>> giorniPasti = new HashMap<>();
+
     public static class AlimentoQuantificato {
         private Alimento alimento;
         private int quantita;
@@ -66,7 +68,7 @@ public class AggiungiGiornoDieta {
 
         @Override
         public String toString() {
-            return alimento.getNome() + " (" + quantita + " g)"; // Modifica l'unità se necessario
+            return alimento.getNome() + " (" + quantita + " g)";
         }
     }
 
@@ -85,21 +87,20 @@ public class AggiungiGiornoDieta {
 
     @FXML
     private void initialize() {
-        pastiAlimenti.put("colazione", FXCollections.observableArrayList());
-        pastiAlimenti.put("spuntinoMattina", FXCollections.observableArrayList());
-        pastiAlimenti.put("pranzo", FXCollections.observableArrayList());
-        pastiAlimenti.put("spuntinoPomeriggio", FXCollections.observableArrayList());
-        pastiAlimenti.put("cena", FXCollections.observableArrayList());
-
-        // Inizializza le ListView
-        colazioneListView.setItems(FXCollections.observableArrayList());
-        spuntinoMattinaListView.setItems(FXCollections.observableArrayList());
-        pranzoListView.setItems(FXCollections.observableArrayList());
-        spuntinoPomeriggioListView.setItems(FXCollections.observableArrayList());
-        cenaListView.setItems(FXCollections.observableArrayList());
-
-        aggiornaTotali();
+        giorniPasti.put(giornoCorrente, creaMappaPastiVuota());
         aggiornaIndicatoreGiorno();
+        aggiornaListView();
+        aggiornaTotali();
+    }
+
+    private Map<String, ObservableList<AlimentoQuantificato>> creaMappaPastiVuota() {
+        Map<String, ObservableList<AlimentoQuantificato>> pasti = new HashMap<>();
+        pasti.put("colazione", FXCollections.observableArrayList());
+        pasti.put("spuntinoMattina", FXCollections.observableArrayList());
+        pasti.put("pranzo", FXCollections.observableArrayList());
+        pasti.put("spuntinoPomeriggio", FXCollections.observableArrayList());
+        pasti.put("cena", FXCollections.observableArrayList());
+        return pasti;
     }
 
     @FXML
@@ -139,25 +140,36 @@ public class AggiungiGiornoDieta {
     }
 
     public void aggiungiAlimentoAllaLista(String pasto, Alimento alimento, int quantita) {
+        Map<String, ObservableList<AlimentoQuantificato>> pastiAlimenti = giorniPasti.get(giornoCorrente);
         pastiAlimenti.get(pasto).add(new AlimentoQuantificato(alimento, quantita));
-        switch (pasto) {
-            case "colazione":
-                colazioneListView.getItems().add(new AlimentoQuantificato(alimento, quantita).toString());
-                break;
-            case "spuntinoMattina":
-                spuntinoMattinaListView.getItems().add(new AlimentoQuantificato(alimento, quantita).toString());
-                break;
-            case "pranzo":
-                pranzoListView.getItems().add(new AlimentoQuantificato(alimento, quantita).toString());
-                break;
-            case "spuntinoPomeriggio":
-                spuntinoPomeriggioListView.getItems().add(new AlimentoQuantificato(alimento, quantita).toString());
-                break;
-            case "cena":
-                cenaListView.getItems().add(new AlimentoQuantificato(alimento, quantita).toString());
-                break;
-        }
+        aggiornaListView();
         aggiornaTotali();
+    }
+
+    private void aggiornaListView() {
+        Map<String, ObservableList<AlimentoQuantificato>> pastiAlimenti = giorniPasti.get(giornoCorrente);
+
+        colazioneListView.setItems(FXCollections.observableArrayList());
+        spuntinoMattinaListView.setItems(FXCollections.observableArrayList());
+        pranzoListView.setItems(FXCollections.observableArrayList());
+        spuntinoPomeriggioListView.setItems(FXCollections.observableArrayList());
+        cenaListView.setItems(FXCollections.observableArrayList());
+
+        for (AlimentoQuantificato a : pastiAlimenti.get("colazione")) {
+            colazioneListView.getItems().add(a.toString());
+        }
+        for (AlimentoQuantificato a : pastiAlimenti.get("spuntinoMattina")) {
+            spuntinoMattinaListView.getItems().add(a.toString());
+        }
+        for (AlimentoQuantificato a : pastiAlimenti.get("pranzo")) {
+            pranzoListView.getItems().add(a.toString());
+        }
+        for (AlimentoQuantificato a : pastiAlimenti.get("spuntinoPomeriggio")) {
+            spuntinoPomeriggioListView.getItems().add(a.toString());
+        }
+        for (AlimentoQuantificato a : pastiAlimenti.get("cena")) {
+            cenaListView.getItems().add(a.toString());
+        }
     }
 
     private void aggiornaTotali() {
@@ -166,12 +178,13 @@ public class AggiungiGiornoDieta {
         double proteineTotali = 0;
         double grassiTotali = 0;
 
+        Map<String, ObservableList<AlimentoQuantificato>> pastiAlimenti = giorniPasti.get(giornoCorrente);
+
         for (ObservableList<AlimentoQuantificato> listaAlimenti : pastiAlimenti.values()) {
             for (AlimentoQuantificato alimentoQuantificato : listaAlimenti) {
                 Alimento alimento = alimentoQuantificato.getAlimento();
                 int quantita = alimentoQuantificato.getQuantita();
 
-                // Calcola i valori proporzionalmente alla quantità (assumendo valori per 100g nel DB)
                 kcalTotali += (alimento.getKcal() / 100.0) * quantita;
                 carboidratiTotali += (alimento.getCarboidrati() / 100.0) * quantita;
                 proteineTotali += (alimento.getProteine() / 100.0) * quantita;
@@ -187,23 +200,19 @@ public class AggiungiGiornoDieta {
 
     @FXML
     private void salvaPianoButtonAction(ActionEvent event) {
-        // Implementa la logica per salvare il piano dieta
         System.out.println("Piano dieta salvato!");
+        // Qui potresti serializzare giorniPasti o salvarlo su DB
     }
 
     @FXML
     private void avantiGiornoButtonAction(ActionEvent event) {
         if (giornoCorrente < numeroGiorni) {
             giornoCorrente++;
+            if (!giorniPasti.containsKey(giornoCorrente)) {
+                giorniPasti.put(giornoCorrente, creaMappaPastiVuota());
+            }
             aggiornaIndicatoreGiorno();
-            // Implementa la logica per caricare i dati del giorno successivo se necessario
-            // Potrebbe essere necessario pulire le liste dei pasti per il nuovo giorno
-            pastiAlimenti.values().forEach(ObservableList::clear);
-            colazioneListView.getItems().clear();
-            spuntinoMattinaListView.getItems().clear();
-            pranzoListView.getItems().clear();
-            spuntinoPomeriggioListView.getItems().clear();
-            cenaListView.getItems().clear();
+            aggiornaListView();
             aggiornaTotali();
         } else {
             System.out.println("Ultimo giorno raggiunto.");
@@ -215,14 +224,7 @@ public class AggiungiGiornoDieta {
         if (giornoCorrente > 1) {
             giornoCorrente--;
             aggiornaIndicatoreGiorno();
-            // Implementa la logica per caricare i dati del giorno precedente se necessario
-            // Potrebbe essere necessario pulire le liste dei pasti per il nuovo giorno
-            pastiAlimenti.values().forEach(ObservableList::clear);
-            colazioneListView.getItems().clear();
-            spuntinoMattinaListView.getItems().clear();
-            pranzoListView.getItems().clear();
-            spuntinoPomeriggioListView.getItems().clear();
-            cenaListView.getItems().clear();
+            aggiornaListView();
             aggiornaTotali();
         } else {
             System.out.println("Primo giorno raggiunto.");

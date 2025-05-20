@@ -38,16 +38,16 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Button>
-                  <Button fx:id="BottoneAlimenti1" layoutX="10.0" layoutY="179.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Alimenti">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <Button fx:id="BottoneAlimenti2" layoutX="10.0" layoutY="99.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Diete">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
+                        <Button fx:id="BottoneAlimenti1" mnemonicParsing="false" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Alimenti">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                        <Button fx:id="BottoneAlimenti2" mnemonicParsing="false" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Diete">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
                     </children>
                 </VBox>
             </left>
