@@ -23,6 +23,8 @@ public class HomePageNutrizionista {
     @FXML
     private Button BottoneAlimenti;
     @FXML
+    private Button BottoneDieta;
+    @FXML
     private Label nomeUtenteLabelHomePage;
     @FXML
     private TextField ricercaClienteTextField;
@@ -44,6 +46,20 @@ public class HomePageNutrizionista {
             dietaStage.setScene(new Scene(dietaRoot));
             dietaStage.setTitle("Diete");
             dietaStage.show();
+            ((Stage) BottoneDieta.getScene().getWindow()).close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void AccessoAlimenti(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
+            Parent loginRoot = fxmlLoader.load();
+            Stage loginStage = new Stage();
+            loginStage.setScene(new Scene(loginRoot));
+            loginStage.show();
             ((Stage) BottoneAlimenti.getScene().getWindow()).close();
         } catch (IOException e) {
             e.printStackTrace();
