@@ -183,7 +183,7 @@ public class DietaNutrizionista {
             Window owner = ((Node) event.getSource()).getScene().getWindow();
             stage.initOwner(owner);
 
-            stage.setOnHidden(e -> caricaListaDiete()); // Ricarica la lista quando la finestra "Nuova Dieta" è chiusa
+            stage.setOnHidden(e -> caricaListaDiete()); // Ricarica la lista quando la finestra "Nuova Dieta" Ã¨ chiusa
 
             stage.show();
         } catch (IOException e) {
