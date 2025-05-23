@@ -67,7 +67,7 @@
                             <children>
                                 <TextField fx:id="filtroNomeDietaTextField" promptText="Filtra per nome..." styleClass="search-field" />
                                 <Button mnemonicParsing="false" styleClass="button-positive" text="+ Nuova dieta" onAction="#vaiAggiungiNuovaDieta" />
-                                <Button mnemonicParsing="false" styleClass="button-negative" text="-" />
+                                <Button mnemonicParsing="false" styleClass="button-negative" text="-" onAction="#eliminaDietaSelezionata"/>
                             </children>
                         </HBox>
                     </children>

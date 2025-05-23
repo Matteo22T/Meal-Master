@@ -154,13 +154,15 @@ public class DietaNutrizionista {
     private void caricaListaDiete() {
         observableListaDiete.clear(); // Pulisce la lista prima di ricaricare
         String url = "jdbc:sqlite:database.db";
-        String query = "SELECT id_dieta, nome_dieta, data_inizio, data_fine FROM Dieta";
+        // MODIFICA QUI: La query deve selezionare "id" (il nome reale della colonna ID)
+        String query = "SELECT id, nome_dieta, data_inizio, data_fine FROM Diete";
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
                 observableListaDiete.add(new Dieta(
-                        rs.getInt("id_dieta"),
+                        // MODIFICA QUI: Recupera il valore usando il nome della colonna reale "id"
+                        rs.getInt("id"),
                         rs.getString("nome_dieta"),
                         rs.getString("data_inizio"),
                         rs.getString("data_fine")
@@ -170,7 +172,6 @@ public class DietaNutrizionista {
             System.err.println("Errore DB (carica diete): " + e.getMessage());
         }
     }
-
     @FXML
     private void vaiAggiungiNuovaDieta(ActionEvent event) {
         try {
@@ -190,4 +191,100 @@ public class DietaNutrizionista {
             e.printStackTrace();
         }
     }
+
+
+    @FXML
+    private void eliminaDietaSelezionata(ActionEvent event) {
+        Dieta dietaSelezionata = listaDiete.getSelectionModel().getSelectedItem();
+
+        if (dietaSelezionata == null) {
+            System.err.println("Nessuna dieta selezionata da eliminare.");
+            return;
+        }
+
+        boolean conferma = confermaEliminazione(dietaSelezionata.getNome());
+        if (!conferma) {
+            return;
+        }
+
+        String url = "jdbc:sqlite:database.db";
+
+        try (Connection conn = DriverManager.getConnection(url)) {
+            conn.setAutoCommit(false);
+
+            try {
+                // 1. Recupera tutti gli id_giorno_dieta associati alla dieta
+                String queryGiorni = "SELECT id_giorno_dieta FROM Giorno_dieta WHERE id_dieta = ?";
+                PreparedStatement psGiorni = conn.prepareStatement(queryGiorni);
+                psGiorni.setInt(1, dietaSelezionata.getId());
+                ResultSet rs = psGiorni.executeQuery();
+
+                // Costruiamo una lista di id_giorno_dieta
+                java.util.List<Integer> listaIdGiorni = new java.util.ArrayList<>();
+                while (rs.next()) {
+                    listaIdGiorni.add(rs.getInt("id_giorno_dieta"));
+                }
+                rs.close();
+                psGiorni.close();
+
+                if (!listaIdGiorni.isEmpty()) {
+                    // 2. Elimina da DietaAlimenti tutti i record con id_giorno_dieta trovati
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("DELETE FROM DietaAlimenti WHERE id_giorno_dieta IN (");
+                    for (int i = 0; i < listaIdGiorni.size(); i++) {
+                        sb.append("?");
+                        if (i < listaIdGiorni.size() - 1) {
+                            sb.append(",");
+                        }
+                    }
+                    sb.append(")");
+
+                    PreparedStatement psEliminaAlimenti = conn.prepareStatement(sb.toString());
+                    for (int i = 0; i < listaIdGiorni.size(); i++) {
+                        psEliminaAlimenti.setInt(i + 1, listaIdGiorni.get(i));
+                    }
+                    psEliminaAlimenti.executeUpdate();
+                    psEliminaAlimenti.close();
+                }
+
+                // 3. Elimina i giorni associati alla dieta
+                String eliminaGiorni = "DELETE FROM Giorno_dieta WHERE id_dieta = ?";
+                try (PreparedStatement ps = conn.prepareStatement(eliminaGiorni)) {
+                    ps.setInt(1, dietaSelezionata.getId());
+                    ps.executeUpdate();
+                }
+
+                // 4. Elimina la dieta
+                String eliminaDieta = "DELETE FROM Diete WHERE id = ?";
+                try (PreparedStatement ps = conn.prepareStatement(eliminaDieta)) {
+                    ps.setInt(1, dietaSelezionata.getId());
+                    ps.executeUpdate();
+                }
+
+                conn.commit();
+
+                // Rimuove dalla ListView
+                observableListaDiete.remove(dietaSelezionata);
+
+            } catch (SQLException e) {
+                conn.rollback();
+                System.err.println("Errore durante l'eliminazione: " + e.getMessage());
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Errore di connessione DB: " + e.getMessage());
+        }
+    }
+    private boolean confermaEliminazione(String nomeDieta) {
+        // Implementa una finestra di dialogo di conferma
+        // Per esempio con Alert di JavaFX:
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Conferma Eliminazione");
+        alert.setHeaderText("Sei sicuro di voler eliminare la dieta \"" + nomeDieta + "\"?");
+        alert.setContentText("Questa operazione non può essere annullata.");
+
+        java.util.Optional<javafx.scene.control.ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK;
+    }
+
 }

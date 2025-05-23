@@ -34,7 +34,7 @@
                         </HBox>
                         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="75.0" prefWidth="180.0" text="Clienti" />
                         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="80.0" prefWidth="180.0" text="Alimenti" />
-                        <Button fx:id="BottoneAlimenti" onAction="#AccessoDieta" mnemonicParsing="false" prefHeight="83.0" prefWidth="212.0" text="Diete">
+                        <Button fx:id="BottoneAlimenti" mnemonicParsing="false" onAction="#AccessoDieta" prefHeight="83.0" prefWidth="212.0" text="Diete">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
