@@ -1,0 +1,290 @@
+/* ===== STILI GENERALI ===== */
+.main-container {
+    -fx-background-color: linear-gradient(to bottom right, #fdf8f7, #f5efed);
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #8B3A3A, #A0464A);
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 2, 0);
+}
+
+.profile-section {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-background-radius: 12;
+    -fx-padding: 15 10;
+    -fx-spacing: 10;
+    -fx-alignment: center-left;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.profile-circle {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 8, 0, 0, 2);
+}
+
+.profile-image {
+    -fx-clip: circle(22.5px at center);
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 3, 0, 0, 1);
+}
+
+.profile-image:hover {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.8), 8, 0, 0, 2);
+}
+
+.profile-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.profile-subtitle {
+    -fx-text-fill: #E8C5C1;
+    -fx-font-size: 11px;
+}
+
+.nav-menu {
+    -fx-padding: 10 0;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #F5E6E4;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+    -fx-padding: 0 15;
+    -fx-effect: null;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 5, 0, 0, 0);
+}
+
+.nav-button-active {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.4), 8, 0, 0, 2);
+}
+
+/* ===== CONTENUTO PRINCIPALE ===== */
+.main-content {
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+    -fx-spacing: 20;
+}
+
+/* ===== SEZIONE STATISTICHE ===== */
+.stats-section {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 30;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 15, 0, 0, 5);
+}
+
+.calories-container {
+    -fx-alignment: center;
+}
+
+.calories-circle {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 15, 0, 0, 3);
+}
+
+.calories-progress {
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.calories-number {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.calories-label {
+    -fx-text-fill: rgba(255,255,255,0.9);
+    -fx-font-weight: normal;
+}
+
+.macros-container {
+    -fx-alignment: center;
+}
+
+.macros-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-weight: bold;
+}
+
+.macros-grid {
+    -fx-alignment: center;
+}
+
+.macro-item {
+    -fx-alignment: center;
+}
+
+.macro-circle {
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 8, 0, 0, 2);
+}
+
+.macro-value {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-weight: bold;
+}
+
+.macro-label {
+    -fx-text-fill: #A0464A;
+    -fx-font-weight: normal;
+}
+
+/* ===== SEZIONE PASTI ===== */
+.meals-section {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 15, 0, 0, 5);
+}
+
+.meals-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+}
+
+.meals-row {
+    -fx-alignment: center;
+    -fx-padding: 5 15;
+}
+
+.meal-card {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-background-radius: 12;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.08), 10, 0, 0, 3);
+    -fx-border-color: rgba(139,58,58,0.1);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.meal-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.15), 15, 0, 0, 5);
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f9f2f1);
+    -fx-cursor: hand;
+}
+
+.meal-icon {
+    -fx-font-size: 24px;
+    -fx-text-fill: #4F7942;
+}
+
+.meal-name {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.meal-calories {
+    -fx-text-fill: #B8928E;
+    -fx-font-size: 12px;
+}
+
+.add-meal-button {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 2);
+}
+
+.add-meal-button:hover {
+    -fx-background-color: linear-gradient(to right, #5A8A4A, #658F52);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.5), 12, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.add-meal-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/* ===== PULSANTE SECONDARIO (opzionale) ===== */
+.secondary-button {
+    -fx-background-color: linear-gradient(to right, #8B3A3A, #A0464A);
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.3), 8, 0, 0, 2);
+}
+
+.secondary-button:hover {
+    -fx-background-color: linear-gradient(to right, #A0464A, #B54C50);
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.5), 12, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ===== ANIMAZIONI E TRANSIZIONI ===== */
+.meal-card, .add-meal-button, .secondary-button, .nav-button, .profile-image {
+    -fx-transition: all 0.3s ease;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1200px) {
+    .macros-grid {
+        -fx-spacing: 20;
+    }
+
+    .meals-row {
+        -fx-spacing: 10;
+    }
+
+    .meal-card {
+        -fx-padding: 10;
+    }
+}
+
+/* ===== STATI HOVER PERSONALIZZATI ===== */
+.macro-item:hover .macro-circle {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 12, 0, 0, 3);
+}
+
+.calories-container:hover .calories-circle {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.5), 20, 0, 0, 5);
+}
+
+/* ===== COLORI AGGIUNTIVI PER ELEMENTI SPECIALI ===== */
+.accent-red {
+    -fx-text-fill: #8B3A3A;
+}
+
+.accent-green {
+    -fx-text-fill: #4F7942;
+}
+
+.accent-light-red {
+    -fx-text-fill: #B8928E;
+}
+
+.background-light-red {
+    -fx-background-color: #FDF8F7;
+}
+
+.border-red {
+    -fx-border-color: #E8C5C1;
+}
