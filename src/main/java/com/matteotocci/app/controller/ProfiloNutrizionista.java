@@ -34,6 +34,8 @@ public class ProfiloNutrizionista implements Initializable {
     @FXML
     private Button BottoneAlimenti;
     @FXML
+    private Button BottoneDieta;
+    @FXML
     private Label benvenutoLabel;
     @FXML
     private TextField nomeTextField;
@@ -109,6 +111,22 @@ public class ProfiloNutrizionista implements Initializable {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(homePageRoot));
             stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void AccessoDieta(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DietaNutrizionista.fxml"));
+            Parent dietaRoot = fxmlLoader.load();
+            DietaNutrizionista controller = fxmlLoader.getController();
+            controller.setLoggedInUserId(loggedInUserId); // Passa l'ID Utente
+            Stage dietaStage = new Stage();
+            dietaStage.setScene(new Scene(dietaRoot));
+            dietaStage.setTitle("Diete");
+            dietaStage.show();
+            ((Stage) BottoneDieta.getScene().getWindow()).close();
         } catch (IOException e) {
             e.printStackTrace();
         }

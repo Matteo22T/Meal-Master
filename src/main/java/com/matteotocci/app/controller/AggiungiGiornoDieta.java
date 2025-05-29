@@ -1,5 +1,5 @@
 package com.matteotocci.app.controller;
-
+import com.matteotocci.app.model.Dieta; // Questo import è corretto e necessario
 import com.matteotocci.app.model.SQLiteConnessione;
 import com.matteotocci.app.model.Alimento;
 import com.matteotocci.app.model.Session;
@@ -205,7 +205,8 @@ public class AggiungiGiornoDieta {
         try {
             conn = SQLiteConnessione.connector();
             conn.setAutoCommit(false);
-
+            System.out.println("titoloPiano = '" + titoloPiano + "'");
+            System.out.println("UserID = " + Session.getUserId());
             // 1. Recupera l'ID della dieta
             String sqlGetDieta = "SELECT id FROM Diete WHERE nome_dieta = ? AND id_nutrizionista = ?";
             psGetDietaId = conn.prepareStatement(sqlGetDieta);
@@ -238,7 +239,7 @@ public class AggiungiGiornoDieta {
                 psDeleteAlimenti.executeUpdate();
 
                 // 3b. Inserisci i nuovi alimenti per questo giorno
-                String sqlInsert = "INSERT INTO DietaAlimenti (id_giorno_dieta, id_alimento, quantita_grammi) VALUES (?, ?, ?)";
+                String sqlInsert = "INSERT INTO DietaAlimenti (id_giorno_dieta, id_alimento, quantita_grammi, pasto) VALUES (?, ?, ?, ?)";
                 psInsertAlimenti = conn.prepareStatement(sqlInsert);
 
                 Map<String, ObservableList<AlimentoQuantificato>> pasti = giorniPasti.get(giornoIndex);
@@ -247,11 +248,15 @@ public class AggiungiGiornoDieta {
                     giorniPasti.put(giornoIndex, pasti);
                 }
 
-                for (ObservableList<AlimentoQuantificato> lista : pasti.values()) {
+                for (Map.Entry<String, ObservableList<AlimentoQuantificato>> entry : pasti.entrySet()) {
+                    String pasto = entry.getKey();
+                    ObservableList<AlimentoQuantificato> lista = entry.getValue();
+
                     for (AlimentoQuantificato aq : lista) {
                         psInsertAlimenti.setInt(1, idGiornoDieta);
                         psInsertAlimenti.setInt(2, aq.getAlimento().getId());
                         psInsertAlimenti.setDouble(3, aq.getQuantita());
+                        psInsertAlimenti.setString(4, pasto);  // <-- aggiunta colonna pasto
                         psInsertAlimenti.addBatch();
                     }
                 }
@@ -483,4 +488,97 @@ public class AggiungiGiornoDieta {
             System.out.println("Primo giorno raggiunto.");
         }
     }
+
+    private Dieta dietaCorrente; // <-- Modificato
+
+    public void impostaDietaDaModificare(Dieta dieta) { // <-- Modificato
+        this.dietaCorrente = dieta;
+        caricaDatiDieta();
+    }
+
+    private void caricaDatiDieta() {
+        if (dietaCorrente == null) return;
+
+        int dietaId = dietaCorrente.getId();
+
+        Connection conn = null;
+        PreparedStatement psGiorni = null;
+        PreparedStatement psAlimenti = null;
+        ResultSet rsGiorni = null;
+        ResultSet rsAlimenti = null;
+
+        try {
+            conn = SQLiteConnessione.connector();
+
+            // 1. Recupera i giorni associati alla dieta
+            String sqlGiorni = "SELECT id_giorno_dieta FROM Giorno_dieta WHERE id_dieta = ? ORDER BY id_giorno_dieta ASC";
+            psGiorni = conn.prepareStatement(sqlGiorni);
+            psGiorni.setInt(1, dietaId);
+            rsGiorni = psGiorni.executeQuery();
+
+            int giornoIndex = 1;
+            giorniPasti.clear(); // Pulisci i dati esistenti
+
+            while (rsGiorni.next()) {
+                int idGiornoDieta = rsGiorni.getInt("id_giorno_dieta");
+
+                // Crea la mappa vuota per questo giorno
+                Map<String, ObservableList<AlimentoQuantificato>> pasti = creaMappaPastiVuota();
+
+                // 2. Recupera gli alimenti associati a questo giorno, includendo la colonna pasto
+                String sqlAlimenti = "SELECT da.id_alimento, da.quantita_grammi, da.pasto, a.nome, a.kcal, a.carboidrati, a.proteine, a.grassi " +
+                        "FROM DietaAlimenti da " +
+                        "JOIN foods a ON da.id_alimento = a.id " +
+                        "WHERE da.id_giorno_dieta = ?";
+                psAlimenti = conn.prepareStatement(sqlAlimenti);
+                psAlimenti.setInt(1, idGiornoDieta);
+                rsAlimenti = psAlimenti.executeQuery();
+
+                while (rsAlimenti.next()) {
+                    int idAlimento = rsAlimenti.getInt("id_alimento");
+                    String nome = rsAlimenti.getString("nome");
+                    double kcal = rsAlimenti.getDouble("kcal");
+                    double carboidrati = rsAlimenti.getDouble("carboidrati");
+                    double proteine = rsAlimenti.getDouble("proteine");
+                    double grassi = rsAlimenti.getDouble("grassi");
+                    int quantita = rsAlimenti.getInt("quantita_grammi");
+
+                    // Leggi il pasto dal DB
+                    String pasto = rsAlimenti.getString("pasto");
+
+                    // Crea un oggetto Alimento (ipotizzando che abbia un costruttore adatto)
+                    Alimento alimento = new Alimento(nome, null, kcal, proteine, carboidrati, grassi, 0, 0, 0, 0, null, null, null, idAlimento);
+
+                    // Inserisci l'alimento nel pasto corretto (se il pasto è null o non riconosciuto, puoi mettere un default)
+                    if (pasto == null || !pasti.containsKey(pasto)) {
+                        pasto = "pranzo"; // default fallback
+                    }
+                    pasti.get(pasto).add(new AlimentoQuantificato(alimento, quantita));
+                }
+                rsAlimenti.close();
+                psAlimenti.close();
+
+                giorniPasti.put(giornoIndex, pasti);
+                giornoIndex++;
+            }
+            numeroGiorni=giornoIndex-1;
+            aggiornaListView();
+            aggiornaTotali();
+            aggiornaIndicatoreGiorno();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rsGiorni != null) rsGiorni.close();
+                if (psGiorni != null) psGiorni.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }

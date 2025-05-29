@@ -264,7 +264,11 @@
     -fx-cursor: hand;
     -fx-font-size: 14px;
 }
-
+.button-danger {
+    -fx-background-color: #dc3545; /* Rosso */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
 .button-negative:hover {
     -fx-background-color: #d32f2f;
 }
