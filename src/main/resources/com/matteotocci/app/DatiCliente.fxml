@@ -83,7 +83,7 @@
                         </HBox>
                         <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="300.0">
                            <children>
-                              <Label text="Data di nascita">
+                              <Label text="Sesso">
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin>
@@ -91,6 +91,19 @@
                            </children>
                            <VBox.margin>
                               <Insets bottom="-15.0" top="-20.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <ChoiceBox fx:id="genereBox" prefHeight="26.0" prefWidth="175.0" />
+                        <HBox alignment="CENTER" prefHeight="33.0" prefWidth="356.0">
+                           <children>
+                              <Label prefHeight="29.0" prefWidth="86.0" text="Data di nascita">
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="-15.0" top="-15.0" />
                            </VBox.margin>
                         </HBox>
                         <DatePicker fx:id="datadinascitaPicker" />

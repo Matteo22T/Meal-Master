@@ -50,7 +50,11 @@ public class DatiCliente {
     private Slider pesoSlider;
 
     @FXML
+    private ChoiceBox<String> genereBox;
+
+    @FXML
     private VBox registerBox; // Ottieni il riferimento al VBox principale
+
 
     private Map<String, Integer> mappaNutrizionisti = new HashMap<>();
     private int idUtente;
@@ -97,7 +101,20 @@ public class DatiCliente {
             pesoLabel.setText(String.format("%.0f kg", valore));
         });
 
-        ObservableList<String> livelliAttivita = FXCollections.observableArrayList("Sedentario", "Leggermente Attivo", "Moderatamente Attivo", "Molto Attivo", "Estremamente Attivo");
+        ObservableList<String> opzioniSesso = FXCollections.observableArrayList(
+                "Maschio",
+                "Femmina",
+                "Altro/Non specificato" // O le opzioni che preferisci
+        );
+        genereBox.setItems(opzioniSesso);
+
+        ObservableList<String> livelliAttivita = FXCollections.observableArrayList(
+                "Sedentario",
+                "Leggermente Attivo",
+                "Moderatamente Attivo",
+                "Molto Attivo",
+                "Estremamente Attivo"
+        );
         livelloattivitàBox.setItems(livelliAttivita);
 
         // Aggiungi un listener di eventi al VBox principale per intercettare il tasto "Invio"
@@ -145,15 +162,21 @@ public class DatiCliente {
             showAlert(Alert.AlertType.ERROR, "Errore", "Seleziona un nutrizionista.");
             return;
         }
+        if (genereBox.getValue() == null || genereBox.getValue().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Seleziona il tuo sesso.");
+            return;
+        }
 
         double altezza = altezzaSlider.getValue();
         double peso = pesoSlider.getValue();
         LocalDate dataDiNascita = datadinascitaPicker.getValue();
         String livelloAttivita = livelloattivitàBox.getValue();
+        String sessoSelezionato = genereBox.getValue();
         String nutrizionistaSelezionato = nutrizionistaBox.getValue();
         Integer idNutrizionista = mappaNutrizionisti.get(nutrizionistaSelezionato);
 
-        boolean successo = datiCliente.registraCliente(altezza, peso, dataDiNascita, livelloAttivita, idNutrizionista, idUtente);
+
+        boolean successo = datiCliente.registraCliente(altezza, peso, dataDiNascita, livelloAttivita,sessoSelezionato, idNutrizionista, idUtente);
         // --- Fine Logica di Registrazione ---
 
         // --- Gestione Risultato e Navigazione ---

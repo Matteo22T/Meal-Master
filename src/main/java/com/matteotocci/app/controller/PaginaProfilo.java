@@ -110,6 +110,7 @@ public class PaginaProfilo implements Initializable {
             String peso = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "peso_kg");
             String livelloAttivita = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "livello_attivita");
             String dataNascita = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "data_di_nascita");
+            String sesso = getDatoUtenteDalDatabase("Clienti",utenteCorrenteId,"sesso");
 
             // Imposta i valori nei rispettivi TextField
             if (altezzaTextField != null) {
@@ -123,6 +124,21 @@ public class PaginaProfilo implements Initializable {
             }
             if (dataNascitaTextField != null) {
                 dataNascitaTextField.setText(dataNascita);
+            }
+            if (sessoTextField != null){
+                sessoTextField.setText(sesso);
+            }
+            if (nutrizionistaTextField != null) {
+                String idNutrizionista = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "id_nutrizionista");
+
+                if (idNutrizionista != null && !idNutrizionista.isEmpty()) {
+                    String nomeNutrizionista = getDatoUtenteDalDatabase("Utente", idNutrizionista, "Nome");
+                    String cognomeNutrizionista = getDatoUtenteDalDatabase("Utente", idNutrizionista, "Cognome");
+
+                    if (nomeNutrizionista != null && cognomeNutrizionista != null) {
+                        nutrizionistaTextField.setText(nomeNutrizionista + " " + cognomeNutrizionista);
+                    }
+                }
             }
 
             // Imposta anche gli altri campi se hai i riferimenti FXML
