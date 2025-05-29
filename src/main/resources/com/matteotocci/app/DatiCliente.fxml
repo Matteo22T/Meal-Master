@@ -13,104 +13,148 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="551.0" prefWidth="531.0" style="-fx-background-color: green;" stylesheets="@css/stile_login.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.DatiCliente">
+<AnchorPane prefHeight="600.0" prefWidth="580.0" stylesheets="@css/DatiCliente-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.DatiCliente">
+    <styleClass>
+        <String fx:value="root" />
+    </styleClass>
     <children>
-        <BorderPane layoutX="51.0" prefHeight="551.0" prefWidth="478.0" style="-fx-background-color: white;">
+        <!-- Container principale centrato -->
+        <BorderPane layoutX="51.0" prefHeight="600.0" prefWidth="478.0">
             <styleClass>
                 <String fx:value="pagina-tonda" />
                 <String fx:value="border-color" />
+                <String fx:value="container-shadow" />
             </styleClass>
-            <top>
-                <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <center>
+                <AnchorPane prefHeight="600.0" prefWidth="478.0">
                     <children>
-                        <VBox fx:id="registerBox" alignment="TOP_CENTER" prefHeight="548.0" prefWidth="476.0" spacing="15.0" styleClass="pagina-tonda">
+                        <VBox fx:id="registerBox" alignment="TOP_CENTER" prefHeight="600.0" prefWidth="478.0" styleClass="pagina-tonda">
                             <children>
-                                <ImageView fitHeight="224.0" fitWidth="277.0" pickOnBounds="true" preserveRatio="true">
+                                <!-- Logo con effetto ombra -->
+                                <ImageView fitHeight="200.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
                                         <Image url="@immagini/logo.jpg" />
                                     </image>
+                                    <styleClass>
+                                        <String fx:value="image-view" />
+                                    </styleClass>
+                                    <VBox.margin>
+                                        <Insets bottom="5.0" />
+                                    </VBox.margin>
+                                </ImageView>
+
+                                <!-- Titolo -->
+                                <Label styleClass="title" text="Completa il tuo Profilo">
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </Label>
+
+                                <!-- Sezione Altezza e Peso -->
+                                <VBox spacing="10.0">
+                                    <children>
+                                        <!-- Labels per valori attuali -->
+                                        <HBox alignment="CENTER" prefHeight="25.0" prefWidth="400.0" spacing="120.0" />
+
+                                        <!-- Labels descrittive -->
+                                        <HBox alignment="CENTER" prefHeight="20.0" prefWidth="400.0">
+                                            <children>
+                                                <Label fx:id="altezzaLabel" styleClass="slider-value" text="150 cm" />
+                                    <Region prefHeight="18.0" prefWidth="21.0" />
+                                                <Label text="Altezza" />
+                                    <Region prefHeight="18.0" prefWidth="79.0" />
+                                                <Label fx:id="pesoLabel" styleClass="slider-value" text="70 kg" />
+                                    <Region prefHeight="18.0" prefWidth="19.0" />
+                                                <Label text="Peso" />
+                                    <Region prefHeight="18.0" prefWidth="48.0" />
+                                            </children>
+                                        </HBox>
+
+                                        <!-- Sliders -->
+                                        <HBox alignment="CENTER" prefHeight="40.0" prefWidth="400.0" spacing="40.0">
+                                            <children>
+                                                <Slider fx:id="altezzaSlider" blockIncrement="1.0" max="250.0" min="50.0" prefHeight="20.0" prefWidth="160.0" snapToTicks="true" value="150.0">
+                                                    <styleClass>
+                                                        <String fx:value="interactive" />
+                                                    </styleClass>
+                                                </Slider>
+                                                <Slider fx:id="pesoSlider" blockIncrement="0.1" max="200.0" min="30.0" prefHeight="20.0" prefWidth="160.0" snapToTicks="true" value="70.0">
+                                                    <styleClass>
+                                                        <String fx:value="interactive" />
+                                                    </styleClass>
+                                                </Slider>
+                                            </children>
+                                        </HBox>
+                                    </children>
                                     <VBox.margin>
                                         <Insets bottom="10.0" />
                                     </VBox.margin>
-                                </ImageView>
-                        <HBox prefHeight="18.0" prefWidth="300.0" VBox.vgrow="NEVER">
-                           <children>
-                              <Label fx:id="altezzaLabel" prefHeight="18.0" prefWidth="69.0" text="0 cm" HBox.hgrow="NEVER">
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <Label fx:id="pesoLabel" prefHeight="18.0" prefWidth="85.0" text="0 kg" HBox.hgrow="NEVER">
-                                 <HBox.margin>
-                                    <Insets left="120.0" />
-                                 </HBox.margin>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="-20.0" />
-                           </VBox.margin>
-                        </HBox>
-                                <HBox alignment="CENTER" prefHeight="38.0" prefWidth="358.0" spacing="40.0">
+                                </VBox>
+
+                                <!-- Sezione Choice Boxes -->
+                                <VBox spacing="10.0">
                                     <children>
-                              <Slider fx:id="altezzaSlider" blockIncrement="1.0" max="250.0" min="50.0" prefHeight="14.0" prefWidth="148.0" snapToTicks="true" />
-                              <Slider fx:id="pesoSlider" blockIncrement="0.1" max="200.0" min="30.0" prefHeight="14.0" prefWidth="147.0" snapToTicks="true" />
+                                        <!-- Labels descrittive -->
+                                        <HBox alignment="CENTER" prefHeight="20.0" prefWidth="400.0" spacing="80.0">
+                                            <children>
+                                                <Label text="Livello di Attività" />
+                                                <Label text="Nutrizionista" />
+                                            </children>
+                                        </HBox>
+
+                                        <!-- Choice Boxes -->
+                                        <HBox alignment="CENTER" prefHeight="40.0" prefWidth="400.0" spacing="40.0">
+                                            <children>
+                                                <ChoiceBox fx:id="livelloattivitàBox" prefWidth="160.0">
+                                                    <styleClass>
+                                                        <String fx:value="interactive" />
+                                                    </styleClass>
+                                                </ChoiceBox>
+                                                <ChoiceBox fx:id="nutrizionistaBox" prefWidth="160.0">
+                                                    <styleClass>
+                                                        <String fx:value="interactive" />
+                                                    </styleClass>
+                                                </ChoiceBox>
+                                            </children>
+                                        </HBox>
                                     </children>
-                                </HBox>
-                        <HBox prefHeight="18.0" prefWidth="300.0">
-                           <children>
-                              <Label text="Livello di Attività">
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <Label text="Nutrizionista">
-                                 <HBox.margin>
-                                    <Insets left="100.0" />
-                                 </HBox.margin>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="-20.0" top="-20.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <HBox alignment="CENTER" prefHeight="38.0" prefWidth="358.0" spacing="40.0">
-                           <children>
-                              <ChoiceBox fx:id="livelloattivitàBox" prefWidth="150.0" />
-                              <ChoiceBox fx:id="nutrizionistaBox" prefWidth="150.0" />
-                           </children>
-                        </HBox>
-                        <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="300.0">
-                           <children>
-                              <Label text="Data di nascita">
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="-15.0" top="-20.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <DatePicker fx:id="datadinascitaPicker" />
-                                <Button fx:id="BottoneConferma" mnemonicParsing="false" onAction="#Conferma" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Conferma">
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" />
+                                    </VBox.margin>
+                                </VBox>
+
+                                <!-- Sezione Data di Nascita -->
+                                <VBox alignment="CENTER" spacing="10.0">
+                                    <children>
+                                        <Label text="Data di nascita" />
+                                        <DatePicker fx:id="datadinascitaPicker" prefWidth="250.0">
+                                            <styleClass>
+                                                <String fx:value="interactive" />
+                                            </styleClass>
+                                        </DatePicker>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="15.0" />
+                                    </VBox.margin>
+                                </VBox>
+
+                                <!-- Pulsante Conferma -->
+                                <Button fx:id="BottoneConferma" mnemonicParsing="false" onAction="#Conferma" prefHeight="45.0" prefWidth="140.0" styleClass="bottone1" text="CONFERMA">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />
                                     </cursor>
                                 </Button>
                             </children>
                             <padding>
-                                <Insets left="60.0" right="60.0" top="40.0" />
+                                <Insets bottom="20.0" left="60.0" right="60.0" top="20.0" />
                             </padding>
                         </VBox>
                     </children>
                 </AnchorPane>
-            </top>
+            </center>
         </BorderPane>
     </children>
-    <styleClass>
-        <String fx:value="pagina-tonda" />
-        <String fx:value="border-color" />
-    </styleClass>
 </AnchorPane>
