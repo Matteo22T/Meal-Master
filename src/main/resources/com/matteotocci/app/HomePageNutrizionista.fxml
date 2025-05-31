@@ -10,53 +10,89 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="531.0" prefWidth="922.0" stylesheets="@css/stile_HomePage.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePageNutrizionista">
+<AnchorPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/HomePageNutrizionista-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePageNutrizionista">
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <VBox prefHeight="578.0" prefWidth="180.0">
+                <!-- SIDEBAR NUTRIZIONISTA -->
+                <VBox prefHeight="650.0" prefWidth="200.0" styleClass="sidebar">
                     <children>
-                        <HBox prefHeight="69.0" prefWidth="180.0">
+                        <!-- PROFILO NUTRIZIONISTA -->
+                        <HBox prefHeight="80.0" prefWidth="200.0" styleClass="profile-section">
                             <children>
-                                <ImageView fx:id="profileImage" fitHeight="70.0" fitWidth="68.0" onMouseClicked="#openProfiloNutrizionista" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@immagini/omino_profilo.jpg" />
-                                    </image>
-                                </ImageView>
-                                <VBox>
-                                    <Label fx:id="nomeUtenteLabelHomePage" prefHeight="35.0" prefWidth="114.0" text="Benvenuto" />
-                                    <Label prefHeight="39.0" prefWidth="113.0" text="Nutrizionista" />
+                                <StackPane prefHeight="60.0" prefWidth="60.0">
+                                    <children>
+                                        <Circle fill="#ffffff" radius="25.0" styleClass="profile-circle" />
+                                        <ImageView fx:id="profileImage" fitHeight="45.0" fitWidth="45.0" onMouseClicked="#openProfiloNutrizionista" pickOnBounds="true" preserveRatio="true" styleClass="profile-image">
+                                            <image>
+                                                <Image url="@immagini/logo.png" />
+                                            </image>
+                                        </ImageView>
+                                    </children>
+                                </StackPane>
+                                <VBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="130.0">
+                                    <children>
+                                        <Label fx:id="nomeUtenteLabelHomePage" styleClass="profile-name" text="Benvenuto" />
+                                        <Label styleClass="profile-subtitle" text="Nutrizionista" />
+                                    </children>
                                 </VBox>
                             </children>
                         </HBox>
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="75.0" prefWidth="180.0" text="Clienti" />
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="80.0" prefWidth="180.0" text="Alimenti" />
-                        <Button fx:id="BottoneDieta" mnemonicParsing="false" onAction="#AccessoDieta" prefHeight="83.0" prefWidth="212.0" text="Diete">
-                            <cursor>
-                                <Cursor fx:constant="HAND" />
-                            </cursor>
-                        </Button>
+
+                        <!-- MENU NAVIGAZIONE NUTRIZIONISTA -->
+                        <VBox prefHeight="400.0" prefWidth="200.0" spacing="5.0" styleClass="nav-menu">
+                            <children>
+                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button,nav-button-active" text="👥 Clienti" />
+                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="🥗 Alimenti" />
+                                <Button fx:id="BottoneDieta" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoDieta" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="📋 Diete">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Button>
+                            </children>
+                        </VBox>
                     </children>
                 </VBox>
-                <AnchorPane prefHeight="531.0" prefWidth="742.0">
+
+                <!-- CONTENUTO PRINCIPALE -->
+                <VBox maxWidth="1.7976931348623157E308" prefHeight="650.0" prefWidth="800.0" styleClass="main-content">
                     <children>
-                        <Label layoutX="26.0" layoutY="25.0" text="Clienti" AnchorPane.leftAnchor="26.0" AnchorPane.topAnchor="25.0">
-                            <font>
-                                <Font size="24.0" />
-                            </font>
-                        </Label>
-                        <TextField fx:id="ricercaClienteTextField" layoutX="26.0" layoutY="60.0" prefWidth="200.0" promptText="Cerca per nome..." AnchorPane.leftAnchor="26.0" AnchorPane.topAnchor="60.0" />
-                        <TableView fx:id="tabellaClienti" layoutX="26.0" layoutY="100.0" prefHeight="410.0" prefWidth="690.0" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="100.0">
-                            <columns>
-                                <TableColumn fx:id="nomeColonna" prefWidth="229.0" text="Nome" />
-                                <TableColumn fx:id="azioniColonna" prefWidth="460.0" text="Azioni" />
-                            </columns>
-                        </TableView>
+                        <!-- HEADER SEZIONE -->
+                        <VBox styleClass="header-section">
+                            <children>
+                                <Label styleClass="page-title" text="Gestione Clienti">
+                                    <font>
+                                        <Font name="Segoe UI Bold" size="24.0" />
+                                    </font>
+                                </Label>
+
+                                <!-- BARRA RICERCA -->
+                                <HBox alignment="CENTER_LEFT" styleClass="search-container">
+                                    <children>
+                                        <TextField fx:id="ricercaClienteTextField" prefWidth="300.0" promptText="🔍 Cerca per nome..." styleClass="search-field" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+
+                        <!-- TABELLA CLIENTI -->
+                        <VBox styleClass="table-section" VBox.vgrow="ALWAYS">
+                            <children>
+                                <TableView fx:id="tabellaClienti" prefHeight="450.0" styleClass="clients-table" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="nomeColonna" prefWidth="300.0" styleClass="table-column-header" text="Nome Cliente" />
+                                        <TableColumn fx:id="azioniColonna" prefWidth="450.0" styleClass="table-column-header" text="Azioni" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
                     </children>
-                </AnchorPane>
+                </VBox>
             </children>
         </HBox>
     </children>

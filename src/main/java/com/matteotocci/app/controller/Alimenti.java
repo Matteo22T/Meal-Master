@@ -153,7 +153,10 @@ public class Alimenti {
 
             Stage stage = new Stage();
             stage.setTitle("Dettaglio Alimento");
-            stage.setScene(new Scene(root));
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/com/matteotocci/app/css/DettaglioAlimento-Style.css").toExternalForm());
+            stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

@@ -6,62 +6,111 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="600.0" prefWidth="400.0" spacing="10" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiAlimentoController">
+<VBox stylesheets="@css/AggiungiAlimento-Style.css" alignment="CENTER" prefHeight="500.0" prefWidth="900.0" styleClass="form-container" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiAlimentoController">
 
-    <HBox spacing="5">
-        <TextField fx:id="nomeField" prefHeight="26.0" prefWidth="350.0" promptText="Nome Alimento" />
-        <Label text="*" textFill="red" />
-    </HBox>
+    <VBox styleClass="form-section" maxWidth="850" spacing="20">
 
-    <HBox spacing="5">
-        <TextField fx:id="brandField" prefHeight="26.0" prefWidth="350.0" promptText="Marca" />
-        <Label text="*" textFill="red" />
-    </HBox>
+        <!-- Titolo -->
+        <Label text="Aggiungi Nuovo Alimento" styleClass="form-title" />
 
-    <HBox spacing="5">
-        <TextField fx:id="kcalField" prefWidth="350.0" promptText="Calorie" />
-        <Label text="*" textFill="red" />
-    </HBox>
+        <!-- Layout principale orizzontale -->
+        <HBox spacing="30" alignment="CENTER">
 
-    <HBox spacing="5">
-        <TextField fx:id="proteineField" prefWidth="350.0" promptText="Proteine" />
-        <Label text="*" textFill="red" />
-    </HBox>
+            <!-- Colonna sinistra: Informazioni di base -->
+            <VBox styleClass="basic-info-section" spacing="15" prefWidth="250">
+                <Label text="Informazioni Generali" styleClass="group-label" />
 
-    <HBox spacing="5">
-        <TextField fx:id="carboidratiField" prefWidth="350.0" promptText="Carboidrati" />
-        <Label text="*" textFill="red" />
-    </HBox>
+                <HBox styleClass="field-group" spacing="5">
+                    <TextField fx:id="nomeField" prefWidth="220.0" promptText="Nome Alimento" styleClass="custom-text-field" />
+                    <Label text="*" styleClass="required-asterisk" />
+                </HBox>
 
-    <HBox spacing="5">
-        <TextField fx:id="grassiField" prefWidth="350.0" promptText="Grassi" />
-        <Label text="*" textFill="red" />
-    </HBox>
+                <HBox styleClass="field-group" spacing="5">
+                    <TextField fx:id="brandField" prefWidth="220.0" promptText="Marca" styleClass="custom-text-field" />
+                    <Label text="*" styleClass="required-asterisk" />
+                </HBox>
 
-    <HBox spacing="5">
-        <TextField fx:id="grassiSatField" prefWidth="350.0" promptText="Grassi Saturi" />
-        <Label text="*" textFill="red" />
-    </HBox>
+                <HBox styleClass="field-group" spacing="5">
+                    <TextField fx:id="kcalField" prefWidth="220.0" promptText="Calorie (per 100g)" styleClass="numeric-field" />
+                    <Label text="*" styleClass="required-asterisk" />
+                </HBox>
 
-    <HBox spacing="5">
-        <TextField fx:id="saleField" prefWidth="350.0" promptText="Sale" />
-        <Label text="*" textFill="red" />
-    </HBox>
+                <!-- Sezione Immagini -->
+                <VBox styleClass="images-section" spacing="10">
+                    <Label text="Immagini (opzionale)" styleClass="group-label" />
+                    <TextField fx:id="immaginePiccolaField" prefWidth="220.0" promptText="URL immagine piccola" styleClass="custom-text-field" />
+                    <TextField fx:id="immagineGrandeField" prefWidth="220.0" promptText="URL immagine grande" styleClass="custom-text-field" />
+                </VBox>
+            </VBox>
 
-    <HBox spacing="5">
-        <TextField fx:id="fibreField" prefWidth="350.0" promptText="Fibre" />
-        <Label text="*" textFill="red" />
-    </HBox>
+            <!-- Colonna destra: Macronutrienti -->
+            <VBox styleClass="field-group-macro" spacing="15" prefWidth="450">
+                <Label text="Macronutrienti (per 100g)" styleClass="group-label" />
 
-    <HBox spacing="5">
-        <TextField fx:id="zuccheriField" prefWidth="350.0" promptText="Zuccheri" />
-        <Label text="*" textFill="red" />
-    </HBox>
+                <VBox styleClass="nutrition-section" spacing="15">
+                    <!-- Prima riga: Proteine, Carboidrati, Grassi -->
+                    <HBox styleClass="macro-row" spacing="15">
+                        <VBox spacing="5" alignment="CENTER_LEFT">
+                            <HBox spacing="5">
+                                <TextField fx:id="proteineField" prefWidth="130.0" promptText="Proteine (g)" styleClass="numeric-field" />
+                                <Label text="*" styleClass="required-asterisk" />
+                            </HBox>
+                        </VBox>
 
-    <TextField fx:id="immaginePiccolaField" promptText="URL immagine piccola (opzionale)" />
-    <TextField fx:id="immagineGrandeField" promptText="URL immagine grande (opzionale)" />
+                        <VBox spacing="5" alignment="CENTER_LEFT">
+                            <HBox spacing="5">
+                                <TextField fx:id="carboidratiField" prefWidth="130.0" promptText="Carboidrati (g)" styleClass="numeric-field" />
+                                <Label text="*" styleClass="required-asterisk" />
+                            </HBox>
+                        </VBox>
 
-    <Button onAction="#handleSalva" text="Salva" />
+                        <VBox spacing="5" alignment="CENTER_LEFT">
+                            <HBox spacing="5">
+                                <TextField fx:id="grassiField" prefWidth="130.0" promptText="Grassi (g)" styleClass="numeric-field" />
+                                <Label text="*" styleClass="required-asterisk" />
+                            </HBox>
+                        </VBox>
+                    </HBox>
 
-    <Label style="-fx-font-style: italic" text="* Campi obbligatori" textFill="red" />
+                    <!-- Seconda riga: Grassi Saturi, Fibre, Zuccheri -->
+                    <HBox styleClass="macro-row" spacing="15">
+                        <VBox spacing="5" alignment="CENTER_LEFT">
+                            <HBox spacing="5">
+                                <TextField fx:id="grassiSatField" prefWidth="130.0" promptText="Grassi Saturi (g)" styleClass="numeric-field" />
+                                <Label text="*" styleClass="required-asterisk" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox spacing="5" alignment="CENTER_LEFT">
+                            <HBox spacing="5">
+                                <TextField fx:id="fibreField" prefWidth="130.0" promptText="Fibre (g)" styleClass="numeric-field" />
+                                <Label text="*" styleClass="required-asterisk" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox spacing="5" alignment="CENTER_LEFT">
+                            <HBox spacing="5">
+                                <TextField fx:id="zuccheriField" prefWidth="130.0" promptText="Zuccheri (g)" styleClass="numeric-field" />
+                                <Label text="*" styleClass="required-asterisk" />
+                            </HBox>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Terza riga: Sale centrato -->
+                    <HBox styleClass="field-group" spacing="5" alignment="CENTER">
+                        <TextField fx:id="saleField" prefWidth="200.0" promptText="Sale (g)" styleClass="numeric-field" />
+                        <Label text="*" styleClass="required-asterisk" />
+                    </HBox>
+                </VBox>
+            </VBox>
+
+        </HBox>
+
+        <!-- Pulsante Salva e nota -->
+        <VBox spacing="10" alignment="CENTER">
+            <Button onAction="#handleSalva" text="Salva Alimento" styleClass="save-button" />
+            <Label text="* Campi obbligatori" styleClass="required-note" />
+        </VBox>
+
+    </VBox>
 </VBox>

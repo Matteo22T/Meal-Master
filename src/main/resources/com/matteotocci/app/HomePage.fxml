@@ -11,16 +11,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
 
-<AnchorPane prefHeight="500.0" prefWidth="1000.0" stylesheets="@css/HomePage-Style.css" styleClass="main-container" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePage">
+<AnchorPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/HomePage-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePage">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <!-- SIDEBAR -->
-            <VBox prefHeight="578.0" prefWidth="200.0" styleClass="sidebar">
+            <VBox prefHeight="640.0" prefWidth="200.0" styleClass="sidebar">
                <children>
                   <!-- PROFILO UTENTE -->
                   <HBox prefHeight="80.0" prefWidth="200.0" styleClass="profile-section">
@@ -49,7 +46,7 @@
                      <children>
                         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button,nav-button-active" text="🏠 Home Page" />
                         <Button fx:id="BottoneRicette" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoRicette" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="📖 Ricette" />
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="📋 Piano Alimentare" />
+                        <Button fx:id="BottonePiano" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoPianoAlimentare" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="📋 Piano Alimentare" />
                         <Button fx:id="BottoneAlimenti" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="🥗 Alimenti">
                            <cursor>
                               <Cursor fx:constant="HAND" />
@@ -238,7 +235,7 @@
                               <!-- MERENDA -->
                               <VBox alignment="CENTER" prefHeight="130.0" prefWidth="250.0" spacing="10.0" styleClass="meal-card">
                                  <children>
-                                    <Label styleClass="meal-icon" text="🍞" >
+                                    <Label styleClass="meal-icon" text="🍞">
                                     <font>
                                        <Font name="FontAwesome" size="24.0" />
                                     </font>

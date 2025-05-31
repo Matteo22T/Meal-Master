@@ -26,7 +26,6 @@
 }
 
 .profile-image {
-    -fx-clip: circle(22.5px at center);
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 3, 0, 0, 1);
 }

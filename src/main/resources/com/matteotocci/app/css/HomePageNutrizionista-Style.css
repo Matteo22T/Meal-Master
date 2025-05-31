@@ -1,0 +1,335 @@
+/* ===== STILI GENERALI ===== */
+.main-container {
+    -fx-background-color: linear-gradient(to bottom right, #fdf8f7, #f5efed);
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ===== SIDEBAR NUTRIZIONISTA ===== */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #8B3A3A, #A0464A);
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 2, 0);
+}
+
+.profile-section {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-background-radius: 12;
+    -fx-padding: 15 10;
+    -fx-spacing: 10;
+    -fx-alignment: center-left;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.profile-circle {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 8, 0, 0, 2);
+}
+
+.profile-image {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 3, 0, 0, 1);
+}
+
+.profile-image:hover {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.8), 8, 0, 0, 2);
+}
+
+.profile-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.profile-subtitle {
+    -fx-text-fill: #E8C5C1;
+    -fx-font-size: 11px;
+}
+
+.nav-menu {
+    -fx-padding: 10 0;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #F5E6E4;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+    -fx-padding: 0 15;
+    -fx-effect: null;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 5, 0, 0, 0);
+}
+
+.nav-button-active {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.4), 8, 0, 0, 2);
+}
+
+/* ===== CONTENUTO PRINCIPALE ===== */
+.main-content {
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+    -fx-spacing: 20;
+}
+
+/* ===== HEADER SEZIONE ===== */
+.header-section {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 25 30;
+    -fx-spacing: 20;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 15, 0, 0, 5);
+    -fx-border-color: rgba(139,58,58,0.1);
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+}
+
+.page-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.2), 3, 0, 0, 1);
+}
+
+/* ===== BARRA RICERCA ===== */
+.search-container {
+    -fx-spacing: 15;
+    -fx-alignment: center-left;
+}
+
+.search-field {
+    -fx-background-color: linear-gradient(to bottom, #fdf8f7, #f9f2f1);
+    -fx-background-radius: 25;
+    -fx-border-color: rgba(139,58,58,0.2);
+    -fx-border-radius: 25;
+    -fx-border-width: 2;
+    -fx-padding: 12 20;
+    -fx-font-size: 14px;
+    -fx-text-fill: #8B3A3A;
+    -fx-prompt-text-fill: #B8928E;
+    -fx-effect: innershadow(gaussian, rgba(139,58,58,0.05), 3, 0, 0, 1);
+}
+
+.search-field:focused {
+    -fx-border-color: #4F7942;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 2);
+}
+
+
+
+/* ===== SEZIONE TABELLA ===== */
+.table-section {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 15, 0, 0, 5);
+    -fx-border-color: rgba(139,58,58,0.1);
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+}
+
+/* ===== TABELLA CLIENTI ===== */
+.clients-table {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(139,58,58,0.1);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-effect: innershadow(gaussian, rgba(139,58,58,0.05), 5, 0, 0, 2);
+}
+
+.clients-table .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #8B3A3A, #A0464A);
+    -fx-background-radius: 10 10 0 0;
+}
+
+.clients-table .column-header {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 15 10;
+    -fx-alignment: center-left;
+}
+
+.clients-table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.clients-table .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(139,58,58,0.05);
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 8 0;
+}
+
+.clients-table .table-row-cell:odd {
+    -fx-background-color: rgba(139,58,58,0.02);
+}
+
+.clients-table .table-row-cell:selected {
+    -fx-background-color: linear-gradient(to right, rgba(79,121,66,0.2), rgba(79,121,66,0.1));
+    -fx-text-fill: #4F7942;
+}
+
+.clients-table .table-row-cell:hover {
+    -fx-background-color: rgba(139,58,58,0.05);
+}
+
+.clients-table .table-cell {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 13px;
+    -fx-padding: 12 15;
+    -fx-alignment: center-left;
+    -fx-border-color: transparent;
+}
+
+.clients-table .table-cell:selected {
+    -fx-text-fill: #4F7942;
+    -fx-font-weight: bold;
+}
+
+/* ===== PULSANTI AZIONI TABELLA ===== */
+.action-button {
+    -fx-background-color: linear-gradient(to right, #8B3A3A, #A0464A);
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 15;
+    -fx-padding: 6 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.3), 5, 0, 0, 1);
+}
+
+.action-button:hover {
+    -fx-background-color: linear-gradient(to right, #A0464A, #B54C50);
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.5), 8, 0, 0, 2);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.action-button-success {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+}
+
+.action-button-success:hover {
+    -fx-background-color: linear-gradient(to right, #5A8A4A, #658F52);
+}
+
+.action-button-warning {
+    -fx-background-color: linear-gradient(to right, #FF9800, #FFA726);
+}
+
+.action-button-warning:hover {
+    -fx-background-color: linear-gradient(to right, #FFA726, #FFB74D);
+}
+
+/* ===== SCROLL BAR PERSONALIZZATA ===== */
+.clients-table .scroll-bar:vertical {
+    -fx-background-color: rgba(139,58,58,0.1);
+    -fx-background-radius: 5;
+    -fx-pref-width: 8;
+}
+
+.clients-table .scroll-bar:vertical .track {
+    -fx-background-color: rgba(139,58,58,0.05);
+    -fx-background-radius: 5;
+}
+
+.clients-table .scroll-bar:vertical .thumb {
+    -fx-background-color: linear-gradient(to bottom, #8B3A3A, #A0464A);
+    -fx-background-radius: 5;
+}
+
+.clients-table .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: linear-gradient(to bottom, #A0464A, #B54C50);
+}
+
+.clients-table .scroll-bar:horizontal {
+    -fx-background-color: rgba(139,58,58,0.1);
+    -fx-background-radius: 5;
+    -fx-pref-height: 8;
+}
+
+.clients-table .scroll-bar:horizontal .track {
+    -fx-background-color: rgba(139,58,58,0.05);
+    -fx-background-radius: 5;
+}
+
+.clients-table .scroll-bar:horizontal .thumb {
+    -fx-background-color: linear-gradient(to right, #8B3A3A, #A0464A);
+    -fx-background-radius: 5;
+}
+
+/* ===== STATI FOCUS E HOVER ===== */
+.clients-table:focused {
+    -fx-border-color: #4F7942;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 10, 0, 0, 3);
+}
+
+/* ===== ANIMAZIONI E TRANSIZIONI ===== */
+.search-field, .add-client-button, .action-button, .nav-button, .profile-image {
+    -fx-transition: all 0.3s ease;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1000px) {
+    .search-container {
+        -fx-spacing: 10;
+    }
+
+    .search-field {
+        -fx-pref-width: 250;
+    }
+
+    .header-section {
+        -fx-padding: 20 25;
+    }
+
+    .table-section {
+        -fx-padding: 20;
+    }
+}
+
+/* ===== UTILITY CLASSES ===== */
+.accent-red {
+    -fx-text-fill: #8B3A3A;
+}
+
+.accent-green {
+    -fx-text-fill: #4F7942;
+}
+
+.accent-light-red {
+    -fx-text-fill: #B8928E;
+}
+
+.background-light-red {
+    -fx-background-color: #FDF8F7;
+}
+
+.border-red {
+    -fx-border-color: #E8C5C1;
+}
+
+.text-white {
+    -fx-text-fill: white;
+}
+
+.background-gradient-primary {
+    -fx-background-color: linear-gradient(to right, #8B3A3A, #A0464A);
+}
+
+.background-gradient-secondary {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+}

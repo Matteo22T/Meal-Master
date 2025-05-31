@@ -1,0 +1,211 @@
+/* ===== FORM AGGIUNGI ALIMENTO - STILI ===== */
+
+/* Container principale */
+.form-container {
+    -fx-background-color: linear-gradient(to bottom right, #fdf8f7, #f5efed);
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+    -fx-alignment: center;
+    -fx-pref-width: 900;
+    -fx-pref-height: 500;
+    -fx-max-width: 900;
+    -fx-max-height: 500;
+}
+
+/* Sezione del form */
+.form-section {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 15, 0, 0, 5);
+    -fx-border-color: rgba(139,58,58,0.05);
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+    -fx-max-width: 850;
+    -fx-pref-width: 850;
+}
+
+/* Titolo del form */
+.form-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+    -fx-alignment: center;
+}
+
+/* Gruppi di campi */
+.field-group {
+    -fx-spacing: 5;
+    -fx-alignment: center-left;
+    -fx-padding: 2 0;
+}
+
+.field-group-macro {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-background-radius: 10;
+    -fx-padding: 12;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.05), 8, 0, 0, 2);
+    -fx-border-color: rgba(79,121,66,0.1);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+/* Etichette dei gruppi */
+.group-label {
+    -fx-text-fill: #4F7942;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 3 0;
+}
+
+/* TextField personalizzati */
+.custom-text-field {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdfcfc);
+    -fx-background-radius: 6;
+    -fx-border-color: #E8C5C1;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 8 12;
+    -fx-font-size: 12px;
+    -fx-text-fill: #8B3A3A;
+    -fx-prompt-text-fill: #B8928E;
+    -fx-effect: innershadow(gaussian, rgba(139,58,58,0.03), 3, 0, 0, 1);
+}
+
+.custom-text-field:focused {
+    -fx-border-color: #4F7942;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 8, 0, 0, 2);
+    -fx-background-color: white;
+}
+
+.custom-text-field:hover {
+    -fx-border-color: #A0464A;
+    -fx-background-color: white;
+}
+
+/* Campi numerici */
+.numeric-field {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdfcfc);
+    -fx-background-radius: 6;
+    -fx-border-color: #E8C5C1;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 8 12;
+    -fx-font-size: 12px;
+    -fx-text-fill: #4F7942;
+    -fx-prompt-text-fill: #B8928E;
+    -fx-effect: innershadow(gaussian, rgba(79,121,66,0.03), 3, 0, 0, 1);
+}
+
+.numeric-field:focused {
+    -fx-border-color: #4F7942;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 2);
+    -fx-background-color: white;
+}
+
+.numeric-field:hover {
+    -fx-border-color: #5A8A4A;
+    -fx-background-color: white;
+}
+
+/* Asterisco per campi obbligatori */
+.required-asterisk {
+    -fx-text-fill: #A0464A;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 0 5;
+}
+
+/* Pulsante Salva */
+.save-button {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 10 30;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 10, 0, 0, 3);
+    -fx-min-width: 120;
+}
+
+.save-button:hover {
+    -fx-background-color: linear-gradient(to right, #5A8A4A, #658F52);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.5), 18, 0, 0, 6);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.save-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.4), 8, 0, 0, 2);
+}
+
+/* Etichetta campi obbligatori */
+.required-note {
+    -fx-text-fill: #B8928E;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+    -fx-padding: 10 0 0 0;
+    -fx-alignment: center;
+}
+
+/* Sezioni specifiche */
+.basic-info-section {
+    -fx-spacing: 10;
+    -fx-padding: 0;
+}
+
+.nutrition-section {
+    -fx-spacing: 10;
+    -fx-padding: 0;
+}
+
+.images-section {
+    -fx-spacing: 8;
+    -fx-padding: 5 0 0 0;
+}
+
+/* Contenitori per righe multiple */
+.macro-row {
+    -fx-spacing: 15;
+    -fx-alignment: center;
+    -fx-fill-width: true;
+}
+
+/* Animazioni e transizioni */
+.custom-text-field, .numeric-field, .save-button {
+    -fx-transition: all 0.3s ease;
+}
+
+/* Layout responsive per campi macro */
+.macro-grid {
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+/* Effetti hover per sezioni */
+.field-group-macro:hover {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.1), 12, 0, 0, 4);
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f9f5f4);
+}
+
+/* Colori di validazione */
+.field-error {
+    -fx-border-color: #A0464A !important;
+    -fx-border-width: 2 !important;
+    -fx-effect: dropshadow(gaussian, rgba(160,70,74,0.3), 8, 0, 0, 2) !important;
+}
+
+.field-success {
+    -fx-border-color: #4F7942 !important;
+    -fx-border-width: 2 !important;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 2) !important;
+}

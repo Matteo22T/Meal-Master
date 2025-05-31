@@ -1,0 +1,262 @@
+/* ===== STILI GENERALI ===== */
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #fdf8f7, #f5efed);
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ===== CONTENITORE PRINCIPALE ===== */
+.main-container {
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+}
+
+/* ===== TITOLO PRINCIPALE ===== */
+.diet-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.2), 3, 0, 0, 1);
+}
+
+/* ===== SEZIONE INFO DATE ===== */
+.date-info-container {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 15 20;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 10, 0, 0, 3);
+    -fx-border-color: rgba(139,58,58,0.1);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.date-label-bold {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.date-label-value {
+    -fx-text-fill: #4F7942;
+    -fx-font-size: 13px;
+    -fx-font-weight: normal;
+}
+
+/* ===== SEPARATORE ===== */
+.separator {
+    -fx-background-color: linear-gradient(to right,
+    transparent,
+    rgba(139,58,58,0.3),
+    transparent);
+    -fx-pref-height: 2;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.2), 3, 0, 0, 1);
+}
+
+/* ===== TITOLO SEZIONE PIANI ===== */
+.section-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.15), 2, 0, 0, 1);
+}
+
+/* ===== SCROLL PANE ===== */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .scroll-bar:vertical {
+    -fx-background-color: rgba(139,58,58,0.1);
+    -fx-background-radius: 5;
+    -fx-pref-width: 8;
+}
+
+.scroll-pane > .scroll-bar:vertical > .track {
+    -fx-background-color: rgba(139,58,58,0.05);
+    -fx-background-radius: 5;
+}
+
+.scroll-pane > .scroll-bar:vertical > .thumb {
+    -fx-background-color: linear-gradient(to bottom, #8B3A3A, #A0464A);
+    -fx-background-radius: 5;
+}
+
+.scroll-pane > .scroll-bar:vertical > .thumb:hover {
+    -fx-background-color: linear-gradient(to bottom, #A0464A, #B54C50);
+}
+
+/* ===== CONTENITORE GIORNI ===== */
+.days-container {
+    -fx-background-color: transparent;
+    -fx-spacing: 25;
+}
+
+/* ===== CARD GIORNO ===== */
+.day-card {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 15, 0, 0, 5);
+    -fx-border-color: rgba(139,58,58,0.08);
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+}
+
+.day-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.18), 20, 0, 0, 8);
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+}
+
+/* ===== TITOLO GIORNO ===== */
+.day-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.15), 2, 0, 0, 1);
+}
+
+/* ===== SEPARATORE INTERNO ===== */
+.inner-separator {
+    -fx-background-color: linear-gradient(to right,
+    transparent,
+    rgba(139,58,58,0.2),
+    transparent);
+    -fx-pref-height: 1;
+}
+
+/* ===== SEZIONE PASTI ===== */
+.meals-section {
+    -fx-spacing: 15;
+}
+
+.meal-type-title {
+    -fx-text-fill: #4F7942;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* ===== CONTAINER ALIMENTI ===== */
+.foods-container {
+    -fx-background-color: linear-gradient(to bottom, #fdf8f7, #f9f2f1);
+    -fx-background-radius: 10;
+    -fx-padding: 12;
+    -fx-spacing: 8;
+    -fx-border-color: rgba(139,58,58,0.1);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-effect: innershadow(gaussian, rgba(139,58,58,0.05), 3, 0, 0, 1);
+}
+
+/* ===== ITEM ALIMENTO ===== */
+.food-item {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-padding: 10 12;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.08), 5, 0, 0, 2);
+    -fx-border-color: rgba(139,58,58,0.05);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.food-item:hover {
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.12), 8, 0, 0, 3);
+    -fx-background-color: linear-gradient(to right, #ffffff, #fefcfc);
+}
+
+.food-name {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.food-quantity {
+    -fx-text-fill: #4F7942;
+    -fx-font-size: 12px;
+    -fx-font-weight: normal;
+}
+
+.food-calories {
+    -fx-text-fill: #B8928E;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}
+
+/* ===== STATI VUOTI ===== */
+.empty-state {
+    -fx-text-fill: #B8928E;
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+    -fx-alignment: center;
+    -fx-padding: 20;
+}
+
+/* ===== TOTALI GIORNALIERI ===== */
+.daily-totals {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-background-radius: 10;
+    -fx-padding: 12 15;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 2);
+}
+
+.totals-label {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.totals-value {
+    -fx-text-fill: rgba(255,255,255,0.9);
+    -fx-font-size: 12px;
+}
+
+/* ===== ANIMAZIONI E TRANSIZIONI ===== */
+.day-card, .food-item, .foods-container {
+    -fx-transition: all 0.3s ease;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 800px) {
+    .day-card {
+        -fx-padding: 15;
+    }
+
+    .foods-container {
+        -fx-padding: 10;
+    }
+
+    .food-item {
+        -fx-padding: 8 10;
+    }
+}
+
+/* ===== UTILITY CLASSES ===== */
+.accent-red {
+    -fx-text-fill: #8B3A3A;
+}
+
+.accent-green {
+    -fx-text-fill: #4F7942;
+}
+
+.accent-light-red {
+    -fx-text-fill: #B8928E;
+}
+
+.text-white {
+    -fx-text-fill: white;
+}
+
+.background-gradient-primary {
+    -fx-background-color: linear-gradient(to right, #8B3A3A, #A0464A);
+}
+
+.background-gradient-secondary {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+}
