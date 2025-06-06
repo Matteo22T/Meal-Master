@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="400.0" stylesheets="@css/stile_HomePage.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.BMI">
+    <children>
+        <VBox alignment="TOP_CENTER" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label styleClass="header-label" text="Calcolatore BMI">
+                    <font>
+                        <Font size="24.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets top="20.0" />
+                    </VBox.margin>
+                </Label>
+                <HBox alignment="CENTER" spacing="10.0">
+                    <children>
+                        <TextField fx:id="altezzaTextField" promptText="Altezza" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" spacing="10.0">
+                    <children>
+                        <TextField fx:id="pesoTextField" promptText="Peso" />
+                    </children>
+                </HBox>
+                <Button onAction="#handleCalcolaBMI" styleClass="calculate-button" text="Calcola BMI">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Button>
+                <StackPane fx:id="bmiGaugeContainer" prefHeight="200.0" prefWidth="200.0" styleClass="bmi-gauge-container">
+                    <children>
+                        <!-- Qui andranno gli elementi per il gauge: archi colorati, lancetta, valori -->
+                        <!-- Esempio schematico di come potresti aggiungere gli archi colorati -->
+                        <!-- Puoi usare Path, Region con CSS, o un'immagine di sfondo per il quadrante -->
+                        <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #F0F0F0; -fx-background-radius: 100;" /> <!-- Sfondo del quadrante -->
+                        <ImageView fx:id="gaugeNeedle" fitHeight="100.0" fitWidth="10.0" pickOnBounds="true" preserveRatio="true" styleClass="gauge-needle">
+                            <image>
+                                <!-- Assicurati che il percorso dell'immagine sia corretto e che l'immagine sia nel classpath -->
+
+                            </image>
+                        </ImageView>
+                        <VBox alignment="CENTER" spacing="5.0">
+                            <children>
+                                <Label fx:id="bmiValueDisplayLabel" styleClass="bmi-value-display" text="-">
+                                    <font>
+                                        <Font name="System Bold" size="36.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="bmiClassificationDisplayLabel" styleClass="bmi-classification-display" text="-">
+                                    <font>
+                                        <Font size="18.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="bmiFeedbackLabel" styleClass="bmi-feedback-label" text="-">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </VBox>
+                    </children>
+                    <VBox.margin>
+                        <Insets top="10.0" />
+                    </VBox.margin>
+                </StackPane>
+                <VBox alignment="TOP_LEFT" spacing="5.0" styleClass="bmi-legend">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="360.0" spacing="5.0">
+                            <children>
+                                <Label prefHeight="10.0" prefWidth="10.0" style="-fx-background-color: #0000FF; -fx-background-radius: 5;" />
+                                <Label text="Gravemente Sottopeso" />
+                                <Label text="&lt; 16.0" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                            <children>
+                                <Label prefHeight="10.0" prefWidth="10.0" style="-fx-background-color: #4169E1; -fx-background-radius: 5;" />
+                                <Label text="Sottopeso" />
+                                <Label text="16.0 - 18.4" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                            <children>
+                                <Label prefHeight="10.0" prefWidth="10.0" style="-fx-background-color: #228B22; -fx-background-radius: 5;" />
+                                <Label text="Normopeso" />
+                                <Label text="18.5 - 24.9" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                            <children>
+                                <Label prefHeight="10.0" prefWidth="10.0" style="-fx-background-color: #FFA500; -fx-background-radius: 5;" />
+                                <Label text="Sovrappeso" />
+                                <Label text="25.0 - 29.9" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                            <children>
+                                <Label prefHeight="10.0" prefWidth="10.0" style="-fx-background-color: #FF4500; -fx-background-radius: 5;" />
+                                <Label text="Obeso Classe I" />
+                                <Label text="30.0 - 34.9" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                            <children>
+                                <Label prefHeight="10.0" prefWidth="10.0" style="-fx-background-color: #B22222; -fx-background-radius: 5;" />
+                                <Label text="Obeso Classe II" />
+                                <Label text="35.0 - 39.9" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                            <children>
+                                <Label prefHeight="10.0" prefWidth="10.0" style="-fx-background-color: #8B0000; -fx-background-radius: 5;" />
+                                <Label text="Obeso Classe III" />
+                                <Label text="≥ 40.0" />
+                            </children>
+                        </HBox>
+                    </children>
+                    <VBox.margin>
+                        <Insets left="20.0" right="20.0" top="10.0" />
+                    </VBox.margin>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

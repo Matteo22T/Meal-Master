@@ -109,6 +109,7 @@ public class PaginaProfilo implements Initializable {
             String peso = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "peso_kg");
             String livelloAttivita = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "livello_attivita");
             String dataNascita = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "data_di_nascita");
+            String sesso = getDatoUtenteDalDatabase("Clienti",utenteCorrenteId,"sesso");
 
             // Imposta i valori nei rispettivi TextField
             if (altezzaTextField != null) {
@@ -122,6 +123,21 @@ public class PaginaProfilo implements Initializable {
             }
             if (dataNascitaTextField != null) {
                 dataNascitaTextField.setText(dataNascita);
+            }
+            if (sessoTextField != null){
+                sessoTextField.setText(sesso);
+            }
+            if (nutrizionistaTextField != null) {
+                String idNutrizionista = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "id_nutrizionista");
+
+                if (idNutrizionista != null && !idNutrizionista.isEmpty()) {
+                    String nomeNutrizionista = getDatoUtenteDalDatabase("Utente", idNutrizionista, "Nome");
+                    String cognomeNutrizionista = getDatoUtenteDalDatabase("Utente", idNutrizionista, "Cognome");
+
+                    if (nomeNutrizionista != null && cognomeNutrizionista != null) {
+                        nutrizionistaTextField.setText(nomeNutrizionista + " " + cognomeNutrizionista);
+                    }
+                }
             }
 
 
@@ -299,4 +315,27 @@ public class PaginaProfilo implements Initializable {
             // L'utente ha cliccato Annulla o ha chiuso la finestra, non fare nulla
         }
     }
+    @FXML
+    private void mostraBMI(MouseEvent event) {
+        try {
+            // Assicurati che il percorso sia corretto e il nome del file FXML sia "BMI.fxml" (se la classe è BMI)
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/BMI.fxml"));
+            Parent bmiRoot = fxmlLoader.load();
+
+            // Ottieni il controller della schermata BMI
+            // Il tipo deve corrispondere esattamente al nome della classe del controller: BMI (maiuscolo)
+            BMI bmiController = fxmlLoader.getController();
+
+            // Imposta l'ID utente nel controller della schermata BMI
+            bmiController.setUtenteCorrenteId(utenteCorrenteId);
+
+            Stage bmiStage = new Stage();
+            bmiStage.setTitle("Calcolo BMI");
+            bmiStage.setScene(new Scene(bmiRoot));
+            bmiStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
