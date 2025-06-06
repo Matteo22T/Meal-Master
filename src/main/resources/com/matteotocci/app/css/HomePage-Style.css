@@ -144,12 +144,206 @@
     -fx-font-weight: normal;
 }
 
+
+/* ===== SEZIONE SELEZIONE GIORNO ===== */
+.day-selection-section {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 15 20;
+    -fx-spacing: 15;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 15, 0, 0, 5);
+    -fx-border-color: rgba(139,58,58,0.05);
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+}
+
+.day-selection-label {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* ===== COMBOBOX GIORNO DIETA ===== */
+.day-combo-box {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-background-radius: 8;
+    -fx-border-color: #E8C5C1;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 8 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.08), 5, 0, 0, 2);
+    -fx-font-size: 13px;
+    -fx-text-fill: #8B3A3A;
+    -fx-font-weight: normal;
+}
+
+.day-combo-box:hover {
+    -fx-border-color: #A0464A;
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f9f2f1);
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.15), 8, 0, 0, 3);
+}
+
+.day-combo-box:focused {
+    -fx-border-color: #4F7942;
+    -fx-border-width: 2;
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f5efed);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 10, 0, 0, 3);
+}
+
+/* ===== FRECCIA DROPDOWN ===== */
+.day-combo-box .arrow {
+    -fx-background-color: #8B3A3A;
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
+    -fx-padding: 3 3 3 3;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.3), 2, 0, 0, 1);
+}
+
+.day-combo-box:hover .arrow {
+    -fx-background-color: #A0464A;
+}
+
+.day-combo-box:focused .arrow {
+    -fx-background-color: #4F7942;
+}
+
+/* ===== BOTTONE ARROW ===== */
+.day-combo-box .arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0 8 8 0;
+    -fx-padding: 0 8 0 4;
+}
+
+.day-combo-box .arrow-button:hover {
+    -fx-background-color: rgba(160,70,74,0.1);
+}
+
+.day-combo-box:focused .arrow-button {
+    -fx-background-color: rgba(79,121,66,0.1);
+}
+
+/* ===== LISTA DROPDOWN ===== */
+.day-combo-box .list-view {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #E8C5C1;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.2), 15, 0, 0, 5);
+    -fx-padding: 5;
+}
+
+/* ===== CELLE DELLA LISTA ===== */
+.day-combo-box .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 13px;
+    -fx-padding: 8 12;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.day-combo-box .list-cell:hover {
+    -fx-background-color: linear-gradient(to right, rgba(79,121,66,0.1), rgba(90,138,74,0.1));
+    -fx-text-fill: #4F7942;
+    -fx-font-weight: bold;
+}
+
+.day-combo-box .list-cell:selected {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 5, 0, 0, 2);
+}
+
+/* ===== PROMPT TEXT ===== */
+.day-combo-box .combo-box-base .text-input {
+    -fx-text-fill: #B8928E;
+    -fx-font-style: italic;
+    -fx-font-size: 13px;
+}
+
+.day-combo-box .combo-box-base .text-input:focused {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-style: normal;
+}
+
+/* ===== POPUP CONTAINER ===== */
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #E8C5C1;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.25), 20, 0, 0, 8);
+    -fx-padding: 8;
+}
+
+/* ===== ANIMAZIONI E TRANSIZIONI ===== */
+.day-combo-box, .day-combo-box .arrow-button, .day-combo-box .list-cell {
+    -fx-transition: all 0.3s ease;
+}
+
+/* ===== STATO DISABILITATO ===== */
+.day-combo-box:disabled {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #E8C5C1;
+    -fx-text-fill: #B8928E;
+    -fx-opacity: 0.6;
+    -fx-cursor: default;
+}
+
+.day-combo-box:disabled .arrow {
+    -fx-background-color: #B8928E;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1200px) {
+    .day-selection-section {
+        -fx-padding: 10 15;
+        -fx-spacing: 10;
+    }
+
+    .day-combo-box {
+        -fx-pref-width: 180;
+        -fx-font-size: 12px;
+    }
+
+    .day-selection-label {
+        -fx-font-size: 13px;
+    }
+}
+
+/* ===== VARIANTI DI COLORE AGGIUNTIVE ===== */
+.day-combo-box.success {
+    -fx-border-color: #4F7942;
+}
+
+.day-combo-box.success:hover {
+    -fx-border-color: #5A8A4A;
+}
+
+.day-combo-box.error {
+    -fx-border-color: #d32f2f;
+}
+
+.day-combo-box.error:hover {
+    -fx-border-color: #f44336;
+}
+
+/* ===== INTEGRAZIONE CON IL TEMA ESISTENTE ===== */
+.day-selection-section:hover {
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.15), 20, 0, 0, 8);
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+}
+
 /* ===== SEZIONE PASTI ===== */
 .meals-section {
     -fx-background-color: white;
     -fx-background-radius: 15;
     -fx-padding: 20;
-    -fx-spacing: 15;
+    -fx-spacing: 10;
     -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 15, 0, 0, 5);
 }
 
@@ -286,4 +480,63 @@
 
 .border-red {
     -fx-border-color: #E8C5C1;
+}
+
+/* CSS corretto per JavaFX - aggiungi al tuo HomePage-Style.css */
+
+.progress-arc {
+    -fx-stroke-line-cap: round; /* Estremità arrotondate */
+}
+
+/* Effetti per diversi stati dei macronutrienti */
+.progress-arc-proteine {
+    -fx-effect: dropshadow(gaussian, rgba(33, 150, 243, 0.3), 5, 0.3, 0, 0);
+}
+
+.progress-arc-carboidrati {
+    -fx-effect: dropshadow(gaussian, rgba(255, 193, 7, 0.3), 5, 0.3, 0, 0);
+}
+
+.progress-arc-grassi {
+    -fx-effect: dropshadow(gaussian, rgba(244, 67, 54, 0.3), 5, 0.3, 0, 0);
+}
+
+/* Effetto per progresso completo */
+.progress-arc-complete {
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.6), 8, 0.4, 0, 0);
+}
+
+/* Hover effect per macro items */
+.macro-item:hover .progress-arc {
+    -fx-stroke-width: 8.0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 6, 0.3, 0, 0);
+}
+
+/* Stili per diversi livelli di completamento */
+.progress-low {
+    -fx-stroke: #FF5722; /* Rosso per < 30% */
+}
+
+.progress-medium {
+    -fx-stroke: #FF9800; /* Arancione per 30-70% */
+}
+
+.progress-high {
+    -fx-stroke: #4CAF50; /* Verde per > 70% */
+}
+
+.progress-complete {
+    -fx-stroke: #2E7D32; /* Verde scuro per 100% */
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.8), 10, 0.5, 0, 0);
+}
+
+/* Animazione pulsante per completamento */
+@keyframes pulse {
+    0% { -fx-scale-x: 1.0; -fx-scale-y: 1.0; }
+    50% { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
+    100% { -fx-scale-x: 1.0; -fx-scale-y: 1.0; }
+}
+
+.progress-arc-pulse {
+    -fx-animation: pulse 2s infinite;
 }

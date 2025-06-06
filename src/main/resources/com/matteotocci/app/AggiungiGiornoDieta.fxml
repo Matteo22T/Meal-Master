@@ -4,63 +4,78 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.layout.RowConstraints?>
 
-
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiGiornoDieta">
+<BorderPane prefHeight="800.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/AggiugniGiornoDieta-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiGiornoDieta">
     <top>
-        <VBox alignment="CENTER" spacing="5.0" BorderPane.alignment="CENTER">
+        <VBox alignment="CENTER" spacing="10.0" styleClass="header-section" BorderPane.alignment="CENTER">
             <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
-            <Label text="Aggiungi Alimenti al Piano" style="-fx-font-weight: bold; -fx-font-size: 20px;">
+            <Label styleClass="main-title" text="Aggiungi Alimenti al Piano">
                 <font>
                     <Font name="Arial Bold" size="20.0" />
                 </font>
             </Label>
-            <Label fx:id="giornoCorrenteLabel" text="Giorno Corrente: 1/7" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Separator />
+            <Label fx:id="giornoCorrenteLabel" styleClass="day-counter" text="Giorno Corrente: 1/7" />
+
+            <!-- Campo per il nome del giorno -->
+            <HBox alignment="CENTER" spacing="10.0" styleClass="day-name-container">
+                <Label styleClass="day-name-label" text="Nome del giorno:">
+                    <font>
+                        <Font name="Arial" size="14.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="nomeGiornoTextField" prefWidth="200.0" promptText="Es. Lunedì, Giorno 1, etc..." styleClass="day-name-field">
+                    <font>
+                        <Font name="Arial" size="14.0" />
+                    </font>
+                </TextField>
+            </HBox>
+
+            <Separator styleClass="header-separator" />
         </VBox>
     </top>
     <center>
-        <ScrollPane fitToWidth="true" fitToHeight="true">
+        <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="content-scroll">
             <content>
-                <GridPane hgap="20.0" vgap="20.0" style="-fx-padding: 20;">
+                <GridPane hgap="20.0" styleClass="meals-grid" vgap="20.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="200.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="200.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="150.0" prefHeight="150.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="150.0" prefHeight="150.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="150.0" prefHeight="150.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="100.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="150.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="150.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="150.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="100.0" vgrow="NEVER" />
                     </rowConstraints>
                     <children>
                         <!-- Colazione -->
-                        <VBox spacing="10.0">
+                        <VBox spacing="10.0" styleClass="meal-section">
                             <children>
-                                <Label text="Colazione" style="-fx-font-weight: bold; -fx-font-size: 16px;">
+                                <Label styleClass="meal-title" text="Colazione">
                                     <font>
                                         <Font name="Arial Bold" size="16.0" />
                                     </font>
                                 </Label>
-                                <ListView fx:id="colazioneListView" prefHeight="150.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-color: white;"/>
-                                <HBox spacing="10">
-                                    <Button mnemonicParsing="false" onAction="#openAggiungiAlimentoDieta" text="Aggiungi Alimento" fx:id="aggiungiColazioneButton">
+                                <ListView fx:id="colazioneListView" prefHeight="150.0" styleClass="meal-list" />
+                                <HBox spacing="10" styleClass="meal-buttons">
+                                    <Button fx:id="aggiungiColazioneButton" mnemonicParsing="false" onAction="#openAggiungiAlimentoDieta" styleClass="add-meal-button" text="Aggiungi Alimento">
                                         <font>
                                             <Font name="Arial" size="12.0" />
                                         </font>
                                     </Button>
-                                    <Button mnemonicParsing="false" onAction="#rimuoviAlimento" text="Rimuovi Alimento" fx:id="rimuoviColazioneButton">
+                                    <Button fx:id="rimuoviColazioneButton" mnemonicParsing="false" onAction="#rimuoviAlimento" styleClass="remove-meal-button" text="Rimuovi Alimento">
                                         <font>
                                             <Font name="Arial" size="12.0" />
                                         </font>
@@ -70,21 +85,21 @@
                         </VBox>
 
                         <!-- Spuntino Mattina -->
-                        <VBox spacing="10.0" GridPane.columnIndex="1">
+                        <VBox spacing="10.0" styleClass="meal-section" GridPane.columnIndex="1">
                             <children>
-                                <Label text="Spuntino Mattina" style="-fx-font-weight: bold; -fx-font-size: 16px;">
+                                <Label styleClass="meal-title" text="Spuntino Mattina">
                                     <font>
                                         <Font name="Arial Bold" size="16.0" />
                                     </font>
                                 </Label>
-                                <ListView fx:id="spuntinoMattinaListView" prefHeight="150.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-color: white;"/>
-                                <HBox spacing="10">
-                                    <Button mnemonicParsing="false" onAction="#openAggiungiAlimentoDieta" text="Aggiungi Alimento" fx:id="aggiungiSpuntinoMattinaButton">
+                                <ListView fx:id="spuntinoMattinaListView" prefHeight="150.0" styleClass="meal-list" />
+                                <HBox spacing="10" styleClass="meal-buttons">
+                                    <Button fx:id="aggiungiSpuntinoMattinaButton" mnemonicParsing="false" onAction="#openAggiungiAlimentoDieta" styleClass="add-meal-button" text="Aggiungi Alimento">
                                         <font>
                                             <Font name="Arial" size="12.0" />
                                         </font>
                                     </Button>
-                                    <Button mnemonicParsing="false" onAction="#rimuoviAlimento" text="Rimuovi Alimento" fx:id="rimuoviSpuntinoMattinaButton">
+                                    <Button fx:id="rimuoviSpuntinoMattinaButton" mnemonicParsing="false" onAction="#rimuoviAlimento" styleClass="remove-meal-button" text="Rimuovi Alimento">
                                         <font>
                                             <Font name="Arial" size="12.0" />
                                         </font>
@@ -94,21 +109,21 @@
                         </VBox>
 
                         <!-- Pranzo -->
-                        <VBox spacing="10.0" GridPane.rowIndex="1">
+                        <VBox spacing="10.0" styleClass="meal-section" GridPane.rowIndex="1">
                             <children>
-                                <Label text="Pranzo" style="-fx-font-weight: bold; -fx-font-size: 16px;">
+                                <Label styleClass="meal-title" text="Pranzo">
                                     <font>
                                         <Font name="Arial Bold" size="16.0" />
                                     </font>
                                 </Label>
-                                <ListView fx:id="pranzoListView" prefHeight="150.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-color: white;"/>
-                                <HBox spacing="10">
-                                    <Button mnemonicParsing="false" onAction="#openAggiungiAlimentoDieta" text="Aggiungi Alimento" fx:id="aggiungiPranzoButton">
+                                <ListView fx:id="pranzoListView" prefHeight="150.0" styleClass="meal-list" />
+                                <HBox spacing="10" styleClass="meal-buttons">
+                                    <Button fx:id="aggiungiPranzoButton" mnemonicParsing="false" onAction="#openAggiungiAlimentoDieta" styleClass="add-meal-button" text="Aggiungi Alimento">
                                         <font>
                                             <Font name="Arial" size="12.0" />
                                         </font>
                                     </Button>
-                                    <Button mnemonicParsing="false" onAction="#rimuoviAlimento" text="Rimuovi Alimento" fx:id="rimuoviPranzoButton">
+                                    <Button fx:id="rimuoviPranzoButton" mnemonicParsing="false" onAction="#rimuoviAlimento" styleClass="remove-meal-button" text="Rimuovi Alimento">
                                         <font>
                                             <Font name="Arial" size="12.0" />
                                         </font>
@@ -118,21 +133,21 @@
                         </VBox>
 
                         <!-- Spuntino Pomeriggio -->
-                        <VBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <VBox spacing="10.0" styleClass="meal-section" GridPane.columnIndex="1" GridPane.rowIndex="1">
                             <children>
-                                <Label text="Spuntino Pomeriggio" style="-fx-font-weight: bold; -fx-font-size: 16px;">
+                                <Label styleClass="meal-title" text="Spuntino Pomeriggio">
                                     <font>
                                         <Font name="Arial Bold" size="16.0" />
                                     </font>
                                 </Label>
-                                <ListView fx:id="spuntinoPomeriggioListView" prefHeight="150.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-color: white;"/>
-                                <HBox spacing="10">
-                                    <Button mnemonicParsing="false" onAction="#openAggiungiAlimentoDieta" text="Aggiungi Alimento" fx:id="aggiungiSpuntinoPomeriggioButton">
+                                <ListView fx:id="spuntinoPomeriggioListView" prefHeight="150.0" styleClass="meal-list" />
+                                <HBox spacing="10" styleClass="meal-buttons">
+                                    <Button fx:id="aggiungiSpuntinoPomeriggioButton" mnemonicParsing="false" onAction="#openAggiungiAlimentoDieta" styleClass="add-meal-button" text="Aggiungi Alimento">
                                         <font>
                                             <Font name="Arial" size="12.0" />
                                         </font>
                                     </Button>
-                                    <Button mnemonicParsing="false" onAction="#rimuoviAlimento" text="Rimuovi Alimento" fx:id="rimuoviSpuntinoPomeriggioButton">
+                                    <Button fx:id="rimuoviSpuntinoPomeriggioButton" mnemonicParsing="false" onAction="#rimuoviAlimento" styleClass="remove-meal-button" text="Rimuovi Alimento">
                                         <font>
                                             <Font name="Arial" size="12.0" />
                                         </font>
@@ -142,21 +157,21 @@
                         </VBox>
 
                         <!-- Cena -->
-                        <VBox spacing="10.0" GridPane.rowIndex="2">
+                        <VBox spacing="10.0" styleClass="meal-section" GridPane.rowIndex="2">
                             <children>
-                                <Label text="Cena" style="-fx-font-weight: bold; -fx-font-size: 16px;">
+                                <Label styleClass="meal-title" text="Cena">
                                     <font>
                                         <Font name="Arial Bold" size="16.0" />
                                     </font>
                                 </Label>
-                                <ListView fx:id="cenaListView" prefHeight="150.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-color: white;"/>
-                                <HBox spacing="10">
-                                    <Button mnemonicParsing="false" onAction="#openAggiungiAlimentoDieta" text="Aggiungi Alimento" fx:id="aggiungiCenaButton">
+                                <ListView fx:id="cenaListView" prefHeight="150.0" styleClass="meal-list" />
+                                <HBox spacing="10" styleClass="meal-buttons">
+                                    <Button fx:id="aggiungiCenaButton" mnemonicParsing="false" onAction="#openAggiungiAlimentoDieta" styleClass="add-meal-button" text="Aggiungi Alimento">
                                         <font>
                                             <Font name="Arial" size="12.0" />
                                         </font>
                                     </Button>
-                                    <Button mnemonicParsing="false" onAction="#rimuoviAlimento" text="Rimuovi Alimento" fx:id="rimuoviCenaButton">
+                                    <Button fx:id="rimuoviCenaButton" mnemonicParsing="false" onAction="#rimuoviAlimento" styleClass="remove-meal-button" text="Rimuovi Alimento">
                                         <font>
                                             <Font name="Arial" size="12.0" />
                                         </font>
@@ -166,62 +181,67 @@
                         </VBox>
 
                         <!-- Totali Giornalieri -->
-                        <VBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <VBox styleClass="totals-section" GridPane.columnIndex="1" GridPane.rowIndex="2">
                             <children>
-                                <Label text="Totali Giornalieri" style="-fx-font-weight: bold; -fx-font-size: 18px;">
+                                <Label styleClass="totals-title" text="Totali Giornalieri">
                                     <font>
                                         <Font name="Arial Bold" size="18.0" />
                                     </font>
                                 </Label>
-                                <HBox spacing="10.0" alignment="CENTER_LEFT">
-                                    <Label text="Kcal:" style="-fx-font-size: 14px;  -fx-font-weight: bold;">
-                                        <font>
-                                            <Font name="Arial Bold" size="14.0" />
-                                        </font>
-                                    </Label>
-                                    <Label fx:id="kcalTotaliLabel" text="0" style="-fx-font-size: 14px;">
-                                        <font>
-                                            <Font name="Arial" size="14.0" />
-                                        </font>
-                                    </Label>
-                                </HBox>
-                                <HBox spacing="10.0" alignment="CENTER_LEFT">
-                                    <Label text="Carboidrati:" style="-fx-font-size: 14px;  -fx-font-weight: bold;">
-                                        <font>
-                                            <Font name="Arial Bold" size="14.0" />
-                                        </font>
-                                    </Label>
-                                    <Label fx:id="carboidratiLabel" text="0 g" style="-fx-font-size: 14px;">
-                                        <font>
-                                            <Font name="Arial" size="14.0" />
-                                        </font>
-                                    </Label>
-                                </HBox>
-                                <HBox spacing="10.0" alignment="CENTER_LEFT">
-                                    <Label text="Proteine:" style="-fx-font-size: 14px;  -fx-font-weight: bold;">
-                                        <font>
-                                            <Font name="Arial Bold" size="14.0" />
-                                        </font>
-                                    </Label>
-                                    <Label fx:id="proteineLabel" text="0 g" style="-fx-font-size: 14px;">
-                                        <font>
-                                            <Font name="Arial" size="14.0" />
-                                        </font>
-                                    </Label>
-                                </HBox>
-                                <HBox spacing="10.0" alignment="CENTER_LEFT">
-                                    <Label text="Grassi:" style="-fx-font-size: 14px;  -fx-font-weight: bold;">
-                                        <font>
-                                            <Font name="Arial Bold" size="14.0" />
-                                        </font>
-                                    </Label>
-                                    <Label fx:id="grassiLabel" text="0 g" style="-fx-font-size: 14px;">
-                                        <font>
-                                            <Font name="Arial" size="14.0" />
-                                        </font>
-                                    </Label>
-                                </HBox>
+                                <VBox spacing="8.0" styleClass="totals-container">
+                                    <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="total-item">
+                                        <Label styleClass="total-label" text="Kcal:">
+                                            <font>
+                                                <Font name="Arial Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="kcalTotaliLabel" styleClass="total-value" text="0">
+                                            <font>
+                                                <Font name="Arial" size="14.0" />
+                                            </font>
+                                        </Label>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="total-item">
+                                        <Label styleClass="total-label" text="Carboidrati:">
+                                            <font>
+                                                <Font name="Arial Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="carboidratiLabel" styleClass="total-value" text="0 g">
+                                            <font>
+                                                <Font name="Arial" size="14.0" />
+                                            </font>
+                                        </Label>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="total-item">
+                                        <Label styleClass="total-label" text="Proteine:">
+                                            <font>
+                                                <Font name="Arial Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="proteineLabel" styleClass="total-value" text="0 g">
+                                            <font>
+                                                <Font name="Arial" size="14.0" />
+                                            </font>
+                                        </Label>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="total-item">
+                                        <Label styleClass="total-label" text="Grassi:">
+                                            <font>
+                                                <Font name="Arial Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="grassiLabel" styleClass="total-value" text="0 g">
+                                            <font>
+                                                <Font name="Arial" size="14.0" />
+                                            </font>
+                                        </Label>
+                                    </HBox>
+                                </VBox>
                             </children>
+                     <GridPane.margin>
+                        <Insets top="95.0" />
+                     </GridPane.margin>
                         </VBox>
                     </children>
                 </GridPane>
@@ -229,21 +249,21 @@
         </ScrollPane>
     </center>
     <bottom>
-        <HBox alignment="CENTER" spacing="20.0" BorderPane.alignment="CENTER">
+        <HBox alignment="CENTER" spacing="20.0" styleClass="footer-section" BorderPane.alignment="CENTER">
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
-            <Button mnemonicParsing="false" onAction="#indietroGiornoButtonAction" text="Giorno Precedente" fx:id="indietroGiornoButton">
+            <Button fx:id="indietroGiornoButton" mnemonicParsing="false" onAction="#indietroGiornoButtonAction" styleClass="nav-day-button" text="Giorno Precedente">
                 <font>
                     <Font name="Arial" size="12.0" />
                 </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#avantiGiornoButtonAction" text="Giorno Successivo" fx:id="avantiGiornoButton">
+            <Button fx:id="avantiGiornoButton" mnemonicParsing="false" onAction="#avantiGiornoButtonAction" styleClass="nav-day-button" text="Giorno Successivo">
                 <font>
                     <Font name="Arial" size="12.0" />
                 </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#salvaPianoButtonAction" text="Salva Piano" fx:id="salvaPianoButton">
+            <Button fx:id="salvaPianoButton" mnemonicParsing="false" onAction="#salvaPianoButtonAction" styleClass="save-button" text="Salva Piano">
                 <font>
                     <Font name="Arial" size="12.0" />
                 </font>

@@ -134,12 +134,12 @@ public class login implements Initializable {
             showAlert(Alert.AlertType.INFORMATION, "Accesso riuscito", "Benvenuto!");
 
             try {
+                int loggedInUserId = loginModel.getIdUtente(email);
+                Session.setUserId(loggedInUserId);
+
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
                 Parent homePageRoot = fxmlLoader.load();
 
-                // **Ottieni il controller HomePage o HomePageNutrizionista**
-                int loggedInUserId = loginModel.getIdUtente(email);
-                Session.setUserId(loggedInUserId);
 
                 // Passa l'ID utente al controller corretto in base al ruolo
                 if (ruolo.equalsIgnoreCase("nutrizionista")) {
@@ -295,6 +295,7 @@ public class login implements Initializable {
         alert.showAndWait();
     }
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if (loginModel.isDbConnected()){
@@ -303,8 +304,92 @@ public class login implements Initializable {
             System.out.println("Not connected");
         }
 
+        // --- Gestione dello switch tra email e password del Login con frecce direzionali ---
+        loginEmailField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.DOWN) {
+                loginPasswordField.requestFocus();
+                event.consume(); // Consuma l'evento per evitare la propagazione
+            }
+        });
+
+        loginPasswordField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.UP) {
+                loginEmailField.requestFocus();
+                event.consume(); // Consuma l'evento per evitare la propagazione
+            }
+        });
+
         loginPasswordField.setOnKeyPressed(this::handleLoginEnter);
         loginEmailField.setOnKeyPressed(this::handleLoginEnter);
+
+
+        // --- Gestione dello switch tra i campi di Registrazione con frecce direzionali ---
+
+        // Navigazione tra i RadioButton Cliente e Nutrizionista
+        Cliente.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.RIGHT) {
+                Nutrizionista.requestFocus();
+                event.consume();
+            } else if (event.getCode() == KeyCode.DOWN) {
+                nomeField.requestFocus();
+                event.consume();
+            }
+        });
+
+        Nutrizionista.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.LEFT) {
+                Cliente.requestFocus();
+                event.consume();
+            } else if (event.getCode() == KeyCode.DOWN) {
+                nomeField.requestFocus();
+                event.consume();
+            }
+        });
+
+        // Navigazione tra Nome, Cognome, Email, Password di registrazione
+        nomeField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.DOWN) {
+                emailField.requestFocus(); // Va direttamente a Email con freccia giù
+                event.consume();
+            } else if (event.getCode() == KeyCode.RIGHT) {
+                cognomeField.requestFocus(); // Va a Cognome con freccia destra
+                event.consume();
+            } else if (event.getCode() == KeyCode.UP) {
+                Cliente.requestFocus(); // Torna ai RadioButton
+                event.consume();
+            }
+        });
+
+        cognomeField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.DOWN) {
+                emailField.requestFocus(); // Va direttamente a Email con freccia giù
+                event.consume();
+            } else if (event.getCode() == KeyCode.LEFT) {
+                nomeField.requestFocus(); // Torna a Nome con freccia sinistra
+                event.consume();
+            } else if (event.getCode() == KeyCode.UP) {
+                Nutrizionista.requestFocus(); // Torna ai RadioButton (potrebbe essere Cliente o Nutrizionista)
+                event.consume();
+            }
+        });
+
+        emailField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.DOWN) {
+                passwordField.requestFocus();
+                event.consume();
+            } else if (event.getCode() == KeyCode.UP) {
+                nomeField.requestFocus(); // Torna a Nome
+                event.consume();
+            }
+        });
+
+        passwordField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.UP) {
+                emailField.requestFocus();
+                event.consume();
+            }
+        });
+
 
         nomeField.setOnKeyPressed(this::handleRegisterEnter);
         cognomeField.setOnKeyPressed(this::handleRegisterEnter);

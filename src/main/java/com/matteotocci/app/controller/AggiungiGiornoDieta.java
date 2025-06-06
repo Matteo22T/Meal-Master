@@ -11,8 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -25,6 +24,8 @@ public class AggiungiGiornoDieta {
     private String titoloPiano;
     private int numeroGiorni;
     private int giornoCorrente = 1;
+    private int idDieta;
+
 
     @FXML private Label giornoCorrenteLabel;
     @FXML private ListView<String> colazioneListView;
@@ -36,8 +37,12 @@ public class AggiungiGiornoDieta {
     @FXML private Label carboidratiLabel;
     @FXML private Label proteineLabel;
     @FXML private Label grassiLabel;
+    @FXML private TextField nomeGiornoTextField;
 
     private String pastoSelezionato;
+
+    private Map<Integer, String> nomiGiorni = new HashMap<>();
+    private Map<Integer, Integer> idGiornoDietaMap = new HashMap<>();
 
     private Map<Integer, Map<String, ObservableList<AlimentoQuantificato>>> giorniPasti = new HashMap<>();
 
@@ -64,6 +69,10 @@ public class AggiungiGiornoDieta {
         }
     }
 
+    public void setIdDieta(int idDieta){
+        this.idDieta=idDieta;
+    }
+
     public void setTitoloPiano(String titolo) {
         this.titoloPiano = titolo;
     }
@@ -75,7 +84,11 @@ public class AggiungiGiornoDieta {
 
     private void aggiornaIndicatoreGiorno() {
         giornoCorrenteLabel.setText("Giorno corrente: " + giornoCorrente + "/" + numeroGiorni);
+        String nomeGiorno = nomiGiorni.getOrDefault(giornoCorrente, "");
+        nomeGiornoTextField.setText(nomeGiorno); // <-- MOSTRA il nome nel TextFiel
     }
+
+
 
     @FXML
     private void initialize() {
@@ -202,6 +215,8 @@ public class AggiungiGiornoDieta {
         PreparedStatement psInsertAlimenti = null;
         ResultSet rs = null;
 
+        salvaNomeGiornoCorrente(); // Salva il nome del giorno corrente prima di iniziare il salvataggio generale
+
         try {
             conn = SQLiteConnessione.connector();
             conn.setAutoCommit(false);
@@ -232,6 +247,18 @@ public class AggiungiGiornoDieta {
             while (rs.next() && giornoIndex <= numeroGiorni) {
                 int idGiornoDieta = rs.getInt("id_giorno_dieta");
 
+                // UPDATE nome giorno
+                String nomeGiorno = nomiGiorni.get(giornoIndex); // devi avere questa mappa o altra struttura
+                System.out.println("nome giorno = " + nomeGiorno);
+                if (nomeGiorno != null && !nomeGiorno.isEmpty()) {
+                    String sqlUpdateNomeGiorno = "UPDATE Giorno_dieta SET nome_giorno = ? WHERE id_giorno_dieta = ?";
+                    try (PreparedStatement psUpdateNomeGiorno = conn.prepareStatement(sqlUpdateNomeGiorno)) {
+                        psUpdateNomeGiorno.setString(1, nomeGiorno);
+                        psUpdateNomeGiorno.setInt(2, idGiornoDieta);
+                        psUpdateNomeGiorno.executeUpdate();
+                    }
+                }
+
                 // 3a. Cancella gli alimenti esistenti per questo giorno
                 String sqlDelete = "DELETE FROM DietaAlimenti WHERE id_giorno_dieta = ?";
                 psDeleteAlimenti = conn.prepareStatement(sqlDelete);
@@ -239,7 +266,7 @@ public class AggiungiGiornoDieta {
                 psDeleteAlimenti.executeUpdate();
 
                 // 3b. Inserisci i nuovi alimenti per questo giorno
-                String sqlInsert = "INSERT INTO DietaAlimenti (id_giorno_dieta, id_alimento, quantita_grammi, pasto) VALUES (?, ?, ?, ?)";
+                String sqlInsert = "INSERT INTO DietaAlimenti (id_giorno_dieta,id_alimento, quantita_grammi, pasto) VALUES (?, ?, ?, ?)";
                 psInsertAlimenti = conn.prepareStatement(sqlInsert);
 
                 Map<String, ObservableList<AlimentoQuantificato>> pasti = giorniPasti.get(giornoIndex);
@@ -271,6 +298,13 @@ public class AggiungiGiornoDieta {
 
             conn.commit();
             System.out.println("Piano salvato correttamente.");
+            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+            successAlert.setTitle("Salvataggio Completato");
+            successAlert.setHeaderText(null); // Non mostrare un header text
+            successAlert.setContentText("Dieta salvata con successo!");
+            successAlert.showAndWait();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -464,6 +498,9 @@ public class AggiungiGiornoDieta {
 
     @FXML
     private void avantiGiornoButtonAction(ActionEvent event) {
+
+        salvaNomeGiornoCorrente();
+
         if (giornoCorrente < numeroGiorni) {
             giornoCorrente++;
             if (!giorniPasti.containsKey(giornoCorrente)) {
@@ -479,6 +516,9 @@ public class AggiungiGiornoDieta {
 
     @FXML
     private void indietroGiornoButtonAction(ActionEvent event) {
+
+        salvaNomeGiornoCorrente();
+
         if (giornoCorrente > 1) {
             giornoCorrente--;
             aggiornaIndicatoreGiorno();
@@ -487,6 +527,19 @@ public class AggiungiGiornoDieta {
         } else {
             System.out.println("Primo giorno raggiunto.");
         }
+    }
+
+    private void salvaNomeGiornoCorrente() {
+        String nomeInserito = nomeGiornoTextField.getText();
+        if (nomeInserito != null && !nomeInserito.trim().isEmpty()) {
+            nomiGiorni.put(giornoCorrente, nomeInserito.trim());
+        } else {
+            // Se l'utente cancella il nome, puoi scegliere di rimuoverlo dalla mappa
+            // o lasciare che il database lo salvi come null/vuoto.
+            // Per ora, lo rimuoviamo se è vuoto
+            nomiGiorni.remove(giornoCorrente);
+        }
+        System.out.println("Salvato in nomiGiorni per giorno " + giornoCorrente + ": " + nomiGiorni.get(giornoCorrente)); // Debug
     }
 
     private Dieta dietaCorrente; // <-- Modificato
@@ -511,19 +564,28 @@ public class AggiungiGiornoDieta {
             conn = SQLiteConnessione.connector();
 
             // 1. Recupera i giorni associati alla dieta
-            String sqlGiorni = "SELECT id_giorno_dieta FROM Giorno_dieta WHERE id_dieta = ? ORDER BY id_giorno_dieta ASC";
+            String sqlGiorni = "SELECT id_giorno_dieta, nome_giorno FROM Giorno_dieta WHERE id_dieta = ? ORDER BY id_giorno_dieta ASC";
             psGiorni = conn.prepareStatement(sqlGiorni);
             psGiorni.setInt(1, dietaId);
             rsGiorni = psGiorni.executeQuery();
 
             int giornoIndex = 1;
-            giorniPasti.clear(); // Pulisci i dati esistenti
+            giorniPasti.clear();
+            nomiGiorni.clear();
+            idGiornoDietaMap.clear();
 
             while (rsGiorni.next()) {
                 int idGiornoDieta = rsGiorni.getInt("id_giorno_dieta");
+                String nomeGiorno = rsGiorni.getString("nome_giorno");
+
+                nomiGiorni.put(giornoIndex, nomeGiorno);
+                idGiornoDietaMap.put(giornoIndex, idGiornoDieta);
 
                 // Crea la mappa vuota per questo giorno
                 Map<String, ObservableList<AlimentoQuantificato>> pasti = creaMappaPastiVuota();
+
+                // Associa questa mappa 'pasti' al giornoIndex corrente *una sola volta*
+                giorniPasti.put(giornoIndex, pasti); // <-- Questa riga è corretta qui
 
                 // 2. Recupera gli alimenti associati a questo giorno, includendo la colonna pasto
                 String sqlAlimenti = "SELECT da.id_alimento, da.quantita_grammi, da.pasto, a.nome, a.kcal, a.carboidrati, a.proteine, a.grassi " +
@@ -543,13 +605,10 @@ public class AggiungiGiornoDieta {
                     double grassi = rsAlimenti.getDouble("grassi");
                     int quantita = rsAlimenti.getInt("quantita_grammi");
 
-                    // Leggi il pasto dal DB
                     String pasto = rsAlimenti.getString("pasto");
 
-                    // Crea un oggetto Alimento (ipotizzando che abbia un costruttore adatto)
                     Alimento alimento = new Alimento(nome, null, kcal, proteine, carboidrati, grassi, 0, 0, 0, 0, null, null, null, idAlimento);
 
-                    // Inserisci l'alimento nel pasto corretto (se il pasto è null o non riconosciuto, puoi mettere un default)
                     if (pasto == null || !pasti.containsKey(pasto)) {
                         pasto = "pranzo"; // default fallback
                     }
@@ -558,10 +617,10 @@ public class AggiungiGiornoDieta {
                 rsAlimenti.close();
                 psAlimenti.close();
 
-                giorniPasti.put(giornoIndex, pasti);
-                giornoIndex++;
+                // Incrementa l'indice del giorno solo una volta, alla fine del ciclo per il giorno corrente
+                giornoIndex++; // <-- Questa riga è corretta qui e non deve essere duplicata
             }
-            numeroGiorni=giornoIndex-1;
+            numeroGiorni=giornoIndex-1; // Questo sarà ora corretto
             aggiornaListView();
             aggiornaTotali();
             aggiornaIndicatoreGiorno();

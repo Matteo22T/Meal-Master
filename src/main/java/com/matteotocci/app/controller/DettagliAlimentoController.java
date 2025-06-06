@@ -59,6 +59,7 @@ public class DettagliAlimentoController {
     }
 
 
+
     @FXML
     private void chiudiFinestra() {
         ((Stage) immagineGrande.getScene().getWindow()).close();

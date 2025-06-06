@@ -1,0 +1,438 @@
+/* ===== STILI GENERALI ===== */
+.main-container {
+    -fx-background-color: linear-gradient(to bottom right, #fdf8f7, #f5efed);
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ===== SEZIONE HEADER ===== */
+.header-section {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 10, 0, 0, 3);
+    -fx-background-radius: 0 0 15 15;
+}
+
+.main-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+}
+
+.day-counter {
+    -fx-text-fill: #A0464A;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* ===== CAMPO NOME GIORNO ===== */
+.day-name-container {
+    -fx-background-color: rgba(139,58,58,0.05);
+    -fx-background-radius: 10;
+    -fx-padding: 10 15;
+    -fx-effect: innershadow(gaussian, rgba(139,58,58,0.1), 5, 0, 0, 1);
+}
+
+.day-name-label {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-weight: bold;
+}
+
+.day-name-field {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #E8C5C1;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 8 12;
+    -fx-text-fill: #8B3A3A;
+    -fx-prompt-text-fill: #B8928E;
+    -fx-effect: innershadow(gaussian, rgba(139,58,58,0.05), 3, 0, 0, 1);
+}
+
+.day-name-field:focused {
+    -fx-border-color: #4F7942;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 2);
+    -fx-background-color: #ffffff;
+}
+
+.header-separator {
+    -fx-background-color: linear-gradient(to right, transparent, #E8C5C1, transparent);
+    -fx-pref-height: 1;
+}
+
+/* ===== CONTENUTO PRINCIPALE ===== */
+.content-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.meals-grid {
+    -fx-padding: 20;
+    -fx-background-color: transparent;
+}
+
+/* ===== SEZIONI PASTI ===== */
+.meal-section {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 15, 0, 0, 5);
+}
+
+.meal-section:hover {
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.15), 20, 0, 0, 8);
+}
+
+.meal-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+
+.meal-list {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-border-color: #E8C5C1;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-background-radius: 10;
+    -fx-effect: innershadow(gaussian, rgba(139,58,58,0.05), 5, 0, 0, 2);
+}
+
+.meal-list:focused {
+    -fx-border-color: #4F7942;
+    -fx-border-width: 2;
+}
+
+.meal-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 13px;
+    -fx-padding: 5 10;
+}
+
+.meal-list .list-cell:selected {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+}
+
+.meal-list .list-cell:hover {
+    -fx-background-color: rgba(79,121,66,0.1);
+    -fx-background-radius: 5;
+}
+
+.meal-list:focused .list-cell:selected {
+    -fx-background-color: linear-gradient(to right, #5A8A4A, #658F52);
+}
+
+/* ===== PULSANTI PASTI ===== */
+.meal-buttons {
+    -fx-alignment: center;
+}
+
+.add-meal-button {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 2);
+}
+
+.add-meal-button:hover {
+    -fx-background-color: linear-gradient(to right, #5A8A4A, #658F52);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.5), 12, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.add-meal-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.remove-meal-button {
+    -fx-background-color: linear-gradient(to right, #8B3A3A, #A0464A);
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.3), 8, 0, 0, 2);
+}
+
+.remove-meal-button:hover {
+    -fx-background-color: linear-gradient(to right, #A0464A, #B54C50);
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.5), 12, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.remove-meal-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/* ===== SEZIONE TOTALI ===== */
+.totals-section {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f9f2f1);
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.12), 15, 0, 0, 5);
+    -fx-border-color: rgba(79,121,66,0.2);
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+}
+
+.totals-section:hover {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 18, 0, 0, 7);
+}
+
+.totals-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-alignment: center;
+}
+
+.totals-container {
+    -fx-background-color: rgba(79,121,66,0.05);
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+}
+
+.total-item {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.05), 5, 0, 0, 2);
+}
+
+.total-item:hover {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 8, 0, 0, 3);
+}
+
+.total-label {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-weight: bold;
+    -fx-min-width: 90;
+}
+
+.total-value {
+    -fx-text-fill: #4F7942;
+    -fx-font-weight: bold;
+}
+
+/* ===== SEZIONE FOOTER ===== */
+.footer-section {
+    -fx-background-color: linear-gradient(to top, #ffffff, #fdf8f7);
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 10, 0, 0, -3);
+    -fx-background-radius: 15 15 0 0;
+}
+
+.nav-day-button {
+    -fx-background-color: linear-gradient(to right, #B8928E, #C19A96);
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(184,146,142,0.3), 8, 0, 0, 2);
+}
+
+.nav-day-button:hover {
+    -fx-background-color: linear-gradient(to right, #C19A96, #D1A8A4);
+    -fx-effect: dropshadow(gaussian, rgba(184,146,142,0.5), 12, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.nav-day-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.save-button {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.4), 10, 0, 0, 3);
+}
+
+.save-button:hover {
+    -fx-background-color: linear-gradient(to right, #5A8A4A, #658F52);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.6), 15, 0, 0, 5);
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+}
+
+.save-button:pressed {
+    -fx-scale-x: 0.92;
+    -fx-scale-y: 0.92;
+}
+
+/* ===== ANIMAZIONI E TRANSIZIONI ===== */
+.meal-section, .add-meal-button, .remove-meal-button, .nav-day-button, .save-button, .day-name-field, .total-item {
+    -fx-transition: all 0.3s ease;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1200px) {
+    .meals-grid {
+        -fx-hgap: 15;
+        -fx-vgap: 15;
+        -fx-padding: 15;
+    }
+
+    .meal-section {
+        -fx-padding: 15;
+    }
+
+    .totals-section {
+        -fx-padding: 15;
+    }
+}
+
+@media (max-width: 800px) {
+    .day-name-field {
+        -fx-pref-width: 150;
+    }
+
+    .meal-buttons {
+        -fx-spacing: 5;
+    }
+
+    .add-meal-button, .remove-meal-button {
+        -fx-padding: 6 12;
+        -fx-font-size: 11px;
+    }
+}
+
+/* ===== SCROLLBAR PERSONALIZZATA ===== */
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: rgba(139,58,58,0.1);
+    -fx-background-radius: 5;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: linear-gradient(to bottom, #B8928E, #C19A96);
+    -fx-background-radius: 5;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: linear-gradient(to bottom, #A0464A, #8B3A3A);
+}
+
+.scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:horizontal .track {
+    -fx-background-color: rgba(139,58,58,0.1);
+    -fx-background-radius: 5;
+}
+
+.scroll-pane .scroll-bar:horizontal .thumb {
+    -fx-background-color: linear-gradient(to right, #B8928E, #C19A96);
+    -fx-background-radius: 5;
+}
+
+.scroll-pane .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: linear-gradient(to right, #A0464A, #8B3A3A);
+}
+
+/* ===== COLORI AGGIUNTIVI PER ELEMENTI SPECIALI ===== */
+.accent-red {
+    -fx-text-fill: #8B3A3A;
+}
+
+.accent-green {
+    -fx-text-fill: #4F7942;
+}
+
+.accent-light-red {
+    -fx-text-fill: #B8928E;
+}
+
+.background-light-red {
+    -fx-background-color: #FDF8F7;
+}
+
+.border-red {
+    -fx-border-color: #E8C5C1;
+}
+
+/* ===== EFFETTI FOCUS AGGIUNTIVI ===== */
+.meal-list:focused {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 10, 0, 0, 3);
+}
+
+.day-name-field:focused {
+    -fx-text-fill: #8B3A3A;
+}
+
+/* ===== EFFETTI AGGIUNTIVI PER INTERATTIVITÀ ===== */
+.meal-section:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.total-item:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+/* ===== STILI PER STATI DISABILITATI ===== */
+.nav-day-button:disabled {
+    -fx-background-color: linear-gradient(to right, #D3D3D3, #CCCCCC);
+    -fx-text-fill: #999999;
+    -fx-effect: none;
+    -fx-cursor: default;
+}
+
+.save-button:disabled {
+    -fx-background-color: linear-gradient(to right, #D3D3D3, #CCCCCC);
+    -fx-text-fill: #999999;
+    -fx-effect: none;
+    -fx-cursor: default;
+}
+
+.add-meal-button:disabled {
+    -fx-background-color: linear-gradient(to right, #D3D3D3, #CCCCCC);
+    -fx-text-fill: #999999;
+    -fx-effect: none;
+    -fx-cursor: default;
+}
+
+.remove-meal-button:disabled {
+    -fx-background-color: linear-gradient(to right, #D3D3D3, #CCCCCC);
+    -fx-text-fill: #999999;
+    -fx-effect: none;
+    -fx-cursor: default;
+}
+
+/* ===== MIGLIORAMENTI VISUALI AGGIUNTIVI ===== */
+.meal-list .list-cell:empty {
+    -fx-background-color: transparent;
+}
+
+.meal-list .list-cell:filled:selected:focused {
+    -fx-background-color: linear-gradient(to right, #658F52, #70985E);
+    -fx-text-fill: white;
+}
+
+.meal-list .list-cell:filled:selected:focused:hover {
+    -fx-background-color: linear-gradient(to right, #70985E, #7BA368);
+}

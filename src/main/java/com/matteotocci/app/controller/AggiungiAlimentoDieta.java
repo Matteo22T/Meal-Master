@@ -320,7 +320,15 @@ public class AggiungiAlimentoDieta {
                             rs.getString("nome"),
                             rs.getString("descrizione"),
                             rs.getString("categoria"),
-                            rs.getInt("id_utente")
+                            rs.getInt("id_utente"),
+                            rs.getDouble("kcal"),
+                            rs.getDouble("proteine"),
+                            rs.getDouble("carboidrati"),
+                            rs.getDouble("grassi"),
+                            rs.getDouble("grassi_saturi"),
+                            rs.getDouble("zuccheri"),
+                            rs.getDouble("fibre"),
+                            rs.getDouble("sale")
                     );
                     ricette.add(ricetta);
                 }
