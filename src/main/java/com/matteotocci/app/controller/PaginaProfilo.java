@@ -11,7 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.scene.layout.GridPane; // Import aggiunto
+import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -85,19 +85,18 @@ public class PaginaProfilo implements Initializable {
             System.out.println("[DEBUG] Tentativo di recupero dati per l'utente con ID: " + utenteCorrenteId);
 
             // Recupera il nome utente per la sidebar dalla tabella Utente
-            String nomeUtenteSidebar = getDatoUtenteDalDatabase("Utente", utenteCorrenteId, "Nome");
-            System.out.println("[DEBUG] Nome utente sidebar recuperato: " + nomeUtenteSidebar);
-            if (nomeUtenteSidebar != null && !nomeUtenteSidebar.isEmpty()) {
-                nomeUtenteSidebarLabel.setText(nomeUtenteSidebar);
-                benvenutoLabel.setText("Benvenuto " + nomeUtenteSidebar);
+            String nome = getDatoUtenteDalDatabase("Utente", utenteCorrenteId, "Nome");
+            String cognome = getDatoUtenteDalDatabase("Utente", utenteCorrenteId, "Cognome");
+
+            if ((nome != null && !nome.isEmpty()) || (cognome != null && !cognome.isEmpty())) {
+                String nomeCompleto = (nome != null ? nome : "") + " " + (cognome != null ? cognome : "");
+                nomeUtenteSidebarLabel.setText(nomeCompleto.trim());
+                benvenutoLabel.setText("Benvenuto " + nomeCompleto.trim());
             } else {
                 nomeUtenteSidebarLabel.setText("Utente Sconosciuto");
                 benvenutoLabel.setText("Benvenuto Utente");
             }
 
-            // Recupera nome e cognome dalla tabella Utente
-            String nome = getDatoUtenteDalDatabase("Utente", utenteCorrenteId, "Nome");
-            String cognome = getDatoUtenteDalDatabase("Utente", utenteCorrenteId, "Cognome");
             if (nome != null) {
                 nomeTextField.setText(nome);
             }
@@ -141,20 +140,7 @@ public class PaginaProfilo implements Initializable {
                 }
             }
 
-            // Imposta anche gli altri campi se hai i riferimenti FXML
-            // Esempio per gli altri (decommenta e usa se necessario)
-            // if (sessoTextField != null) {
-            //     sessoTextField.setText(getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "sesso")); // Assumi che ci sia una colonna 'sesso'
-            // }
-            // if (pesoIdealeTextField != null) {
-            //     pesoIdealeTextField.setText(getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "peso_ideale_kg")); // Assumi una colonna 'peso_ideale_kg'
-            // }
-            // if (dietaTextField != null) {
-            //     dietaTextField.setText(getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "dieta")); // Assumi una colonna 'dieta'
-            // }
-            // if (nutrizionistaTextField != null) {
-            //     nutrizionistaTextField.setText(getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "id_nutrizionista")); // Recupera l'ID del nutrizionista
-            // }
+
         } else {
             System.out.println("[DEBUG] ID utente non valido (null). Impossibile recuperare i dati.");
         }
@@ -223,15 +209,45 @@ public class PaginaProfilo implements Initializable {
     private void AccessoAlimenti(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
-            Parent loginRoot = fxmlLoader.load();
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(loginRoot));
-            loginStage.show();
-            ((Stage) BottoneAlimenti.getScene().getWindow()).close();
+            Parent root = fxmlLoader.load();
+            Alimenti alimentiController = fxmlLoader.getController();
+
+            // Passa l'ID utente corrente al controller di Alimenti
+            alimentiController.setLoggedInUserId(this.utenteCorrenteId);
+
+            // Cambia scena sulla finestra attuale
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void AccessoRicette(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Ricette.fxml"));
+            Parent root = fxmlLoader.load();
+
+            // Ottieni il controller di Ricette
+            Ricette ricetteController = fxmlLoader.getController();
+
+            // Passa l'ID utente corrente al controller di Ricette
+            ricetteController.setLoggedInUserId(this.utenteCorrenteId);
+
+            // Cambia scena sulla stessa finestra
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @FXML
     private void mostraSchermataModificaPassword(MouseEvent event) {

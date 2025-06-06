@@ -13,61 +13,103 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 
-<AnchorPane prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.Ricette">
+<AnchorPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/Ricette-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.Ricette">
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <VBox prefHeight="578.0" prefWidth="180.0">
+                <!-- SIDEBAR -->
+                <VBox prefHeight="640.0" prefWidth="200.0" styleClass="sidebar">
                     <children>
-                        <HBox prefHeight="69.0" prefWidth="180.0">
+                        <!-- PROFILO UTENTE -->
+                        <HBox prefHeight="80.0" prefWidth="200.0" styleClass="profile-section">
                             <children>
-                                <ImageView fitHeight="70.0" fitWidth="68.0" onMouseClicked="#AccessoProfilo" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@immagini/omino_profilo.jpg" />
-                                    </image>
-                                </ImageView>
-                                <Label fx:id="nomeUtenteLabelHomePage" prefHeight="74.0" prefWidth="114.0" text="Nome e Cognome" />
+                                <StackPane prefHeight="60.0" prefWidth="60.0">
+                                    <children>
+                                        <Circle fill="#ffffff" radius="25.0" styleClass="profile-circle" />
+                                        <ImageView fitHeight="45.0" fitWidth="45.0" onMouseClicked="#AccessoProfilo" pickOnBounds="true" preserveRatio="true" styleClass="profile-image">
+                                            <image>
+                                                <Image url="@immagini/logo-removebg-preview.png" />
+                                            </image>
+                                        </ImageView>
+                                    </children>
+                                </StackPane>
+                                <VBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="130.0">
+                                    <children>
+                                        <Label fx:id="nomeUtenteLabelHomePage" styleClass="profile-name" text="Nome e Cognome" />
+                                        <Label styleClass="profile-subtitle" text="Benvenuto!" />
+                                    </children>
+                                </VBox>
                             </children>
                         </HBox>
-                        <Button fx:id="BottoneHome" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoHome" prefHeight="75.0" prefWidth="180.0" text="Home Page" />
-                        <Button fx:id="BottoneRicette" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoRicette" prefHeight="80.0" prefWidth="180.0" text="Ricette" />
-                        <Button mnemonicParsing="false" prefHeight="79.0" prefWidth="198.0" text="Piano Alimentare" />
-                        <Button fx:id="BottoneAlimenti" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="83.0" prefWidth="212.0" text="Alimenti">
-                            <cursor>
-                                <Cursor fx:constant="HAND" />
-                            </cursor>
-                        </Button>
+
+                        <!-- MENU NAVIGAZIONE -->
+                        <VBox prefHeight="400.0" prefWidth="200.0" spacing="5.0" styleClass="nav-menu">
+                            <children>
+                                <Button fx:id="BottoneHome" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoHome" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="🏠 Home Page" />
+                                <Button fx:id="BottoneRicette" maxWidth="1.7976931348623157E308" mnemonicParsing="false"  prefHeight="50.0" prefWidth="180.0" styleClass="nav-button,nav-button-active" text="📖 Ricette">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Button>
+                                <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="📋 Piano Alimentare" />
+                                <Button fx:id="BottoneAlimenti" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="🥗 Alimenti">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Button>
+                            </children>
+                        </VBox>
                     </children>
                 </VBox>
-                <VBox prefHeight="578.0" prefWidth="863.0">
+
+                <!-- CONTENUTO PRINCIPALE -->
+                <VBox maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="800.0" styleClass="main-content">
                     <children>
-                        <HBox prefHeight="120.0" prefWidth="842.0">
+                        <!-- SEZIONE RICERCA E FILTRI -->
+                        <VBox prefHeight="120.0" prefWidth="800.0" styleClass="search-section">
                             <children>
+                                <!-- PRIMA RIGA CONTROLLI -->
+                                <HBox alignment="CENTER" prefHeight="45.0" prefWidth="800.0" spacing="10.0" styleClass="search-row">
+                                    <children>
+                                        <TextField fx:id="cercaRicetta" prefHeight="35.0" prefWidth="350.0" promptText="Cerca ricetta..." styleClass="search-field" />
+                                        <Button fx:id="bottoneCerca" onAction="#handleCercaRicetta" prefHeight="35.0" prefWidth="120.0" styleClass="search-button" text="🔍 Cerca" />
+                                        <ComboBox fx:id="categorieRicette" prefHeight="35.0" prefWidth="150.0" promptText="Categoria" styleClass="filter-combo" />
+                                        <Button fx:id="bottoneAggiungi" onAction="#handleApriAggiuntaRicetta" prefHeight="35.0" prefWidth="80.0" styleClass="add-button" text="➕" />
+                                    </children>
+                                </HBox>
 
-                                <TextField fx:id="cercaRicetta" prefHeight="42.0" prefWidth="493.0" promptText="Cerca ricetta.." />
-                                <Button fx:id="bottoneCerca" onAction="#handleCercaRicetta" prefHeight="43.0" prefWidth="190.0" text="Cerca" />
-                                <ComboBox fx:id="categorieRicette"  prefHeight="43.0" prefWidth="150.0" promptText="Categoria" />
-                                <Button fx:id="bottoneAggiungi" onAction="#handleApriAggiuntaRicetta" prefHeight="43.0" prefWidth="97.0" text="+" />
-                                <CheckBox fx:id="mieiAlimentiCheckBox" prefHeight="43.0" prefWidth="197.0" text=" Solo le mie ricette">
-                                    <padding>
-                                        <Insets left="5.0" />
-                                    </padding></CheckBox>
-
+                                <!-- SECONDA RIGA CONTROLLI -->
+                                <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="800.0" spacing="10.0" styleClass="filter-row">
+                                    <children>
+                                        <CheckBox fx:id="mieiAlimentiCheckBox" prefHeight="25.0" prefWidth="200.0" styleClass="filter-checkbox" text="📋 Solo le mie ricette">
+                                            <padding>
+                                                <Insets left="5.0" />
+                                            </padding>
+                                        </CheckBox>
+                                        <Region prefHeight="23.0" prefWidth="66.0" HBox.hgrow="ALWAYS" />
+                                        <Label alignment="CENTER_RIGHT" styleClass="NB-label" text="Clicca su una ricetta per visualizzare i dettagli" HBox.hgrow="ALWAYS" />
+                                    </children>
+                                </HBox>
                             </children>
-                        </HBox>
-                        <TableView fx:id="tableViewRicette" editable="true" onMouseClicked="#apriDettaglioRicetta" prefHeight="534.0" prefWidth="842.0">
-                            <columns>
-                                <TableColumn fx:id="nomeCol" prefWidth="200" text="Nome" />
-                                <TableColumn fx:id="descrizioneCol" prefWidth="642.0" text="Descrizione" />
-                                <TableColumn fx:id="categoriaCol" prefWidth="100.0" text="Categoria" />
+                        </VBox>
 
-                            </columns>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                        </TableView>
+                        <!-- SEZIONE TABELLA -->
+                        <VBox styleClass="table-section">
+                            <children>
+                                <TableView fx:id="tableViewRicette" editable="true" onMouseClicked="#apriDettaglioRicetta" prefHeight="390.0" prefWidth="720.0" styleClass="ricette-table">
+                                    <columns>
+                                        <TableColumn fx:id="nomeCol" prefWidth="200.0" styleClass="table-column" text="Nome" />
+                                        <TableColumn fx:id="descrizioneCol" prefWidth="400.0" styleClass="table-column" text="Descrizione" />
+                                        <TableColumn fx:id="categoriaCol" prefWidth="120.0" styleClass="table-column" text="Categoria" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
                     </children>
                 </VBox>
             </children>

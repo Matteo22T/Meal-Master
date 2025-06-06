@@ -4,6 +4,8 @@ import com.matteotocci.app.model.Alimento;
 import com.matteotocci.app.model.SQLiteConnessione;
 import com.matteotocci.app.model.Session;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,40 +13,97 @@ import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.scene.control.cell.PropertyValueFactory;
-
-import java.sql.*;
-
 
 import java.io.IOException;
+import java.sql.*;
 
 public class Alimenti {
+
     @FXML private Button BottoneAlimenti;
     @FXML private ComboBox<String> categoriaComboBox;
     @FXML private CheckBox mieiAlimentiCheckBox;
     @FXML private Button BottoneHome;
     @FXML private Label nomeUtenteLabelHomePage;
     @FXML private Button BottoneRicette;
-    private String loggedInUserId; // Variabile per memorizzare l'ID dell'utente loggato
+    @FXML private TextField cercaAlimento;
+    @FXML private TableView<Alimento> tableView;
+    @FXML private Button bottoneCerca;
 
+    @FXML private TableColumn<Alimento, ImageView> immagineCol;
+    @FXML private TableColumn<Alimento, String> nomeCol, brandCol;
+    @FXML private TableColumn<Alimento, Double> calorieCol, proteineCol, carboidratiCol, grassiCol;
+    @FXML private TableColumn<Alimento, Double> grassiSatCol, saleCol, fibreCol, zuccheriCol;
 
+    private String loggedInUserId;
+    private int offset = 0;
+    private final int LIMIT = 50;
+    private boolean isLoading = false;
+
+    // Metodo per ricevere l'ID utente e aggiornare la label in alto
+    public void setLoggedInUserId(String userId) {
+        this.loggedInUserId = userId;
+        // Aggiorna Session globale (se usi Session)
+        if (userId != null) {
+            try {
+                Session.setUserId(Integer.parseInt(userId));
+            } catch (NumberFormatException e) {
+                System.err.println("[WARN] ID utente non valido per Session");
+            }
+        }
+        System.out.println("[DEBUG - Alimenti] ID utente ricevuto: " + this.loggedInUserId);
+        setNomeUtenteLabel();
+    }
+
+    private void setNomeUtenteLabel() {
+        // Usa l'ID passato o quello in Session se presente
+        String idDaUsare = loggedInUserId != null ? loggedInUserId : (Session.getUserId() != null ? Session.getUserId().toString() : null);
+        if (idDaUsare == null) {
+            nomeUtenteLabelHomePage.setText("Nome e Cognome");
+            return;
+        }
+
+        String nomeUtente = getNomeUtenteDalDatabase(idDaUsare);
+        if (nomeUtente != null && !nomeUtente.isEmpty()) {
+            nomeUtenteLabelHomePage.setText(nomeUtente);
+        } else {
+            nomeUtenteLabelHomePage.setText("Nome e Cognome");
+        }
+    }
+
+    private String getNomeUtenteDalDatabase(String userId) {
+        String nomeUtente = null;
+        String query = "SELECT Nome, Cognome FROM Utente WHERE id = ?";
+        try (Connection conn = SQLiteConnessione.connector();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                nomeUtente = rs.getString("Nome") + " " + rs.getString("Cognome");
+            }
+        } catch (SQLException e) {
+            System.err.println("Errore durante la lettura del nome utente dal database: " + e.getMessage());
+        }
+        return nomeUtente;
+    }
 
     @FXML
     private void AccessoAlimenti(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
-            Parent loginRoot = fxmlLoader.load();
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(loginRoot));
-            loginStage.show();
-            ((Stage) BottoneAlimenti.getScene().getWindow()).close();
+            Parent root = fxmlLoader.load();
+
+            Alimenti controller = fxmlLoader.getController();
+            controller.setLoggedInUserId(loggedInUserId); // Passaggio ID utente
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,12 +112,16 @@ public class Alimenti {
     @FXML
     private void AccessoRicette(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Ricette.fxml"));
-            Parent loginRoot = fxmlLoader.load();
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(loginRoot));
-            loginStage.show();
-            ((Stage) BottoneRicette.getScene().getWindow()).close();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Ricette.fxml"));
+            Parent root = loader.load();
+
+            Ricette controller = loader.getController();
+            controller.setLoggedInUserId(loggedInUserId);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,92 +130,13 @@ public class Alimenti {
     @FXML
     private void AccessoHome(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
-            Parent loginRoot = fxmlLoader.load();
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(loginRoot));
-            loginStage.show();
-            ((Stage) BottoneHome.getScene().getWindow()).close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void AccessoProfilo(MouseEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
-            Parent profileRoot = fxmlLoader.load();
-
-            // Ottieni il controller PaginaProfilo
-            PaginaProfilo profileController = fxmlLoader.getController();
-
-            // **Usa l'ID utente memorizzato invece della stringa statica**
-            if (loggedInUserId != null) {
-                System.out.println("[DEBUG - HomePage] ID utente da passare a Profilo: " + loggedInUserId);
-                profileController.setUtenteCorrenteId(loggedInUserId);
-            } else {
-                System.out.println("[DEBUG - HomePage] ID utente non ancora disponibile per il Profilo.");
-                // Potresti voler gestire questo caso mostrando un messaggio o disabilitando l'accesso al profilo
-            }
-
-            Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            profileStage.setScene(new Scene(profileRoot));
-            profileStage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-
-    public void setLoggedInUserId(String userId) {
-        this.loggedInUserId = userId;
-        System.out.println("[DEBUG - HomePage] ID utente ricevuto: " + this.loggedInUserId);
-        setNomeUtenteLabel();
-    }
-
-    private void setNomeUtenteLabel() {
-        String nomeUtente = getNomeUtenteDalDatabase(loggedInUserId);
-        if (nomeUtente != null && !nomeUtente.isEmpty()) {
-            nomeUtenteLabelHomePage.setText(nomeUtente);
-        } else {
-            nomeUtenteLabelHomePage.setText("Nome e Cognome"); // Fallback text
-        }
-    }
-
-    private String getNomeUtenteDalDatabase(String userId) {
-        String nome = null;
-        String url = "jdbc:sqlite:database.db"; // Assicurati che sia il percorso corretto
-        String query = "SELECT Nome FROM Utente WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                nome = rs.getString("Nome");
-            }
-        } catch (SQLException e) {
-            System.err.println("Errore durante la lettura del nome utente dal database: " + e.getMessage());
-        }
-        return nome;
-    }
-
-    private void apriDettaglio(Alimento alimento) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DettagliAlimento.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
             Parent root = loader.load();
 
-            DettagliAlimentoController controller = loader.getController();
-            controller.setAlimento(alimento);
-            controller.setAlimentiController(this);
-            controller.setOrigineFXML("Alimenti.fxml");
+            HomePage homePageController = loader.getController();
+            homePageController.setLoggedInUserId(this.loggedInUserId);
 
-
-            Stage stage = new Stage();
-            stage.setTitle("Dettaglio Alimento");
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
@@ -161,60 +145,25 @@ public class Alimenti {
     }
 
 
-    @FXML private TextField cercaAlimento;
-    @FXML private TableView<Alimento> tableView;
-    @FXML private Button bottoneCerca;
-
-
-    @FXML private TableColumn<Alimento, ImageView> immagineCol;
-    @FXML private TableColumn<Alimento, String> nomeCol, brandCol;
-    @FXML private TableColumn<Alimento, Double> calorieCol, proteineCol, carboidratiCol, grassiCol;
-    @FXML private TableColumn<Alimento, Double> grassiSatCol, saleCol, fibreCol, zuccheriCol;
-
-    private int offset = 0;
-    private final int LIMIT = 50;
-
-
     @FXML
-    public void resetRicerca() {
-        offset = 0;
-        tableView.getItems().clear();
-    }
-    @FXML public String getFiltro(){
-        return cercaAlimento != null ? cercaAlimento.getText() : "";
-    }
+    private void AccessoProfilo(MouseEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
+            Parent root = fxmlLoader.load();
 
-    @FXML
-    private void handleCercaAlimento(ActionEvent event) {
-        offset = 0;
-        tableView.getItems().clear();
-        String filtro = cercaAlimento.getText();
-        cercaAlimenti(filtro, false);
-    }
-
-
-    private ScrollBar getVerticalScrollbar(TableView<?> table) {
-        for (Node node : table.lookupAll(".scroll-bar")) {
-            if (node instanceof ScrollBar) {
-                ScrollBar sb = (ScrollBar) node;
-                if (sb.getOrientation() == Orientation.VERTICAL) {
-                    return sb;
-                }
+            PaginaProfilo profileController = fxmlLoader.getController();
+            if (loggedInUserId != null) {
+                profileController.setUtenteCorrenteId(loggedInUserId);
             }
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return null;
     }
-
-    private boolean isLoading = false;
-
-    private void caricaAltri() {
-        if (isLoading) return;
-        isLoading = true;
-        String filtro = cercaAlimento.getText();
-        cercaAlimenti(filtro, true);
-        isLoading = false;
-    }
-
 
     @FXML
     public void initialize() {
@@ -234,8 +183,7 @@ public class Alimenti {
             TableRow<Alimento> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    Alimento alimento = row.getItem();
-                    apriDettaglio(alimento);
+                    apriDettaglio(row.getItem());
                 }
             });
             return row;
@@ -244,26 +192,20 @@ public class Alimenti {
         popolaCategorie();
 
         categoriaComboBox.setOnAction(e -> {
-            offset = 0;
-            tableView.getItems().clear();
+            resetRicerca();
             cercaAlimenti(cercaAlimento.getText(), false);
         });
 
         mieiAlimentiCheckBox.setOnAction(e -> {
-            offset = 0;
-            tableView.getItems().clear();
+            resetRicerca();
             cercaAlimenti(cercaAlimento.getText(), false);
         });
-
-
-
 
         Platform.runLater(() -> {
             ScrollBar scrollBar = getVerticalScrollbar(tableView);
             if (scrollBar != null) {
                 scrollBar.valueProperty().addListener((obs, oldVal, newVal) -> {
                     if (newVal.doubleValue() == scrollBar.getMax()) {
-                        // Se raggiunge il fondo, carica altri 50
                         caricaAltri();
                     }
                 });
@@ -271,8 +213,41 @@ public class Alimenti {
         });
 
         cercaAlimenti("", false);
+        setNomeUtenteLabel(); // fallback se non arriva via setLoggedInUserId
     }
 
+    private ScrollBar getVerticalScrollbar(TableView<?> table) {
+        for (Node node : table.lookupAll(".scroll-bar")) {
+            if (node instanceof ScrollBar sb && sb.getOrientation() == Orientation.VERTICAL) {
+                return sb;
+            }
+        }
+        return null;
+    }
+
+    private void caricaAltri() {
+        if (isLoading) return;
+        isLoading = true;
+        cercaAlimenti(cercaAlimento.getText(), true);
+        isLoading = false;
+    }
+
+    @FXML
+    public void resetRicerca() {
+        offset = 0;
+        tableView.getItems().clear();
+    }
+
+    @FXML
+    public String getFiltro() {
+        return cercaAlimento != null ? cercaAlimento.getText() : "";
+    }
+
+    @FXML
+    private void handleCercaAlimento(ActionEvent event) {
+        resetRicerca();
+        cercaAlimenti(cercaAlimento.getText(), false);
+    }
 
     public void cercaAlimenti(String filtro, boolean append) {
         ObservableList<Alimento> alimenti = append ? tableView.getItems() : FXCollections.observableArrayList();
@@ -284,7 +259,7 @@ public class Alimenti {
         if (categoria != null && !categoria.equals("Tutte")) {
             query.append(" AND categoria = ?");
         }
-        if (soloMiei && Session.getUserId() != null) {
+        if (soloMiei && loggedInUserId != null) {
             query.append(" AND user_id = ?");
         }
         query.append(" LIMIT ? OFFSET ?");
@@ -297,8 +272,8 @@ public class Alimenti {
             if (categoria != null && !categoria.equals("Tutte")) {
                 stmt.setString(paramIndex++, categoria);
             }
-            if (soloMiei && Session.getUserId() != null) {
-                stmt.setInt(paramIndex++, Session.getUserId());
+            if (soloMiei && loggedInUserId != null) {
+                stmt.setInt(paramIndex++, Integer.parseInt(loggedInUserId));
             }
             stmt.setInt(paramIndex++, LIMIT);
             stmt.setInt(paramIndex++, offset);
@@ -322,7 +297,6 @@ public class Alimenti {
                             rs.getInt("id")
                     ));
                 }
-
                 tableView.setItems(alimenti);
                 offset += LIMIT;
             }
@@ -332,18 +306,42 @@ public class Alimenti {
         }
     }
 
+    private void apriDettaglio(Alimento alimento) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DettagliAlimento.fxml"));
+            Parent root = loader.load();
+
+            DettagliAlimentoController controller = loader.getController();
+            controller.setAlimento(alimento);
+            controller.setAlimentiController(this);
+            controller.setOrigineFXML("Alimenti.fxml");
+
+            Stage stage = new Stage();
+            stage.setTitle("Dettaglio Alimento");
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/com/matteotocci/app/css/DettaglioAlimento-Style.css").toExternalForm());
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void handleApriAggiunta(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/AggiungiAlimento.fxml"));
             Parent root = loader.load();
+
             AggiungiAlimentoController controller = loader.getController();
             controller.setAlimentiController(this);
+
             Stage stage = new Stage();
             stage.setTitle("Aggiungi Alimento");
             stage.setScene(new Scene(root));
             stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -356,17 +354,15 @@ public class Alimenti {
              ResultSet rs = stmt.executeQuery(query)) {
 
             ObservableList<String> categorie = FXCollections.observableArrayList();
-            categorie.add("Tutte"); // opzione iniziale
+            categorie.add("Tutte");
             while (rs.next()) {
                 categorie.add(rs.getString("categoria"));
             }
             categoriaComboBox.setItems(categorie);
             categoriaComboBox.getSelectionModel().selectFirst();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
-
-
 }

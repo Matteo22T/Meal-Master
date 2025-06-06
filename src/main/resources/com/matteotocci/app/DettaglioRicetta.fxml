@@ -10,121 +10,131 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 
-<AnchorPane prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.DettaglioRicettaController">
-    <VBox fillWidth="false" spacing="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
+<AnchorPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/DettaglioRicetta-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.DettaglioRicettaController">
+    <VBox fillWidth="false" maxWidth="1.7976931348623157E308" spacing="15" styleClass="content-container" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
         <padding>
             <Insets bottom="20" left="20" right="20" top="20" />
         </padding>
-      <HBox prefHeight="2.0" prefWidth="478.0">
-         <children>
-      
-              <Label fx:id="nomeRicettaLabel" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="484.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
-         </children>
-      </HBox>
 
-        <HBox prefHeight="200.0" prefWidth="942.0" spacing="10">
-         <VBox prefHeight="200.0" prefWidth="436.0">
-            <children>
-               <HBox prefHeight="100.0" prefWidth="200.0">
-                  <children>
-                        <Label text="Categoria:" />
-                        <Label fx:id="categoriaLabel" prefHeight="18.0" prefWidth="119.0" />
-                  </children>
-               </HBox>
-               <HBox prefHeight="100.0" prefWidth="200.0">
-                  <children>
-                        <Label text="Autore:" />
-                        <Label fx:id="autoreLabel" prefHeight="18.0" prefWidth="230.0" />
-                  </children>
-               </HBox>
-            </children>
-         </VBox>
-         <VBox prefHeight="200.0" prefWidth="491.0">
-            <children>
-         
-                 <Label style="-fx-font-weight: bold;" text="Descrizione:" />
-                 <TextArea fx:id="descrizioneArea" editable="false" prefHeight="182.0" prefRowCount="4" prefWidth="594.0" wrapText="true" />
-            </children>
-         </VBox>
+        <!-- HEADER RICETTA -->
+        <VBox maxWidth="1.7976931348623157E308" prefHeight="47.0" prefWidth="965.0" spacing="10" styleClass="header-section">
+            <Label fx:id="nomeRicettaLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="recipe-title" text="Nome Ricetta" />
+            <Line endX="700.0" styleClass="divider-line" />
+        </VBox>
+
+        <!-- SEZIONE INFO PRINCIPALE -->
+        <HBox prefHeight="160.0" spacing="20" styleClass="main-info-section">
+            <!-- INFO LATERALI -->
+            <VBox prefWidth="280.0" spacing="15" styleClass="info-card">
+                <Label styleClass="section-title" text="📋 INFO GENERALI" />
+
+                <VBox spacing="12" styleClass="info-list">
+                    <HBox alignment="CENTER_LEFT" spacing="8" styleClass="info-item">
+                        <Label styleClass="info-label" text="🏷️" />
+                        <Label styleClass="info-key" text="Categoria:" />
+                        <Label fx:id="categoriaLabel" styleClass="info-value" text="Categoria" />
+                    </HBox>
+
+                    <HBox alignment="CENTER_LEFT" spacing="8" styleClass="info-item">
+                        <Label styleClass="info-label" text="👨‍🍳" />
+                        <Label styleClass="info-key" text="Autore:" />
+                        <Label fx:id="autoreLabel" styleClass="info-value" text="Autore" />
+                    </HBox>
+                </VBox>
+            </VBox>
+
+            <!-- DESCRIZIONE -->
+            <VBox prefWidth="660.0" spacing="12" styleClass="description-card">
+                <Label styleClass="section-title" text="📝 DESCRIZIONE" />
+                <TextArea fx:id="descrizioneArea" editable="false" prefHeight="110.0" styleClass="description-area" wrapText="true" />
+            </VBox>
         </HBox>
-      <HBox prefHeight="157.0" prefWidth="939.0">
-         <children>
-            <VBox prefHeight="242.0" prefWidth="448.0">
-               <children>
-            
-                    <Label style="-fx-font-weight: bold;" text="Valori nutrizionali totali (per quantità totale):" />
-                    <GridPane hgap="10" prefHeight="174.0" prefWidth="220.0" vgap="5">
-                        <columnConstraints>
-                            <ColumnConstraints halignment="RIGHT" />
-                            <ColumnConstraints halignment="LEFT" />
-                        </columnConstraints>
-            
-                        <rowConstraints>
-                            <RowConstraints />
-                            <RowConstraints />
-                            <RowConstraints />
-                            <RowConstraints />
-                            <RowConstraints />
-                            <RowConstraints />
-                            <RowConstraints />
-                            <RowConstraints />
-                        </rowConstraints>
-            
-                        <Label text="Kcal:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <Label fx:id="kcalLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-            
-                        <Label text="Proteine:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <Label fx:id="proteineLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            
-                        <Label text="Carboidrati:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <Label fx:id="carboidratiLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            
-                        <Label text="Zuccheri:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                        <Label fx:id="zuccheriLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            
-                        <Label text="Grassi:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                        <Label fx:id="grassiLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            
-                        <Label text="Grassi Saturi:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                        <Label fx:id="grassiSaturiLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            
-                        <Label text="Fibre:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                        <Label fx:id="fibreLabel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            
-                        <Label text="Sale:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-                        <Label fx:id="saleLabel" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                    </GridPane>
-               </children>
+
+        <!-- SEZIONE COMPLETA - VALORI NUTRIZIONALI E INGREDIENTI -->
+        <VBox spacing="15" styleClass="complete-details-section">
+            <!-- VALORI NUTRIZIONALI -->
+            <VBox prefHeight="132.0" prefWidth="959.0" spacing="12" styleClass="nutrition-card">
+                <Label styleClass="section-title" text="🥗 VALORI NUTRIZIONALI (per quantità totale)" />
+
+                <GridPane hgap="25" prefHeight="106.0" prefWidth="946.0" styleClass="nutrition-grid" vgap="8">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="LEFT" prefWidth="110.0" />
+                        <ColumnConstraints halignment="RIGHT" prefWidth="70.0" />
+                        <ColumnConstraints halignment="LEFT" prefWidth="50.0" />
+                        <ColumnConstraints halignment="LEFT" prefWidth="110.0" />
+                        <ColumnConstraints halignment="RIGHT" prefWidth="70.0" />
+                        <ColumnConstraints halignment="LEFT" prefWidth="50.0" />
+                        <ColumnConstraints halignment="LEFT" prefWidth="110.0" />
+                        <ColumnConstraints halignment="RIGHT" prefWidth="70.0" />
+                        <ColumnConstraints halignment="LEFT" prefWidth="50.0" />
+                    </columnConstraints>
+
+                    <rowConstraints>
+                        <RowConstraints prefHeight="22.0" />
+                        <RowConstraints prefHeight="22.0" />
+                        <RowConstraints prefHeight="22.0" />
+                    </rowConstraints>
+
+                    <!-- Prima riga -->
+                    <Label styleClass="nutrition-label" text="🔥 Energia" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <Label fx:id="kcalLabel" styleClass="nutrition-value" text="0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <Label styleClass="nutrition-unit" text="kcal" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+
+                    <Label styleClass="nutrition-label" text="🥩 Proteine" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                    <Label fx:id="proteineLabel" styleClass="nutrition-value" text="0" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+                    <Label styleClass="nutrition-unit" text="g" GridPane.columnIndex="5" GridPane.rowIndex="0" />
+
+                    <Label styleClass="nutrition-label" text="🍞 Carboidrati" GridPane.columnIndex="6" GridPane.rowIndex="0" />
+                    <Label fx:id="carboidratiLabel" styleClass="nutrition-value" text="0" GridPane.columnIndex="7" GridPane.rowIndex="0" />
+                    <Label styleClass="nutrition-unit" text="g" GridPane.columnIndex="8" GridPane.rowIndex="0" />
+
+                    <!-- Seconda riga -->
+                    <Label styleClass="nutrition-label" text="🍯 Zuccheri" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <Label fx:id="zuccheriLabel" styleClass="nutrition-value" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Label styleClass="nutrition-unit" text="g" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+
+                    <Label styleClass="nutrition-label" text="🥑 Grassi" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                    <Label fx:id="grassiLabel" styleClass="nutrition-value" text="0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                    <Label styleClass="nutrition-unit" text="g" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+
+                    <Label styleClass="nutrition-label" text="🧈 Grassi Saturi" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                    <Label fx:id="grassiSaturiLabel" styleClass="nutrition-value" text="0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                    <Label styleClass="nutrition-unit" text="g" GridPane.columnIndex="8" GridPane.rowIndex="1" />
+
+                    <!-- Terza riga -->
+                    <Label styleClass="nutrition-label" text="🌾 Fibre" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <Label fx:id="fibreLabel" styleClass="nutrition-value" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <Label styleClass="nutrition-unit" text="g" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+                    <Label styleClass="nutrition-label" text="🧂 Sale" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                    <Label fx:id="saleLabel" styleClass="nutrition-value" text="0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                    <Label styleClass="nutrition-unit" text="g" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                </GridPane>
             </VBox>
-            <VBox prefHeight="242.0" prefWidth="490.0">
-               <children>
-            
-                    <Label prefHeight="18.0" prefWidth="489.0" style="-fx-font-weight: bold;" text="Ingredienti:" />
-                    <TableView fx:id="ingredientiTable" editable="true" prefHeight="225.0" prefWidth="514.0">
-                        <columns>
-                            <TableColumn fx:id="nomeCol" text="Alimento" />
-                            <TableColumn fx:id="quantitaCol" text="Quantità (g)" />
-                        </columns>
-                     <columnResizePolicy>
+
+            <!-- INGREDIENTI -->
+            <VBox spacing="12" styleClass="ingredients-card">
+                <Label styleClass="section-title" text="🥘 INGREDIENTI" />
+                <TableView fx:id="ingredientiTable" editable="true" prefHeight="240.0" styleClass="ingredients-table">
+                    <columns>
+                        <TableColumn fx:id="nomeCol" prefWidth="700.0" styleClass="table-column" text="Alimento" />
+                        <TableColumn fx:id="quantitaCol" prefWidth="240.0" styleClass="table-column" text="Quantità (g)" />
+                    </columns>
+                    <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                    </TableView>
-               </children>
+                    </columnResizePolicy>
+                </TableView>
             </VBox>
-         </children>
-      </HBox>
-      <HBox alignment="TOP_RIGHT" prefHeight="34.0" prefWidth="1006.0">
-         <children>
-            <Button fx:id="bottoneElimina" mnemonicParsing="false" onAction="#handleEliminaRicetta" prefHeight="43.0" prefWidth="60.0" text="Elimina" />
-            <Region prefHeight="34.0" prefWidth="45.0" />
-            <Button mnemonicParsing="false" onAction="#chiudiFinestra" prefHeight="35.0" prefWidth="62.0" text="Chiudi" />
-         </children>
-      </HBox>
+        </VBox>
 
-
+        <!-- AZIONI -->
+        <HBox alignment="CENTER_RIGHT" spacing="15" styleClass="actions-section">
+            <Button fx:id="bottoneElimina" mnemonicParsing="false" onAction="#handleEliminaRicetta" prefHeight="40.0" prefWidth="110.0" styleClass="delete-button" text="🗑️ Elimina" />
+            <Button mnemonicParsing="false" onAction="#chiudiFinestra" prefHeight="40.0" prefWidth="90.0" styleClass="close-button" text="✖️ Chiudi" />
+        </HBox>
     </VBox>
 </AnchorPane>

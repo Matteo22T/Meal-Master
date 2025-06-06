@@ -1,5 +1,8 @@
 package com.matteotocci.app.controller;
 
+import com.matteotocci.app.model.Dieta;
+import com.matteotocci.app.model.SQLiteConnessione;
+import com.matteotocci.app.model.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -8,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -28,12 +32,11 @@ public class HomePage {
     @FXML
     private Button BottoneRicette;
     @FXML
-    private Label nomeUtenteLabelHomePage;
+    private Button BottonePiano;
     @FXML
-    private TextField ricercaClienteTextField;
+    private Label nomeUtenteLabelHomePage;
 
     private String loggedInUserId; // Variabile per memorizzare l'ID dell'utente loggato
-    private ObservableList<Cliente> listaClienti = FXCollections.observableArrayList();
 
     public HomePage() {
         // Costruttore predefinito richiesto da JavaFX
@@ -43,7 +46,6 @@ public class HomePage {
         this.loggedInUserId = userId;
         System.out.println("[DEBUG - HomePage] ID utente ricevuto: " + this.loggedInUserId);
         setNomeUtenteLabel();
-        caricaClientiDelNutrizionista(); //carica i clienti all'avvio della pagina
     }
 
     private void setNomeUtenteLabel() {
@@ -70,33 +72,6 @@ public class HomePage {
             System.err.println("Errore durante la lettura del nome utente dal database: " + e.getMessage());
         }
         return nomeUtente;
-    }
-
-    @FXML
-    private void initialize() {
-        // Se non usi più la TableView, non è necessario inizializzare nulla per le colonne
-    }
-
-    private void caricaClientiDelNutrizionista() {
-        listaClienti.clear(); //pulisce la lista prima di caricare nuovi dati
-        String url = "jdbc:sqlite:database.db";
-        // Query per selezionare i clienti che hanno come id_nutrizionista l'id dell'utente loggato
-        String query = "SELECT u.Nome, u.Cognome FROM Utente u " +
-                "JOIN Clienti c ON u.id = c.id_cliente " +
-                "WHERE c.id_nutrizionista = ?";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, loggedInUserId); // Usa l'id dell'utente loggato
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                String nome = rs.getString("Nome") + " " + rs.getString("Cognome");
-                listaClienti.add(new Cliente(nome));
-            }
-            // Puoi fare qualcosa con la listaClienti qui (ma senza la TableView, probabilmente la visualizzerai in un altro modo)
-        } catch (SQLException e) {
-            System.err.println("Errore durante il caricamento dei clienti del nutrizionista: " + e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     @FXML
@@ -150,30 +125,88 @@ public class HomePage {
         }
     }
 
-    // Classe Cliente (assicurati che corrisponda alla struttura dei dati che vuoi visualizzare)
-    public static class Cliente {
-        private String nome;
-        private String azioni; //per visualizzare i bottoni
+    private Stage dietaStage; // Per gestire apertura/chiusura della finestra dieta
 
-        public Cliente(String nome) {
-            this.nome = nome;
-            this.azioni = "Visualizza Dieta/Modifica"; //valore di default
-        }
+    @FXML
+    private void AccessoPianoAlimentare(ActionEvent event) {
+        Dieta dietaAssegnata = recuperaDietaAssegnataACliente(Session.getUserId());
+        if (dietaAssegnata != null) {
+            try {
+                // Chiudi la finestra precedente se è già aperta
+                if (dietaStage != null && dietaStage.isShowing()) {
+                    dietaStage.close();
+                }
 
-        public String getNome() {
-            return nome;
-        }
 
-        public void setNome(String nome) {
-            this.nome = nome;
-        }
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/VisualizzaDieta.fxml"));
+                Parent visualizzaDietaRoot = fxmlLoader.load();
 
-        public String getAzioni() {
-            return azioni;
-        }
+                // PASSO 2: Ottieni il controller della nuova finestra
+                VisualizzaDieta visualizzaDietaController = fxmlLoader.getController();
 
-        public void setAzioni(String azioni) {
-            this.azioni = azioni;
+                // PASSO 3: Passa l'oggetto Dieta al controller della nuova finestra
+                visualizzaDietaController.impostaDietaDaVisualizzare(dietaAssegnata);
+                System.out.println("DEBUG (HomePage): Passato Dieta ID " + dietaAssegnata.getId() + " al controller VisualizzaDieta.");
+
+                dietaStage = new Stage();
+                dietaStage.setScene(new Scene(visualizzaDietaRoot));
+                dietaStage.show();
+
+            } catch (IOException e) {
+                System.err.println("ERRORE (HomePage): Errore caricamento FXML VisualizzaDieta: " + e.getMessage());
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.", "Verificare il percorso del file FXML.");
+            } catch (Exception e) {
+                System.err.println("ERRORE (HomePage): Errore generico durante l'apertura di VisualizzaDieta: " + e.getMessage());
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.", "Dettagli: " + e.getMessage());
+            }
+        } else {
+            System.out.println("DEBUG (HomePage): Nessuna dieta trovata per il cliente  (ID: " + Session.getUserId() + ").");
+            showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata",
+                    "Il cliente non ha diete assegnate o non è stato possibile recuperarle.");
         }
     }
+
+    private Dieta recuperaDietaAssegnataACliente(int idCliente) {
+        Dieta dieta = null;
+        String url = "jdbc:sqlite:database.db";
+        // Query per recuperare la dieta con l'ID del cliente
+        String query = "SELECT id, nome_dieta, data_inizio, data_fine, id_nutrizionista, id_cliente " +
+                "FROM Diete WHERE id_cliente = ?";
+
+        try (Connection conn = SQLiteConnessione.connector(); // Usa SQLiteConnessione.connector()
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, idCliente);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                dieta = new Dieta(
+                        rs.getInt("id"),
+                        rs.getString("nome_dieta"),
+                        rs.getString("data_inizio"),
+                        rs.getString("data_fine"),
+                        rs.getInt("id_nutrizionista"), // Assicurati che il costruttore di Dieta supporti questi campi
+                        rs.getInt("id_cliente")
+                );
+                System.out.println("DEBUG (HomePageNutrizionista): Recuperata dieta '" + dieta.getNome() + "' (ID: " + dieta.getId() + ") per cliente ID: " + idCliente);
+            } else {
+                System.out.println("DEBUG (HomePageNutrizionista): Nessuna dieta trovata per il cliente ID: " + idCliente);
+            }
+        } catch (SQLException e) {
+            System.err.println("ERRORE SQL (HomePageNutrizionista): Errore durante il recupero della dieta per il cliente: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return dieta;
+    }
+
+
+    private void showAlert(Alert.AlertType type, String title, String header, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 }
+
