@@ -1,12 +1,10 @@
 package com.matteotocci.app.controller;
 
-import com.matteotocci.app.model.Dieta;
-import com.matteotocci.app.model.GiornoDieta;
-import com.matteotocci.app.model.SQLiteConnessione;
-import com.matteotocci.app.model.Session;
+import com.matteotocci.app.model.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -72,6 +70,9 @@ public class HomePage {
     private int targetCarboidrati = 0; // grammi
     private int targetGrassi = 0; // grammi
 
+    private boolean isProgrammaticChange = false;
+
+
 
     @FXML
     private void initialize() {
@@ -91,11 +92,29 @@ public class HomePage {
                     // Inizializza previousDaySelection con la selezione iniziale
                     comboGiorniDieta.getSelectionModel().clearSelection();
                     previousDaySelection = null;
-                    selectCurrentDayIfExists(); // Add this line
-
-                    if (comboGiorniDieta.getSelectionModel().getSelectedItem() != null) {
-                        aggiornaLabelKcalPerPasto();
+                    if (!selectCurrentDayIfExists()) { // restituisce true se ha selezionato qualcosa
+                        restoreDaySelectionFromSession();
                     }
+                    javafx.application.Platform.runLater(() -> {
+                        GiornoDieta giornoSelezionato = comboGiorniDieta.getSelectionModel().getSelectedItem();
+                        if (giornoSelezionato != null) {
+                            SessionGiornoDieta.setGiornoDietaSelezionato(giornoSelezionato);
+                            targetProteine = (int) Math.round(giornoSelezionato.getProteine());
+                            targetGrassi = (int) Math.round(giornoSelezionato.getGrassi());
+                            targetCarboidrati = (int) Math.round(giornoSelezionato.getCarboidrati());
+
+                            labelKcal.setText(Math.round(giornoSelezionato.getKcal()) + " kcal");
+                            labelProteine.setText(targetProteine + " g");
+                            labelCarboidrati.setText(targetCarboidrati + " g");
+                            labelGrassi.setText(targetGrassi + " g");
+
+                            aggiornaLabelKcalPerPasto();
+
+                            previousDaySelection = giornoSelezionato;
+                        } else {
+                            resetAllLabelsAndProgress();
+                        }
+                    });
                 } else {
                     System.out.println("DEBUG (HomePage): Nessuna dieta trovata per l'utente ID: " + userIdFromSession + ". ComboBox non popolata.");
                     if (comboGiorniDieta != null) {
@@ -124,6 +143,12 @@ public class HomePage {
         // Aggiungi un listener alla ComboBox per aggiornare i totali quando la selezione cambia
         if (comboGiorniDieta != null) {
             comboGiorniDieta.valueProperty().addListener((obs, oldVal, newVal) -> {
+                System.out.println(isProgrammaticChange);
+                if (isProgrammaticChange) {
+                    isProgrammaticChange = false; // resetta il flag
+                    System.out.println("nooooo");
+                    return;
+                }
                 // Evita di mostrare l'alert all'inizializzazione o se la selezione non cambia
                 if (oldVal == null || oldVal.equals(newVal)) {
                     previousDaySelection = newVal; // Aggiorna la selezione precedente
@@ -165,6 +190,7 @@ public class HomePage {
 
                     // Aggiorna i target per il nuovo giorno
                     if (newVal != null) {
+                        SessionGiornoDieta.setGiornoDietaSelezionato(newVal);
                         targetProteine = (int) Math.round(newVal.getProteine());
                         targetGrassi = (int) Math.round(newVal.getGrassi());
                         targetCarboidrati = (int) Math.round(newVal.getCarboidrati());
@@ -186,6 +212,7 @@ public class HomePage {
                     previousDaySelection = newVal;
                 } else {
                     // L'utente ha annullato, ripristina la selezione precedente
+                    isProgrammaticChange = true;
                     javafx.application.Platform.runLater(() -> {
                         comboGiorniDieta.getSelectionModel().select(oldVal);
                     });
@@ -197,10 +224,6 @@ public class HomePage {
     }
 
 
-    public void setLoggedInUserId(String userId) {
-        this.loggedInUserId = userId;
-        System.out.println("[DEBUG - HomePage] ID utente ricevuto: " + this.loggedInUserId);
-    }
 
     private void setNomeUtenteLabel() {
         String nomeUtente = getNomeUtenteDalDatabase(Session.getUserId().toString());
@@ -511,7 +534,6 @@ public class HomePage {
 
         String dataCorrente = LocalDate.now().toString();
 
-        // CORREZIONE: Aggiungi id_giorno_dieta nella query
         String query = """
         SELECT pasto, kcal, proteine, carboidrati, grassi
         FROM PastiGiornalieri
@@ -660,9 +682,9 @@ public class HomePage {
         timeline.play();
     }
 
-    private void selectCurrentDayIfExists() {
+    private boolean selectCurrentDayIfExists() {
         Integer userId = Session.getUserId();
-        if (userId == null) return;
+        if (userId == null) return false;
 
         String dataCorrente = LocalDate.now().toString();
 
@@ -672,7 +694,7 @@ public class HomePage {
         INNER JOIN PastiGiornalieri pg ON gd.id_giorno_dieta = pg.id_giorno_dieta
         WHERE pg.id_cliente = ? AND pg.data = ?
         GROUP BY gd.id_giorno_dieta
-        """;
+    """;
 
         try (Connection conn = SQLiteConnessione.connector();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -684,17 +706,30 @@ public class HomePage {
 
             if (rs.next()) {
                 int idGiorno = rs.getInt("id_giorno_dieta");
-                // Find the corresponding GiornoDieta object in the ComboBox and select it
                 for (GiornoDieta giorno : comboGiorniDieta.getItems()) {
                     if (giorno.getIdGiornoDieta() == idGiorno) {
+                        isProgrammaticChange = false;
+                        previousDaySelection = giorno;
                         comboGiorniDieta.getSelectionModel().select(giorno);
-                        return; // Stop after selecting the first match
+                        return true;
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Errore DB", "Impossibile caricare il giorno corrente.", "Dettagli: " + e.getMessage());
+        }
+
+        return false;
+    }
+
+
+    private void restoreDaySelectionFromSession() {
+        GiornoDieta giorno = SessionGiornoDieta.getGiornoDietaSelezionato();
+        if (giorno != null && comboGiorniDieta.getItems().contains(giorno)) {
+            isProgrammaticChange = true;
+            comboGiorniDieta.getSelectionModel().select(giorno);
+            previousDaySelection = giorno;
         }
     }
 

@@ -131,8 +131,6 @@ public class Alimenti {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
             Parent root = loader.load();
 
-            HomePage homePageController = loader.getController();
-            homePageController.setLoggedInUserId(this.loggedInUserId);
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));

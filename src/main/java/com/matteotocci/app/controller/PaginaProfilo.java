@@ -276,12 +276,6 @@ public class PaginaProfilo implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
         Parent root = loader.load();
 
-        // Ottieni il controller della HomePage
-        HomePage homePageController = loader.getController();
-
-        // Passa l'ID utente al controller della HomePage
-        homePageController.setLoggedInUserId(this.utenteCorrenteId);
-
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);

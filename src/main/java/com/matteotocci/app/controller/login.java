@@ -141,18 +141,6 @@ public class login implements Initializable {
                 Parent homePageRoot = fxmlLoader.load();
 
 
-                // Passa l'ID utente al controller corretto in base al ruolo
-                if (ruolo.equalsIgnoreCase("nutrizionista")) {
-                    HomePageNutrizionista homePageController = fxmlLoader.getController();
-                    if (homePageController != null && loggedInUserId != -1) {
-                        homePageController.setLoggedInUserId(String.valueOf(loggedInUserId));
-                    }
-                } else if (ruolo.equalsIgnoreCase("cliente")) {
-                    HomePage homePageController = fxmlLoader.getController();
-                    if (homePageController != null && loggedInUserId != -1) {
-                        homePageController.setLoggedInUserId(String.valueOf(loggedInUserId));
-                    }
-                }
 
                 // Carica la nuova finestra
                 Stage homePageStage = new Stage();
