@@ -115,8 +115,6 @@ public class Alimenti {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Ricette.fxml"));
             Parent root = loader.load();
 
-            Ricette controller = loader.getController();
-            controller.setLoggedInUserId(loggedInUserId);
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));

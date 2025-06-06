@@ -34,22 +34,14 @@ public class Ricette {
     @FXML private TableColumn<Ricetta, String> descrizioneCol;
     @FXML private TableColumn<Ricetta, String> categoriaCol;
 
-    private String loggedInUserId;
 
     private int offset = 0;
     private final int LIMIT = 50;
     private boolean isLoading = false;
 
-    // Metodo per ricevere l'ID utente
-    public void setLoggedInUserId(String userId) {
-        this.loggedInUserId = userId;
-        Session.setUserId(Integer.parseInt(userId)); // Aggiorna Session centralizzata
-        System.out.println("[DEBUG - Ricette] ID utente ricevuto: " + this.loggedInUserId);
-        setNomeUtenteLabel();
-    }
 
     private void setNomeUtenteLabel() {
-        String nomeUtente = getNomeUtenteDalDatabase(loggedInUserId);
+        String nomeUtente = getNomeUtenteDalDatabase(Session.getUserId().toString());
         if (nomeUtente != null && !nomeUtente.isEmpty()) {
             nomeUtenteLabelHomePage.setText(nomeUtente);
         } else {
@@ -78,6 +70,12 @@ public class Ricette {
         nomeCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
         descrizioneCol.setCellValueFactory(new PropertyValueFactory<>("descrizione"));
         categoriaCol.setCellValueFactory(new PropertyValueFactory<>("categoria"));
+
+
+        Integer userIdFromSession = Session.getUserId();
+        if (userIdFromSession != null) {
+            System.out.println("[DEBUG - HomePage] ID utente da Sessione: " + userIdFromSession);
+            setNomeUtenteLabel();}
 
         cercaRicette("", false);
         popolaCategorie();
@@ -234,8 +232,6 @@ public class Ricette {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
             Parent root = loader.load();
 
-            Alimenti controller = loader.getController();
-            controller.setLoggedInUserId(this.loggedInUserId);
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -253,8 +249,6 @@ public class Ricette {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
             Parent root = loader.load();
 
-            HomePage controller = loader.getController();
-            controller.setLoggedInUserId(this.loggedInUserId); // Assumendo che HomePage abbia questo metodo
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -272,10 +266,6 @@ public class Ricette {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
             Parent root = loader.load();
 
-            PaginaProfilo profileController = loader.getController();
-            if (loggedInUserId != null) {
-                profileController.setUtenteCorrenteId(loggedInUserId);
-            }
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));

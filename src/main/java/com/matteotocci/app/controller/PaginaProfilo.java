@@ -235,7 +235,6 @@ public class PaginaProfilo implements Initializable {
             Ricette ricetteController = fxmlLoader.getController();
 
             // Passa l'ID utente corrente al controller di Ricette
-            ricetteController.setLoggedInUserId(this.utenteCorrenteId);
 
             // Cambia scena sulla stessa finestra
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

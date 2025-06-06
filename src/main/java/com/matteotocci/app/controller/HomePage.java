@@ -203,7 +203,7 @@ public class HomePage {
     }
 
     private void setNomeUtenteLabel() {
-        String nomeUtente = getNomeUtenteDalDatabase(loggedInUserId);
+        String nomeUtente = getNomeUtenteDalDatabase(Session.getUserId().toString());
         if (nomeUtente != null && !nomeUtente.isEmpty()) {
             nomeUtenteLabelHomePage.setText(nomeUtente);
         } else {
