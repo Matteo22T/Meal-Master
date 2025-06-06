@@ -51,7 +51,7 @@
                         <VBox prefHeight="400.0" prefWidth="200.0" spacing="5.0" styleClass="nav-menu">
                             <children>
                                 <Button fx:id="BottoneHome" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoHome" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="🏠 Home Page" />
-                                <Button fx:id="BottoneRicette" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoRicette" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button,nav-button-active" text="📖 Ricette">
+                                <Button fx:id="BottoneRicette" maxWidth="1.7976931348623157E308" mnemonicParsing="false"  prefHeight="50.0" prefWidth="180.0" styleClass="nav-button,nav-button-active" text="📖 Ricette">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />
                                     </cursor>

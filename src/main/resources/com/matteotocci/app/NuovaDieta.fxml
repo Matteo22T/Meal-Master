@@ -21,12 +21,14 @@
                 </HBox>
                 <HBox spacing="10.0">
                     <children>
-                        <Label text="Numero di Giorni:"/>
-                        <Spinner fx:id="numeroGiorniSpinner" editable="true">
-                            <valueFactory>
-                                <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="30" initialValue="7"/>
-                            </valueFactory>
-                        </Spinner>
+                        <Label text="Data Inizio:"/>
+                        <DatePicker fx:id="dataInizioDatePicker"/>
+                    </children>
+                </HBox>
+                <HBox spacing="10.0">
+                    <children>
+                        <Label text="Data Fine:"/>
+                        <DatePicker fx:id="dataFineDatePicker"/>
                     </children>
                 </HBox>
                 <Button fx:id="avantiButton" text="Avanti >" onAction="#switchToAggiungiAlimenti"/>

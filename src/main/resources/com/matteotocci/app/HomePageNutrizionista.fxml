@@ -10,6 +10,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
@@ -17,11 +18,13 @@
 
 <AnchorPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/HomePageNutrizionista-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePageNutrizionista">
     <children>
-        <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
             <children>
+
                 <!-- SIDEBAR NUTRIZIONISTA -->
-                <VBox prefHeight="650.0" prefWidth="200.0" styleClass="sidebar">
+                <VBox prefWidth="200.0" styleClass="sidebar" HBox.hgrow="NEVER" VBox.vgrow="ALWAYS">
                     <children>
+
                         <!-- PROFILO NUTRIZIONISTA -->
                         <HBox prefHeight="80.0" prefWidth="200.0" styleClass="profile-section">
                             <children>
@@ -45,11 +48,11 @@
                         </HBox>
 
                         <!-- MENU NAVIGAZIONE NUTRIZIONISTA -->
-                        <VBox prefHeight="400.0" prefWidth="200.0" spacing="5.0" styleClass="nav-menu">
+                        <VBox spacing="5.0" styleClass="nav-menu" VBox.vgrow="ALWAYS">
                             <children>
-                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button,nav-button-active" text="👥 Clienti" />
-                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="🥗 Alimenti" />
-                                <Button fx:id="BottoneDieta" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoDieta" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="📋 Diete">
+                                <Button maxWidth="Infinity" mnemonicParsing="false" prefHeight="50.0" styleClass="nav-button,nav-button-active" text="👥 Clienti" />
+                                <Button maxWidth="Infinity" mnemonicParsing="false" prefHeight="50.0" styleClass="nav-button" text="🥗 Alimenti" />
+                                <Button fx:id="BottoneDieta" maxWidth="Infinity" mnemonicParsing="false" onAction="#AccessoDieta" prefHeight="50.0" styleClass="nav-button" text="📋 Diete">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />
                                     </cursor>
@@ -60,8 +63,9 @@
                 </VBox>
 
                 <!-- CONTENUTO PRINCIPALE -->
-                <VBox maxWidth="1.7976931348623157E308" prefHeight="650.0" prefWidth="800.0" styleClass="main-content">
+                <VBox styleClass="main-content" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                     <children>
+
                         <!-- HEADER SEZIONE -->
                         <VBox styleClass="header-section">
                             <children>
@@ -83,17 +87,22 @@
                         <!-- TABELLA CLIENTI -->
                         <VBox styleClass="table-section" VBox.vgrow="ALWAYS">
                             <children>
-                                <TableView fx:id="tabellaClienti" prefHeight="450.0" styleClass="clients-table" VBox.vgrow="ALWAYS">
+                                <TableView fx:id="tabellaClienti" styleClass="clients-table" VBox.vgrow="ALWAYS">
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                    </columnResizePolicy>
                                     <columns>
-                                        <TableColumn fx:id="nomeColonna" prefWidth="300.0" styleClass="table-column-header" text="Nome Cliente" />
-                                        <TableColumn fx:id="azioniColonna" prefWidth="450.0" styleClass="table-column-header" text="Azioni" />
+                                        <TableColumn fx:id="nomeColonna" text="Nome Cliente" />
+                                        <TableColumn fx:id="azioniColonna" text="Azioni" />
                                     </columns>
                                 </TableView>
                             </children>
                         </VBox>
                     </children>
                 </VBox>
+
             </children>
         </HBox>
     </children>
 </AnchorPane>
+

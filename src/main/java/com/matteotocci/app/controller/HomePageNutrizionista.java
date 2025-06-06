@@ -26,6 +26,8 @@ public class HomePageNutrizionista {
     @FXML
     private Button BottoneDieta;
     @FXML
+    private Button BottoneAlimenti;
+    @FXML
     private Label nomeUtenteLabelHomePage;
     @FXML
     private TextField ricercaClienteTextField;
@@ -35,6 +37,39 @@ public class HomePageNutrizionista {
     private TableColumn<Cliente, String> nomeColonna;
     @FXML
     private TableColumn<Cliente, String> azioniColonna;
+
+
+    @FXML
+    private void AccessoDieta(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DietaNutrizionista.fxml"));
+            Parent dietaRoot = fxmlLoader.load();
+            DietaNutrizionista controller = fxmlLoader.getController();
+            controller.setLoggedInUserId(loggedInUserId); // Passa l'ID Utente
+            Stage dietaStage = new Stage();
+            dietaStage.setScene(new Scene(dietaRoot));
+            dietaStage.setTitle("Diete");
+            dietaStage.show();
+            ((Stage) BottoneDieta.getScene().getWindow()).close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void AccessoAlimenti(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
+            Parent loginRoot = fxmlLoader.load();
+            Stage loginStage = new Stage();
+            loginStage.setScene(new Scene(loginRoot));
+            loginStage.show();
+            ((Stage) BottoneAlimenti.getScene().getWindow()).close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private String loggedInUserId;
     private ObservableList<Cliente> listaClienti = FXCollections.observableArrayList();
@@ -254,23 +289,7 @@ public class HomePageNutrizionista {
         }
     }
 
-    // Metodo per navigazione a DietaNutrizionista (precedentemente fornito)
-    @FXML
-    private void AccessoDieta(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DietaNutrizionista.fxml"));
-            Parent dietaRoot = fxmlLoader.load();
-            DietaNutrizionista controller = fxmlLoader.getController();
-            controller.setLoggedInUserId(loggedInUserId); // Passa l'ID Utente
-            Stage dietaStage = new Stage();
-            dietaStage.setScene(new Scene(dietaRoot));
-            dietaStage.setTitle("Diete");
-            dietaStage.show();
-            ((Stage) BottoneDieta.getScene().getWindow()).close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     // Metodo per navigazione a ProfiloNutrizionista (precedentemente fornito)
     @FXML
