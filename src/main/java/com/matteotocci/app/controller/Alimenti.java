@@ -2,7 +2,8 @@ package com.matteotocci.app.controller;
 
 import com.matteotocci.app.model.Alimento;
 import com.matteotocci.app.model.SQLiteConnessione;
-import com.matteotocci.app.model.Session;
+import com.matteotocci.app.model.Session; // Importa la classe Session
+import com.matteotocci.app.model.Dieta; // Necessario per recuperare la dieta in Alimenti
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +22,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.Optional; // Necessario per showAlert
 
 public class Alimenti {
 
@@ -39,39 +41,26 @@ public class Alimenti {
     @FXML private TableColumn<Alimento, Double> calorieCol, proteineCol, carboidratiCol, grassiCol;
     @FXML private TableColumn<Alimento, Double> grassiSatCol, saleCol, fibreCol, zuccheriCol;
 
-    private String loggedInUserId;
     private int offset = 0;
     private final int LIMIT = 50;
     private boolean isLoading = false;
 
-    // Metodo per ricevere l'ID utente e aggiornare la label in alto
-    public void setLoggedInUserId(String userId) {
-        this.loggedInUserId = userId;
-        // Aggiorna Session globale (se usi Session)
-        if (userId != null) {
-            try {
-                Session.setUserId(Integer.parseInt(userId));
-            } catch (NumberFormatException e) {
-                System.err.println("[WARN] ID utente non valido per Session");
-            }
-        }
-        System.out.println("[DEBUG - Alimenti] ID utente ricevuto: " + this.loggedInUserId);
-        setNomeUtenteLabel();
-    }
+    // Aggiungo la variabile per la dieta in Alimenti, necessaria per la gestione dell'alert
+    private Dieta dietaAssegnata;
 
     private void setNomeUtenteLabel() {
-        // Usa l'ID passato o quello in Session se presente
-        String idDaUsare = loggedInUserId != null ? loggedInUserId : (Session.getUserId() != null ? Session.getUserId().toString() : null);
-        if (idDaUsare == null) {
-            nomeUtenteLabelHomePage.setText("Nome e Cognome");
-            return;
-        }
+        Integer userIdFromSession = Session.getUserId(); // Ottiene l'ID direttamente dalla Sessione
 
-        String nomeUtente = getNomeUtenteDalDatabase(idDaUsare);
-        if (nomeUtente != null && !nomeUtente.isEmpty()) {
-            nomeUtenteLabelHomePage.setText(nomeUtente);
+        if (userIdFromSession != null) {
+            String nomeUtente = getNomeUtenteDalDatabase(userIdFromSession.toString());
+            if (nomeUtente != null && !nomeUtente.isEmpty()) {
+                nomeUtenteLabelHomePage.setText(nomeUtente);
+            } else {
+                nomeUtenteLabelHomePage.setText("Nome e Cognome"); // Testo di fallback
+            }
         } else {
-            nomeUtenteLabelHomePage.setText("Nome e Cognome");
+            nomeUtenteLabelHomePage.setText("Nome e Cognome"); // Testo di fallback se l'ID non è disponibile
+            System.err.println("[ERROR - Alimenti] ID utente non disponibile dalla Sessione per impostare il nome.");
         }
     }
 
@@ -89,76 +78,6 @@ public class Alimenti {
             System.err.println("Errore durante la lettura del nome utente dal database: " + e.getMessage());
         }
         return nomeUtente;
-    }
-
-    @FXML
-    private void AccessoAlimenti(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
-            Parent root = fxmlLoader.load();
-
-            Alimenti controller = fxmlLoader.getController();
-            controller.setLoggedInUserId(loggedInUserId); // Passaggio ID utente
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void AccessoRicette(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Ricette.fxml"));
-            Parent root = loader.load();
-
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void AccessoHome(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
-            Parent root = loader.load();
-
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    @FXML
-    private void AccessoProfilo(MouseEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
-            Parent root = fxmlLoader.load();
-
-            PaginaProfilo profileController = fxmlLoader.getController();
-            if (loggedInUserId != null) {
-                profileController.setUtenteCorrenteId(loggedInUserId);
-            }
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML
@@ -208,8 +127,12 @@ public class Alimenti {
             }
         });
 
+        // Chiama setNomeUtenteLabel qui per impostare il nome utente all'avvio
+        setNomeUtenteLabel();
+        // Carica gli alimenti iniziali
         cercaAlimenti("", false);
-        setNomeUtenteLabel(); // fallback se non arriva via setLoggedInUserId
+        // Recupera la dieta assegnata all'avvio della pagina
+        recuperaEImpostaDietaAssegnata(); // Aggiungi questa chiamata
     }
 
     private ScrollBar getVerticalScrollbar(TableView<?> table) {
@@ -255,7 +178,8 @@ public class Alimenti {
         if (categoria != null && !categoria.equals("Tutte")) {
             query.append(" AND categoria = ?");
         }
-        if (soloMiei && loggedInUserId != null) {
+        Integer currentUserId = Session.getUserId();
+        if (soloMiei && currentUserId != null) {
             query.append(" AND user_id = ?");
         }
         query.append(" LIMIT ? OFFSET ?");
@@ -268,8 +192,8 @@ public class Alimenti {
             if (categoria != null && !categoria.equals("Tutte")) {
                 stmt.setString(paramIndex++, categoria);
             }
-            if (soloMiei && loggedInUserId != null) {
-                stmt.setInt(paramIndex++, Integer.parseInt(loggedInUserId));
+            if (soloMiei && currentUserId != null) {
+                stmt.setInt(paramIndex++, currentUserId);
             }
             stmt.setInt(paramIndex++, LIMIT);
             stmt.setInt(paramIndex++, offset);
@@ -299,6 +223,7 @@ public class Alimenti {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare gli alimenti", "Dettagli: " + e.getMessage());
         }
     }
 
@@ -321,6 +246,7 @@ public class Alimenti {
 
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Caricamento", "Impossibile aprire il dettaglio alimento", "Verificare il file FXML.");
         }
     }
 
@@ -340,6 +266,7 @@ public class Alimenti {
 
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Caricamento", "Impossibile aprire la schermata di aggiunta alimento", "Verificare il file FXML.");
         }
     }
 
@@ -359,6 +286,157 @@ public class Alimenti {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile popolare le categorie", "Dettagli: " + e.getMessage());
+        }
+    }
+
+    // Metodo per visualizzare gli alert
+    private void showAlert(Alert.AlertType type, String title, String header, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    // Metodo per recuperare la dieta assegnata al cliente (copiato da PaginaProfilo/Ricette)
+    private Dieta recuperaDietaAssegnataACliente(int idCliente) {
+        Dieta dieta = null;
+        String url = "jdbc:sqlite:database.db"; // Assicurati che sia il percorso corretto
+        String query = "SELECT id, nome_dieta, data_inizio, data_fine, id_nutrizionista, id_cliente " +
+                "FROM Diete WHERE id_cliente = ?";
+
+        try (Connection conn = SQLiteConnessione.connector();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, idCliente);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                dieta = new Dieta(
+                        rs.getInt("id"),
+                        rs.getString("nome_dieta"),
+                        rs.getString("data_inizio"),
+                        rs.getString("data_fine"),
+                        rs.getInt("id_nutrizionista"),
+                        rs.getInt("id_cliente")
+                );
+            }
+        } catch (SQLException e) {
+            System.err.println("ERRORE SQL (Alimenti): Errore durante il recupero della dieta per il cliente: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return dieta;
+    }
+
+    // Metodo per recuperare e impostare la dieta all'inizializzazione (copiato da PaginaProfilo/Ricette)
+    private void recuperaEImpostaDietaAssegnata() {
+        Integer userIdFromSession = Session.getUserId();
+        if (userIdFromSession != null) {
+            this.dietaAssegnata = recuperaDietaAssegnataACliente(userIdFromSession.intValue());
+            if (this.dietaAssegnata != null) {
+                System.out.println("DEBUG (Alimenti): Dieta '" + dietaAssegnata.getNome() + "' (ID: " + dietaAssegnata.getId() + ") recuperata per utente ID: " + userIdFromSession);
+            } else {
+                System.out.println("DEBUG (Alimenti): Nessuna dieta trovata per l'utente ID: " + userIdFromSession);
+            }
+        } else {
+            System.err.println("[ERROR - Alimenti] ID utente non disponibile dalla Sessione per recupero dieta.");
+        }
+    }
+
+
+    // --- Metodi di Navigazione (aggiornati per non passare l'ID esplicitamente) ---
+
+    @FXML
+    private void AccessoAlimenti(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
+            Parent root = fxmlLoader.load();
+            // Alimenti si inizializza da sola dalla Sessione, non serve passare l'ID
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la pagina Alimenti", "Verificare il percorso FXML.");
+        }
+    }
+
+    @FXML
+    private void AccessoRicette(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Ricette.fxml"));
+            Parent root = loader.load();
+            // Ricette si inizializza da sola dalla Sessione, non serve passare l'ID
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la pagina Ricette", "Verificare il percorso FXML.");
+        }
+    }
+
+    @FXML
+    private void AccessoHome(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
+            Parent root = loader.load();
+            // HomePage si inizializza da sola dalla Sessione, non serve passare l'ID
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la HomePage", "Verificare il percorso FXML.");
+        }
+    }
+
+    @FXML
+    private void AccessoProfilo(MouseEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
+            Parent root = fxmlLoader.load();
+            // PaginaProfilo si inizializza da sola dalla Sessione, non serve passare l'ID
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la Pagina Profilo", "Verificare il percorso FXML.");
+        }
+    }
+
+    @FXML
+    private void AccessoPianoAlimentare(ActionEvent event) {
+        if (dietaAssegnata != null) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/VisualizzaDieta.fxml"));
+                Parent visualizzaDietaRoot = fxmlLoader.load();
+
+                VisualizzaDieta visualizzaDietaController = fxmlLoader.getController();
+
+                // Passa l'oggetto Dieta recuperato al controller della pagina di visualizzazione
+                visualizzaDietaController.impostaDietaDaVisualizzare(dietaAssegnata);
+                System.out.println("DEBUG (Alimenti): Passato Dieta ID " + dietaAssegnata.getId() + " al controller VisualizzaDieta.");
+
+                Stage dietaStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                dietaStage.setScene(new Scene(visualizzaDietaRoot));
+                dietaStage.show();
+
+            } catch (IOException e) {
+                System.err.println("ERRORE (Alimenti): Errore caricamento FXML VisualizzaDieta: " + e.getMessage());
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.", "Verificare il percorso del file FXML.");
+            } catch (Exception e) {
+                System.err.println("ERRORE (Alimenti): Errore generico durante l'apertura di VisualizzaDieta: " + e.getMessage());
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.", "Dettagli: " + e.getMessage());
+            }
+        } else {
+            // QUESTO È L'ALERT CHE AVEVAMO DIMENTICATO!
+            System.out.println("DEBUG (Alimenti): Nessuna dieta trovata per il cliente (ID: " + Session.getUserId() + ").");
+            showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata",
+                    "Il cliente non ha diete assegnate o non è stato possibile recuperarle.");
         }
     }
 }

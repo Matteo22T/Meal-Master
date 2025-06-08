@@ -1,5 +1,9 @@
 package com.matteotocci.app.controller;
 
+import com.matteotocci.app.model.Session;
+import com.matteotocci.app.model.Dieta; // Importa la classe Dieta
+import com.matteotocci.app.model.SQLiteConnessione; // Importa la classe SQLiteConnessione
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -70,65 +74,69 @@ public class PaginaProfilo implements Initializable {
     @FXML
     private GridPane gridPane;
 
-    private String utenteCorrenteId; // L'ID utente verrà impostato esternamente
+    @FXML
+    private Button BottoneAlimenti;
+    @FXML
+    private Button BottoneRicette;
+    @FXML
+    private Button homePageButton;
+    @FXML
+    private Button LogoutButton;
+    @FXML
+    private Button BottonePiano; // Assicurati di avere questo fx:id nel tuo FXML per il bottone del piano alimentare
 
-    public void setUtenteCorrenteId(String userId) {
-        System.out.println("[DEBUG] setUtenteCorrenteId chiamato con ID: " + userId);
-        this.utenteCorrenteId = userId;
-        // Ora che abbiamo l'ID, possiamo inizializzare i dati
+    // Dichiarazione della variabile per la dieta assegnata
+    private Dieta dietaAssegnata;
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        System.out.println("[DEBUG] initialize chiamato in PaginaProfilo.");
+        // Chiama il metodo per caricare i dati utente non appena il controller è pronto
         inizializzaDatiUtente();
+        // Recupera la dieta assegnata all'avvio della pagina
+        recuperaEImpostaDietaAssegnata();
     }
 
     private void inizializzaDatiUtente() {
-        System.out.println("[DEBUG] inizializzaDatiUtente chiamato con ID: " + utenteCorrenteId);
-        if (utenteCorrenteId != null) {
-            System.out.println("[DEBUG] Tentativo di recupero dati per l'utente con ID: " + utenteCorrenteId);
+        Integer userIdFromSession = Session.getUserId(); // Ottiene l'ID direttamente dalla Sessione
 
-            // Recupera il nome utente per la sidebar dalla tabella Utente
-            String nome = getDatoUtenteDalDatabase("Utente", utenteCorrenteId, "Nome");
-            String cognome = getDatoUtenteDalDatabase("Utente", utenteCorrenteId, "Cognome");
+        if (userIdFromSession != null) {
+            System.out.println("[DEBUG] Tentativo di recupero dati per l'utente con ID: " + userIdFromSession);
 
-            if ((nome != null && !nome.isEmpty()) || (cognome != null && !cognome.isEmpty())) {
-                String nomeCompleto = (nome != null ? nome : "") + " " + (cognome != null ? cognome : "");
-                nomeUtenteSidebarLabel.setText(nomeCompleto.trim());
-                benvenutoLabel.setText("Benvenuto " + nomeCompleto.trim());
-            } else {
-                nomeUtenteSidebarLabel.setText("Utente Sconosciuto");
-                benvenutoLabel.setText("Benvenuto Utente");
-            }
+            String nome = getDatoUtenteDalDatabase("Utente", userIdFromSession.toString(), "Nome");
+            String cognome = getDatoUtenteDalDatabase("Utente", userIdFromSession.toString(), "Cognome");
 
-            if (nome != null) {
-                nomeTextField.setText(nome);
-            }
-            if (cognome != null) {
-                cognomeTextField.setText(cognome);
-            }
+            String nomeCompleto = (nome != null ? nome : "") + " " + (cognome != null ? cognome : "");
+            nomeUtenteSidebarLabel.setText(nomeCompleto.trim());
+            benvenutoLabel.setText("Benvenuto " + nomeCompleto.trim());
 
-            // Recupera i dati del cliente dalla tabella Clienti
-            String altezza = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "altezza_cm");
-            String peso = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "peso_kg");
-            String livelloAttivita = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "livello_attivita");
-            String dataNascita = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "data_di_nascita");
-            String sesso = getDatoUtenteDalDatabase("Clienti",utenteCorrenteId,"sesso");
+            nomeTextField.setText(nome != null ? nome : "");
+            cognomeTextField.setText(cognome != null ? cognome : "");
 
-            // Imposta i valori nei rispettivi TextField
+            String altezza = getDatoUtenteDalDatabase("Clienti", userIdFromSession.toString(), "altezza_cm");
+            String peso = getDatoUtenteDalDatabase("Clienti", userIdFromSession.toString(), "peso_kg");
+            String livelloAttivita = getDatoUtenteDalDatabase("Clienti", userIdFromSession.toString(), "livello_attivita");
+            String dataNascita = getDatoUtenteDalDatabase("Clienti", userIdFromSession.toString(), "data_di_nascita");
+            String sesso = getDatoUtenteDalDatabase("Clienti", userIdFromSession.toString(), "sesso");
+
             if (altezzaTextField != null) {
-                altezzaTextField.setText(altezza);
+                altezzaTextField.setText(altezza != null ? altezza : "");
             }
             if (pesoAttualeTextField != null) {
-                pesoAttualeTextField.setText(peso);
+                pesoAttualeTextField.setText(peso != null ? peso : "");
             }
             if (livelloAttivitaTextField != null) {
-                livelloAttivitaTextField.setText(livelloAttivita);
+                livelloAttivitaTextField.setText(livelloAttivita != null ? livelloAttivita : "");
             }
             if (dataNascitaTextField != null) {
-                dataNascitaTextField.setText(dataNascita);
+                dataNascitaTextField.setText(dataNascita != null ? dataNascita : "");
             }
-            if (sessoTextField != null){
-                sessoTextField.setText(sesso);
+            if (sessoTextField != null) {
+                sessoTextField.setText(sesso != null ? sesso : "");
             }
             if (nutrizionistaTextField != null) {
-                String idNutrizionista = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "id_nutrizionista");
+                String idNutrizionista = getDatoUtenteDalDatabase("Clienti", userIdFromSession.toString(), "id_nutrizionista");
 
                 if (idNutrizionista != null && !idNutrizionista.isEmpty()) {
                     String nomeNutrizionista = getDatoUtenteDalDatabase("Utente", idNutrizionista, "Nome");
@@ -136,13 +144,28 @@ public class PaginaProfilo implements Initializable {
 
                     if (nomeNutrizionista != null && cognomeNutrizionista != null) {
                         nutrizionistaTextField.setText(nomeNutrizionista + " " + cognomeNutrizionista);
+                    } else {
+                        nutrizionistaTextField.setText("Nutrizionista non trovato");
                     }
+                } else {
+                    nutrizionistaTextField.setText("Non assegnato");
                 }
             }
 
-
         } else {
-            System.out.println("[DEBUG] ID utente non valido (null). Impossibile recuperare i dati.");
+            System.err.println("[ERROR] ID utente non disponibile dalla Sessione. Impossibile recuperare i dati del profilo.");
+            nomeUtenteSidebarLabel.setText("Utente Sconosciuto");
+            benvenutoLabel.setText("Benvenuto Utente");
+            nomeTextField.setText("");
+            cognomeTextField.setText("");
+            if (sessoTextField != null) sessoTextField.setText("");
+            if (dataNascitaTextField != null) dataNascitaTextField.setText("");
+            if (altezzaTextField != null) altezzaTextField.setText("");
+            if (pesoAttualeTextField != null) pesoAttualeTextField.setText("");
+            if (pesoIdealeTextField != null) pesoIdealeTextField.setText("");
+            if (dietaTextField != null) dietaTextField.setText("");
+            if (livelloAttivitaTextField != null) livelloAttivitaTextField.setText("");
+            if (nutrizionistaTextField != null) nutrizionistaTextField.setText("");
         }
     }
 
@@ -150,7 +173,7 @@ public class PaginaProfilo implements Initializable {
         String valore = null;
         String url = "jdbc:sqlite:database.db";
         String query;
-        String idColumn = "id"; // Default per la tabella Utente
+        String idColumn = "id";
         if (tabella.equals("Clienti")) {
             idColumn = "id_cliente";
         }
@@ -166,7 +189,7 @@ public class PaginaProfilo implements Initializable {
                 valore = rs.getString(campo);
                 System.out.println("[DEBUG] Valore recuperato per " + campo + " da " + tabella + ": " + valore);
             } else {
-                System.out.println("[DEBUG] Nessun utente trovato con ID: " + userId + " nella tabella " + tabella + " per il campo " + campo);
+                System.out.println("[DEBUG] Nessun dato trovato con ID: " + userId + " nella tabella " + tabella + " per il campo " + campo);
             }
 
         } catch (SQLException e) {
@@ -175,25 +198,13 @@ public class PaginaProfilo implements Initializable {
         return valore;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        // L'inizializzazione dei dati ora avviene dopo aver ricevuto l'ID
-        // tramite il metodo setUtenteCorrenteId
-        System.out.println("[DEBUG] initialize chiamato.");
-    }
+    // --- Metodi di Navigazione ---
 
     @FXML
     private void AccessoProfilo(MouseEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
             Parent profileRoot = fxmlLoader.load();
-
-            // Ottieni il controller della pagina del profilo appena caricata
-            PaginaProfilo profileController = fxmlLoader.getController();
-
-            // Imposta l'ID dell'utente corrente nel controller
-            profileController.setUtenteCorrenteId(utenteCorrenteId);
-
             Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             profileStage.setScene(new Scene(profileRoot));
             profileStage.show();
@@ -203,19 +214,10 @@ public class PaginaProfilo implements Initializable {
     }
 
     @FXML
-    private Button BottoneAlimenti;
-
-    @FXML
     private void AccessoAlimenti(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
             Parent root = fxmlLoader.load();
-            Alimenti alimentiController = fxmlLoader.getController();
-
-            // Passa l'ID utente corrente al controller di Alimenti
-            alimentiController.setLoggedInUserId(this.utenteCorrenteId);
-
-            // Cambia scena sulla finestra attuale
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -230,13 +232,6 @@ public class PaginaProfilo implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Ricette.fxml"));
             Parent root = fxmlLoader.load();
-
-            // Ottieni il controller di Ricette
-            Ricette ricetteController = fxmlLoader.getController();
-
-            // Passa l'ID utente corrente al controller di Ricette
-
-            // Cambia scena sulla stessa finestra
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -246,19 +241,21 @@ public class PaginaProfilo implements Initializable {
         }
     }
 
-
-
     @FXML
     private void mostraSchermataModificaPassword(MouseEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ModificaPassword.fxml"));
             Parent modificaPasswordRoot = fxmlLoader.load();
 
-            // **Ottieni il controller di ModificaPassword**
             ModificaPassword modificaPasswordController = fxmlLoader.getController();
 
-            // **Imposta l'ID utente nel controller di ModificaPassword**
-            modificaPasswordController.setUtenteCorrenteId(utenteCorrenteId);
+            Integer userId = Session.getUserId();
+            if (userId != null) {
+                modificaPasswordController.setUtenteCorrenteId(userId.toString());
+            } else {
+                System.err.println("[ERROR - PaginaProfilo] ID utente non disponibile dalla Sessione per ModificaPassword.");
+                showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile modificare la password", "ID utente non disponibile. Riprova il login.");
+            }
 
             Stage modificaPasswordStage = new Stage();
             modificaPasswordStage.setTitle("Modifica Password");
@@ -266,26 +263,28 @@ public class PaginaProfilo implements Initializable {
             modificaPasswordStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata di modifica password.", "Verificare il percorso del file FXML.");
         }
     }
 
     @FXML
-    private Button homePageButton;
+    private void vaiAllaHomePage(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
+            Parent root = loader.load();
 
-    public void vaiAllaHomePage(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
-        Parent root = loader.load();
-
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la HomePage.", "Contattare l'amministratore.");
+        }
     }
 
     @FXML
-    private Button LogoutButton;
-
-    public void eseguiLogout(ActionEvent event) {
+    private void eseguiLogout(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Conferma Logout");
         alert.setHeaderText("Sei sicuro di voler uscire?");
@@ -293,7 +292,6 @@ public class PaginaProfilo implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // L'utente ha cliccato OK, procedi con il logout
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PrimaPagina.fxml"));
                 Parent loginRoot = fxmlLoader.load();
@@ -303,24 +301,25 @@ public class PaginaProfilo implements Initializable {
                 currentStage.show();
             } catch (IOException e) {
                 e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Errore di Logout", "Impossibile effettuare il logout.", "Contattare l'amministratore.");
             }
-        } else {
-            // L'utente ha cliccato Annulla o ha chiuso la finestra, non fare nulla
         }
     }
     @FXML
     private void mostraBMI(MouseEvent event) {
         try {
-            // Assicurati che il percorso sia corretto e il nome del file FXML sia "BMI.fxml" (se la classe è BMI)
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/BMI.fxml"));
             Parent bmiRoot = fxmlLoader.load();
 
-            // Ottieni il controller della schermata BMI
-            // Il tipo deve corrispondere esattamente al nome della classe del controller: BMI (maiuscolo)
             BMI bmiController = fxmlLoader.getController();
 
-            // Imposta l'ID utente nel controller della schermata BMI
-            bmiController.setUtenteCorrenteId(utenteCorrenteId);
+            Integer userId = Session.getUserId();
+            if (userId != null) {
+                bmiController.setUtenteCorrenteId(userId.toString());
+            } else {
+                System.err.println("[ERROR - PaginaProfilo] ID utente non disponibile dalla Sessione per BMI.");
+                showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile calcolare il BMI", "ID utente non disponibile. Riprova il login.");
+            }
 
             Stage bmiStage = new Stage();
             bmiStage.setTitle("Calcolo BMI");
@@ -328,7 +327,103 @@ public class PaginaProfilo implements Initializable {
             bmiStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata di calcolo BMI.", "Verificare il percorso del file FXML.");
         }
     }
 
+    // Metodo per recuperare la dieta assegnata al cliente (copiato da Ricette)
+    private Dieta recuperaDietaAssegnataACliente(int idCliente) {
+        Dieta dieta = null;
+        String url = "jdbc:sqlite:database.db"; // Assicurati che sia il percorso corretto
+        String query = "SELECT id, nome_dieta, data_inizio, data_fine, id_nutrizionista, id_cliente " +
+                "FROM Diete WHERE id_cliente = ?";
+
+        try (Connection conn = SQLiteConnessione.connector();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, idCliente);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                dieta = new Dieta(
+                        rs.getInt("id"),
+                        rs.getString("nome_dieta"),
+                        rs.getString("data_inizio"),
+                        rs.getString("data_fine"),
+                        rs.getInt("id_nutrizionista"),
+                        rs.getInt("id_cliente")
+                );
+            }
+        } catch (SQLException e) {
+            System.err.println("ERRORE SQL (PaginaProfilo): Errore durante il recupero della dieta per il cliente: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return dieta;
+    }
+
+    // Metodo per recuperare e impostare la dieta all'inizializzazione (copiato da Ricette)
+    private void recuperaEImpostaDietaAssegnata() {
+        Integer userIdFromSession = Session.getUserId();
+        if (userIdFromSession != null) {
+            this.dietaAssegnata = recuperaDietaAssegnataACliente(userIdFromSession.intValue());
+            if (this.dietaAssegnata != null) {
+                System.out.println("DEBUG (PaginaProfilo): Dieta '" + dietaAssegnata.getNome() + "' (ID: " + dietaAssegnata.getId() + ") recuperata per utente ID: " + userIdFromSession);
+                // Puoi anche impostare un TextField sulla pagina del profilo per mostrare il nome della dieta, se presente
+                if (dietaTextField != null) {
+                    dietaTextField.setText(dietaAssegnata.getNome());
+                }
+            } else {
+                System.out.println("DEBUG (PaginaProfilo): Nessuna dieta trovata per l'utente ID: " + userIdFromSession);
+                if (dietaTextField != null) {
+                    dietaTextField.setText("Nessuna dieta assegnata");
+                }
+            }
+        } else {
+            System.err.println("[ERROR - PaginaProfilo] ID utente non disponibile dalla Sessione per recupero dieta.");
+            if (dietaTextField != null) {
+                dietaTextField.setText("Errore caricamento dieta");
+            }
+        }
+    }
+
+    // Metodo per visualizzare gli alert
+    private void showAlert(Alert.AlertType type, String title, String header, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void AccessoPianoAlimentare(ActionEvent event) {
+        if (dietaAssegnata != null) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/VisualizzaDieta.fxml"));
+                Parent visualizzaDietaRoot = fxmlLoader.load();
+
+                VisualizzaDieta visualizzaDietaController = fxmlLoader.getController();
+
+                // Passa l'oggetto Dieta recuperato al controller della pagina di visualizzazione
+                visualizzaDietaController.impostaDietaDaVisualizzare(dietaAssegnata);
+                System.out.println("DEBUG (PaginaProfilo): Passato Dieta ID " + dietaAssegnata.getId() + " al controller VisualizzaDieta.");
+
+                Stage dietaStage = new Stage();
+                dietaStage.setScene(new Scene(visualizzaDietaRoot));
+                dietaStage.show();
+
+            } catch (IOException e) {
+                System.err.println("ERRORE (PaginaProfilo): Errore caricamento FXML VisualizzaDieta: " + e.getMessage());
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.", "Verificare il percorso del file FXML.");
+            } catch (Exception e) {
+                System.err.println("ERRORE (PaginaProfilo): Errore generico durante l'apertura di VisualizzaDieta: " + e.getMessage());
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.", "Dettagli: " + e.getMessage());
+            }
+        } else {
+            System.out.println("DEBUG (PaginaProfilo): Nessuna dieta trovata per il cliente (ID: " + Session.getUserId() + ").");
+            showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata",
+                    "Il cliente non ha diete assegnate o non è stato possibile recuperarle.");
+        }
+    }
 }

@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,17 +17,28 @@ import javafx.util.Callback;
 import javafx.scene.layout.HBox;
 
 import java.io.IOException;
-import java.sql.*;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager; // Mantenuto se usato da getNomeUtenteDalDatabase
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
 
-import com.matteotocci.app.model.Dieta; // Importa il modello Dieta
-import com.matteotocci.app.model.SQLiteConnessione; // Importa la tua classe di connessione al DB
+import com.matteotocci.app.model.Dieta;
+import com.matteotocci.app.model.SQLiteConnessione;
+import com.matteotocci.app.model.Session;
 
-public class HomePageNutrizionista {
+public class HomePageNutrizionista implements Initializable {
 
     @FXML
     private Button BottoneDieta;
     @FXML
     private Button BottoneAlimenti;
+    @FXML
+    private Button BottoneRicette; // FXML ID per il bottone Ricette (generico, per i clienti)
+    @FXML
+    private Button BottoneRicetteNutrizionista; // Nuovo FXML ID se hai un bottone separato per le ricette del nutrizionista
     @FXML
     private Label nomeUtenteLabelHomePage;
     @FXML
@@ -38,78 +50,12 @@ public class HomePageNutrizionista {
     @FXML
     private TableColumn<Cliente, String> azioniColonna;
 
-
-    @FXML
-    private void AccessoDieta(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DietaNutrizionista.fxml"));
-            Parent dietaRoot = fxmlLoader.load();
-            DietaNutrizionista controller = fxmlLoader.getController();
-            controller.setLoggedInUserId(loggedInUserId); // Passa l'ID Utente
-            Stage dietaStage = new Stage();
-            dietaStage.setScene(new Scene(dietaRoot));
-            dietaStage.setTitle("Diete");
-            dietaStage.show();
-            ((Stage) BottoneDieta.getScene().getWindow()).close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void AccessoAlimenti(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
-            Parent loginRoot = fxmlLoader.load();
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(loginRoot));
-            loginStage.show();
-            ((Stage) BottoneAlimenti.getScene().getWindow()).close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private String loggedInUserId;
     private ObservableList<Cliente> listaClienti = FXCollections.observableArrayList();
 
-    public void setLoggedInUserId(String userId) {
-        this.loggedInUserId = userId;
-        System.out.println("[DEBUG - HomePageNutrizionista] ID utente ricevuto: " + this.loggedInUserId);
-        setNomeUtenteLabel();
-        caricaClientiDelNutrizionista();
-    }
-
-    private void setNomeUtenteLabel() {
-        String nomeUtente = getNomeUtenteDalDatabase(loggedInUserId);
-        nomeUtenteLabelHomePage.setText(
-                (nomeUtente != null && !nomeUtente.isEmpty()) ? nomeUtente : "Nome e Cognome"
-        );
-    }
-
-    private String getNomeUtenteDalDatabase(String userId) {
-        String nomeUtente = null;
-        String url = "jdbc:sqlite:database.db";
-        String query = "SELECT Nome, Cognome FROM Utente WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                nomeUtente = rs.getString("Nome") + " " + rs.getString("Cognome");
-            }
-        } catch (SQLException e) {
-            System.err.println("Errore DB (nome utente): " + e.getMessage());
-        }
-        return nomeUtente;
-    }
-
-    @FXML
-    private void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         nomeColonna.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
-        // Configurazione della cella per la colonna Azioni
         azioniColonna.setCellFactory(new Callback<TableColumn<Cliente, String>, TableCell<Cliente, String>>() {
             @Override
             public TableCell<Cliente, String> call(TableColumn<Cliente, String> param) {
@@ -118,14 +64,12 @@ public class HomePageNutrizionista {
                     final Button modificaButton = new Button("Modifica Dieta");
                     final HBox container = new HBox(visualizzaButton, modificaButton);
                     {
-                        container.setSpacing(5); // Spazio tra i bottoni
+                        container.setSpacing(5);
 
-                        // AZIONE DEL PULSANTE "VISUALIZZA DIETA"
                         visualizzaButton.setOnAction(event -> {
                             Cliente cliente = getTableView().getItems().get(getIndex());
                             System.out.println("DEBUG (HomePageNutrizionista): Click su Visualizza Dieta per cliente: " + cliente.getNome() + " (ID: " + cliente.getId() + ")");
 
-                            // PASSO 1: Recupera la Dieta assegnata a questo cliente dal database
                             Dieta dietaAssegnata = recuperaDietaAssegnataACliente(cliente.getId());
 
                             if (dietaAssegnata != null) {
@@ -133,10 +77,7 @@ public class HomePageNutrizionista {
                                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/VisualizzaDieta.fxml"));
                                     Parent visualizzaDietaRoot = fxmlLoader.load();
 
-                                    // PASSO 2: Ottieni il controller della nuova finestra
                                     VisualizzaDieta visualizzaDietaController = fxmlLoader.getController();
-
-                                    // PASSO 3: Passa l'oggetto Dieta al controller della nuova finestra
                                     visualizzaDietaController.impostaDietaDaVisualizzare(dietaAssegnata);
                                     System.out.println("DEBUG (HomePageNutrizionista): Passato Dieta ID " + dietaAssegnata.getId() + " al controller VisualizzaDieta.");
 
@@ -161,7 +102,6 @@ public class HomePageNutrizionista {
                             }
                         });
 
-                        // AZIONE DEL PULSANTE "MODIFICA DIETA" (codice originale, non modificato in questo contesto)
                         modificaButton.setOnAction(event -> {
                             Cliente cliente = getTableView().getItems().get(getIndex());
                             System.out.println("DEBUG (HomePageNutrizionista): Modifica Dieta per: " + cliente.getNome());
@@ -174,6 +114,7 @@ public class HomePageNutrizionista {
                                 modificaDietaStage.show();
                             } catch (IOException e) {
                                 e.printStackTrace();
+                                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata di modifica dieta.", "Verificare il percorso del file FXML.");
                             }
                         });
                     }
@@ -194,17 +135,49 @@ public class HomePageNutrizionista {
         ricercaClienteTextField.textProperty().addListener((obs, oldVal, newVal) -> {
             filtraClienti(newVal);
         });
+
+        setNomeUtenteLabel();
+        caricaClientiDelNutrizionista();
     }
 
-    // Metodo per recuperare la dieta assegnata a un cliente specifico
+    private void setNomeUtenteLabel() {
+        Integer userIdFromSession = Session.getUserId();
+        if (userIdFromSession != null) {
+            String nomeUtente = getNomeUtenteDalDatabase(userIdFromSession.toString());
+            nomeUtenteLabelHomePage.setText(
+                    (nomeUtente != null && !nomeUtente.isEmpty()) ? nomeUtente : "Nome e Cognome"
+            );
+        } else {
+            nomeUtenteLabelHomePage.setText("Nome e Cognome");
+            System.err.println("[ERROR - HomePageNutrizionista] ID utente non disponibile dalla Sessione per impostare il nome.");
+        }
+    }
+
+    private String getNomeUtenteDalDatabase(String userId) {
+        String nomeUtente = null;
+        // Assicurati che "database.db" sia nel percorso corretto rispetto all'esecuzione dell'applicazione
+        String url = "jdbc:sqlite:database.db";
+        String query = "SELECT Nome, Cognome FROM Utente WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                nomeUtente = rs.getString("Nome") + " " + rs.getString("Cognome");
+            }
+        } catch (SQLException e) {
+            System.err.println("Errore DB (nome utente): " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare il nome utente.", "Dettagli: " + e.getMessage());
+        }
+        return nomeUtente;
+    }
+
     private Dieta recuperaDietaAssegnataACliente(int idCliente) {
         Dieta dieta = null;
-        String url = "jdbc:sqlite:database.db";
-        // Query per recuperare la dieta con l'ID del cliente
         String query = "SELECT id, nome_dieta, data_inizio, data_fine, id_nutrizionista, id_cliente " +
                 "FROM Diete WHERE id_cliente = ?";
 
-        try (Connection conn = SQLiteConnessione.connector(); // Usa SQLiteConnessione.connector()
+        try (Connection conn = SQLiteConnessione.connector();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, idCliente);
             ResultSet rs = pstmt.executeQuery();
@@ -215,7 +188,7 @@ public class HomePageNutrizionista {
                         rs.getString("nome_dieta"),
                         rs.getString("data_inizio"),
                         rs.getString("data_fine"),
-                        rs.getInt("id_nutrizionista"), // Assicurati che il costruttore di Dieta supporti questi campi
+                        rs.getInt("id_nutrizionista"),
                         rs.getInt("id_cliente")
                 );
                 System.out.println("DEBUG (HomePageNutrizionista): Recuperata dieta '" + dieta.getNome() + "' (ID: " + dieta.getId() + ") per cliente ID: " + idCliente);
@@ -225,29 +198,37 @@ public class HomePageNutrizionista {
         } catch (SQLException e) {
             System.err.println("ERRORE SQL (HomePageNutrizionista): Errore durante il recupero della dieta per il cliente: " + e.getMessage());
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile recuperare la dieta.", "Dettagli: " + e.getMessage());
         }
         return dieta;
     }
 
     private void caricaClientiDelNutrizionista() {
         listaClienti.clear();
-        String url = "jdbc:sqlite:database.db";
-        // Modifica la query per recuperare anche l'ID dell'utente che è il cliente
-        String query = "SELECT u.id, u.Nome, u.Cognome FROM Utente u " + // AGGIUNTO: u.id
+        Integer currentNutrizionistaId = Session.getUserId();
+
+        if (currentNutrizionistaId == null) {
+            System.err.println("[ERROR - HomePageNutrizionista] ID nutrizionista non disponibile dalla Sessione. Impossibile caricare i clienti.");
+            showAlert(Alert.AlertType.WARNING, "Utente non loggato", "ID Nutrizionista non disponibile", "Impossibile caricare la lista clienti. Riprovare il login.");
+            return;
+        }
+
+        String query = "SELECT u.id, u.Nome, u.Cognome FROM Utente u " +
                 "JOIN Clienti c ON u.id = c.id_cliente " +
                 "WHERE c.id_nutrizionista = ?";
-        try (Connection conn = SQLiteConnessione.connector(); // Usa SQLiteConnessione.connector()
+        try (Connection conn = SQLiteConnessione.connector();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, loggedInUserId);
+            pstmt.setInt(1, currentNutrizionistaId);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                int clienteId = rs.getInt("id"); // Recupera l'ID del cliente
+                int clienteId = rs.getInt("id");
                 String nome = rs.getString("Nome") + " " + rs.getString("Cognome");
-                listaClienti.add(new Cliente(clienteId, nome)); // Passa l'ID al costruttore
+                listaClienti.add(new Cliente(clienteId, nome));
             }
             tabellaClienti.setItems(listaClienti);
         } catch (SQLException e) {
-            System.err.println("Errore DB (clienti): " + e.getMessage());
+            System.err.println("Errore DB (caricaClienti): " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare i clienti.", "Dettagli: " + e.getMessage());
         }
     }
 
@@ -266,17 +247,16 @@ public class HomePageNutrizionista {
         tabellaClienti.setItems(filtrati);
     }
 
-    // Classe interna Cliente - MODIFICATA per includere l'ID
     public static class Cliente {
         private String nome;
-        private int id; // AGGIUNTO: ID del cliente
+        private int id;
 
-        public Cliente(int id, String nome) { // AGGIUNTO: Costruttore con ID
+        public Cliente(int id, String nome) {
             this.id = id;
             this.nome = nome;
         }
 
-        public int getId() { // AGGIUNTO: Getter per l'ID
+        public int getId() {
             return id;
         }
 
@@ -289,27 +269,72 @@ public class HomePageNutrizionista {
         }
     }
 
+    // --- Metodi di Navigazione ---
+
+    @FXML
+    private void AccessoDieta(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DietaNutrizionista.fxml"));
+            Parent dietaRoot = fxmlLoader.load();
+            Stage dietaStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            dietaStage.setScene(new Scene(dietaRoot));
+            dietaStage.setTitle("Diete Nutrizionista"); // Titolo più specifico
+            dietaStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.", "Verificare il percorso del file FXML.");
+        }
+    }
+
+    @FXML
+    private void AccessoAlimenti(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
+            Parent alimentiRoot = fxmlLoader.load();
+            Stage alimentiStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            alimentiStage.setScene(new Scene(alimentiRoot));
+            alimentiStage.setTitle("Alimenti"); // Titolo
+            alimentiStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Alimenti'.", "Verificare il percorso del file FXML.");
+        }
+    }
 
 
-    // Metodo per navigazione a ProfiloNutrizionista (precedentemente fornito)
+
+
+    @FXML
+    private void AccessoRicetteNutrizionista(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/RicetteNutrizionista.fxml"));
+            Parent ricetteNutrizionistaRoot = fxmlLoader.load();
+            Stage ricetteNutrizionistaStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            ricetteNutrizionistaStage.setScene(new Scene(ricetteNutrizionistaRoot));
+            ricetteNutrizionistaStage.setTitle("Le Mie Ricette (Nutrizionista)"); // Titolo specifico
+            ricetteNutrizionistaStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Le Mie Ricette (Nutrizionista)'.", "Verificare il percorso del file FXML (RicetteNutrizionista.fxml).");
+        }
+    }
+
+
     @FXML
     private void openProfiloNutrizionista(MouseEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ProfiloNutrizionista.fxml"));
             Parent profileRoot = fxmlLoader.load();
-
-            ProfiloNutrizionista profileController = fxmlLoader.getController();
-            profileController.setLoggedInUserId(loggedInUserId); // Passa l'ID utente
-
             Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             profileStage.setScene(new Scene(profileRoot));
+            profileStage.setTitle("Profilo Nutrizionista"); // Titolo
             profileStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Profilo Nutrizionista'.", "Verificare il percorso del file FXML.");
         }
     }
 
-    // Metodo helper per mostrare alert
     private void showAlert(Alert.AlertType type, String title, String header, String content) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
@@ -318,4 +343,3 @@ public class HomePageNutrizionista {
         alert.showAndWait();
     }
 }
-

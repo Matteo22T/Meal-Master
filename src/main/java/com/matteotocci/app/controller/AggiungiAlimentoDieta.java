@@ -108,6 +108,16 @@ public class AggiungiAlimentoDieta {
         ComboBoxRicetta.setVisible(true);
         CheckBoxAlimenti.setVisible(false);
         CheckBoxRicette.setVisible(true);
+        // Quando si passa alla visualizzazione delle ricette, ricaricale
+        offset = 0; // Reset offset per la nuova ricerca
+        tableViewRicette.getItems().clear(); // Pulisci la tabella
+        // Forza la selezione per mostrare le proprie ricette se l'utente è loggato
+        if (Session.getUserId() != null) {
+            CheckBoxRicette.setSelected(true);
+        } else {
+            CheckBoxRicette.setSelected(false);
+        }
+        cercaRicette(textCercaRicetta.getText(), false);
     }
 
     @FXML
@@ -141,6 +151,11 @@ public class AggiungiAlimentoDieta {
         tableViewRicette.setOnMouseClicked(this::apriDettaglioRicetta);
 
         popolaCategorie();
+
+        // Inizializza lo Spinner per la quantità
+        quantitaSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 100));
+        quantitaSpinner.setEditable(true);
+
 
         ComboBoxAlimento.setOnAction(e -> {
             offset = 0;
@@ -189,7 +204,11 @@ public class AggiungiAlimentoDieta {
         });
 
         cercaAlimenti("", false);
-        cercaRicette("", false); // Carica anche le ricette all'avvio
+        // All'inizializzazione, se un utente è loggato, forza la selezione della checkbox "Solo le mie ricette"
+        if (Session.getUserId() != null) {
+            CheckBoxRicette.setSelected(true);
+        }
+        cercaRicette("", false); // Carica anche le ricette all'avvio, ora con il filtro impostato
     }
 
     @FXML
@@ -292,9 +311,11 @@ public class AggiungiAlimentoDieta {
         String categoria = ComboBoxRicetta.getSelectionModel().getSelectedItem();
         boolean soloMiei = CheckBoxRicette.isSelected();
         StringBuilder query = new StringBuilder("SELECT * FROM Ricette WHERE LOWER(nome) LIKE ?");
+        // Aggiungi una condizione per la categoria solo se non è "Tutte"
         if (categoria != null && !categoria.equals("Tutte")) {
             query.append(" AND categoria = ?");
         }
+        // Aggiungi una condizione per l'id_utente solo se la checkbox "Solo le mie ricette" è selezionata
         if (soloMiei && Session.getUserId() != null) {
             query.append(" AND id_utente = ?");
         }
@@ -304,9 +325,11 @@ public class AggiungiAlimentoDieta {
 
             int paramIndex = 1;
             stmt.setString(paramIndex++, "%" + filtro.toLowerCase() + "%");
+            // Applica il parametro per la categoria solo se la condizione è stata aggiunta
             if (categoria != null && !categoria.equals("Tutte")) {
                 stmt.setString(paramIndex++, categoria);
             }
+            // Applica il parametro per l'id_utente solo se la condizione è stata aggiunta
             if (soloMiei && Session.getUserId() != null) {
                 stmt.setInt(paramIndex++, Session.getUserId());
             }
@@ -395,26 +418,38 @@ public class AggiungiAlimentoDieta {
     }
 
     private void popolaCategorie() {
-        String query = "SELECT DISTINCT categoria FROM foods WHERE categoria IS NOT NULL";
+        String queryAlimenti = "SELECT DISTINCT categoria FROM foods WHERE categoria IS NOT NULL";
         try (Connection conn = SQLiteConnessione.connector();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             ResultSet rs = stmt.executeQuery(queryAlimenti)) {
 
-            ObservableList<String> categorie = FXCollections.observableArrayList();
-            categorie.add("Tutte"); // opzione iniziale
+            ObservableList<String> categorieAlimenti = FXCollections.observableArrayList();
+            categorieAlimenti.add("Tutte"); // opzione iniziale
             while (rs.next()) {
-                categorie.add(rs.getString("categoria"));
+                categorieAlimenti.add(rs.getString("categoria"));
             }
-            ComboBoxAlimento.setItems(categorie);
+            ComboBoxAlimento.setItems(categorieAlimenti);
             ComboBoxAlimento.getSelectionModel().selectFirst();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        ObservableList<String> categoriePrefissate = FXCollections.observableArrayList(
-                "Colazione", "Spuntino", "Pranzo", "Merenda", "Cena"
-        );
-        ComboBoxRicetta.setItems(categoriePrefissate);
 
+        // Popola ComboBoxRicetta con categorie dalla tabella Ricette
+        ObservableList<String> categorieRicetteList = FXCollections.observableArrayList();
+        categorieRicetteList.add("Tutte"); // Aggiungi "Tutte" come prima opzione
+
+        String queryRicette = "SELECT DISTINCT categoria FROM Ricette WHERE categoria IS NOT NULL";
+        try (Connection conn = SQLiteConnessione.connector();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(queryRicette)) {
+            while (rs.next()) {
+                categorieRicetteList.add(rs.getString("categoria"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        ComboBoxRicetta.setItems(categorieRicetteList);
+        ComboBoxRicetta.getSelectionModel().selectFirst(); // Seleziona "Tutte" di default
     }
 
     @FXML
@@ -433,22 +468,25 @@ public class AggiungiAlimentoDieta {
     @FXML
     private void confermaRicette(ActionEvent event) {
         Ricetta ricettaSelezionata = tableViewRicette.getSelectionModel().getSelectedItem();
-        if (ricettaSelezionata != null && giornoDietaController != null && pastoCorrente != null) {
-            //giornoDietaController.aggiungiAlimentoAllaLista(pastoCorrente, ricettaSelezionata.getNome(), 1);  CORREZIONE
-            //Recupero la ricetta completa dal DB per passare un oggetto Alimento
-            Alimento alimentoRicetta = getAlimentoFromRicetta(ricettaSelezionata);
-            if(alimentoRicetta != null){
-                giornoDietaController.aggiungiAlimentoAllaLista(pastoCorrente, alimentoRicetta, 1);
-            }
+        // Recupera la quantità dallo Spinner
+        Integer quantita = quantitaSpinner.getValue();
 
+        if (ricettaSelezionata != null && giornoDietaController != null && pastoCorrente != null && quantita != null && quantita > 0) {
+            // Chiamiamo un metodo specifico nel controller AggiungiGiornoDieta
+            // per aggiungere la ricetta solo alla UI e alla memoria (non al DB in questo momento)
+            giornoDietaController.aggiungiRicettaAllaLista(ricettaSelezionata, quantita, pastoCorrente);
+
+            // Chiudiamo la finestra dopo la conferma
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.close();
         } else {
-            System.out.println("Seleziona una ricetta!");
+            System.out.println("Seleziona una ricetta e specifica una quantità valida!");
         }
     }
 
     private Alimento getAlimentoFromRicetta(Ricetta ricetta) {
+        // Questo metodo non è più rilevante per la logica di aggiunta ricetta
+        // ma lo lascio se è usato altrove.
         String query = "SELECT * FROM foods WHERE nome = ?";
         try (Connection conn = SQLiteConnessione.connector();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -478,4 +516,3 @@ public class AggiungiAlimentoDieta {
         return null;
     }
 }
-
