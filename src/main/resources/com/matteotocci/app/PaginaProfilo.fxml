@@ -28,8 +28,8 @@
                     </children>
                 </HBox>
                 <Button fx:id="homePageButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#vaiAllaHomePage" prefHeight="60.0" style="-fx-cursor: hand;" text="Home Page" />
-                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="65.0" style="-fx-cursor: hand;" text="Ricette" />
-                <Button fx:id="BottoneAlimenti1" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="70.0" style="-fx-cursor: hand;" text="Piano alimentare" />
+                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="65.0" onAction="#AccessoRicette" style="-fx-cursor: hand;" text="Ricette" />
+                <Button fx:id="BottonePianoAlimentare" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoPianoAlimentare" prefHeight="70.0" style="-fx-cursor: hand;" text="Piano alimentare" />
                 <Button fx:id="BottoneAlimenti" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="70.0" style="-fx-cursor: hand;" text="Alimenti" />
             </children>
         </VBox>

@@ -2,7 +2,8 @@ package com.matteotocci.app.controller;
 
 import com.matteotocci.app.model.Ricetta;
 import com.matteotocci.app.model.SQLiteConnessione;
-import com.matteotocci.app.model.Session;
+import com.matteotocci.app.model.Session; // Importa la classe Session
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,51 +19,61 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Optional; // Necessario per showAlert
 
-public class Ricette {
+public class RicetteNutrizionista {
 
     @FXML private Button BottoneAlimenti;
     @FXML private Button BottoneHome;
     @FXML private Button BottoneRicette;
     @FXML private Label nomeUtenteLabelHomePage;
     @FXML private ComboBox<String> categorieRicette;
-    @FXML private CheckBox mieiAlimentiCheckBox;
+    @FXML private CheckBox mieiAlimentiCheckBox; // Potrebbe essere rinominato "mieRicetteCheckBox"
     @FXML private TextField cercaRicetta;
     @FXML private TableView<Ricetta> tableViewRicette;
     @FXML private TableColumn<Ricetta, String> nomeCol;
     @FXML private TableColumn<Ricetta, String> descrizioneCol;
     @FXML private TableColumn<Ricetta, String> categoriaCol;
 
-
     private int offset = 0;
     private final int LIMIT = 50;
     private boolean isLoading = false;
 
-
-    private void setNomeUtenteLabel() {
-        String nomeUtente = getNomeUtenteDalDatabase(Session.getUserId().toString());
-        if (nomeUtente != null && !nomeUtente.isEmpty()) {
-            nomeUtenteLabelHomePage.setText(nomeUtente);
+    private void setNomeNutrizionistaLabel() {
+        Integer nutrizionistaIdFromSession = Session.getUserId(); // Assumiamo esista Session.getNutrizionistaId()
+        if (nutrizionistaIdFromSession != null) {
+            String nomeNutrizionista = getNomeCognomeNutrizionistaDalDatabase(nutrizionistaIdFromSession.toString());
+            if (nomeNutrizionista != null && !nomeNutrizionista.isEmpty()) {
+                nomeUtenteLabelHomePage.setText(nomeNutrizionista);
+            } else {
+                nomeUtenteLabelHomePage.setText("Nome e Cognome Nutrizionista"); // Testo di fallback
+            }
         } else {
-            nomeUtenteLabelHomePage.setText("Nome e Cognome");
+            nomeUtenteLabelHomePage.setText("Nome e Cognome Nutrizionista"); // Testo di fallback se l'ID non è disponibile
+            System.err.println("[ERROR - RicetteNutrizionista] ID nutrizionista non disponibile dalla Sessione per impostare il nome.");
         }
     }
 
-    private String getNomeUtenteDalDatabase(String userId) {
-        String nomeUtente = null;
-        String query = "SELECT Nome, Cognome FROM Utente WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+    private String getNomeCognomeNutrizionistaDalDatabase(String nutrizionistaId) {
+        String nomeNutrizionista = null;
+        // Assumiamo che i nutrizionisti siano nella tabella 'Utente' con un ruolo specifico 'nutrizionista'
+        String query = "SELECT Nome, Cognome FROM Utente WHERE id = ? AND ruolo = 'nutrizionista'";
+        try (Connection conn = SQLiteConnessione.connector();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, userId);
+            pstmt.setString(1, nutrizionistaId);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                nomeUtente = rs.getString("Nome") + " " + rs.getString("Cognome");
+                nomeNutrizionista = rs.getString("Nome") + " " + rs.getString("Cognome");
             }
         } catch (SQLException e) {
-            System.err.println("Errore durante la lettura del nome utente dal database: " + e.getMessage());
+            System.err.println("Errore durante la lettura del nome nutrizionista dal database: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare il nome del nutrizionista.", "Dettagli: " + e.getMessage());
         }
-        return nomeUtente;
+        return nomeNutrizionista;
     }
 
     @FXML
@@ -71,15 +82,13 @@ public class Ricette {
         descrizioneCol.setCellValueFactory(new PropertyValueFactory<>("descrizione"));
         categoriaCol.setCellValueFactory(new PropertyValueFactory<>("categoria"));
 
+        System.out.println("[DEBUG - RicetteNutrizionista] ID nutrizionista da Sessione: " + Session.getUserId());
+        setNomeNutrizionistaLabel(); // Imposta il nome del nutrizionista all'inizializzazione
 
-        Integer userIdFromSession = Session.getUserId();
-        if (userIdFromSession != null) {
-            System.out.println("[DEBUG - HomePage] ID utente da Sessione: " + userIdFromSession);
-            setNomeUtenteLabel();}
+        cercaRicette("", false); // Carica le ricette iniziali
+        popolaCategorie(); // Popola le categorie
 
-        cercaRicette("", false);
-        popolaCategorie();
-
+        // Listener per i filtri di ricerca
         categorieRicette.setOnAction(e -> {
             offset = 0;
             tableViewRicette.getItems().clear();
@@ -92,6 +101,7 @@ public class Ricette {
             cercaRicette(cercaRicetta.getText(), false);
         });
 
+        // Listener per lo scroll della tabella
         ScrollBar scrollBar = getVerticalScrollbar(tableViewRicette);
         if (scrollBar != null) {
             scrollBar.valueProperty().addListener((obs, oldVal, newVal) -> {
@@ -135,8 +145,10 @@ public class Ricette {
         if (categoria != null && !categoria.equals("Tutte")) {
             query.append(" AND categoria = ?");
         }
-        if (soloMiei && Session.getUserId() != 0) {
-            query.append(" AND id_utente = ?");
+        // Usa direttamente Session.getNutrizionistaId() per filtrare le ricette create dal nutrizionista loggato
+        Integer currentNutrizionistaId = Session.getUserId();
+        if (soloMiei && currentNutrizionistaId != null && currentNutrizionistaId != 0) {
+            query.append(" AND id_utente = ?"); // Assumiamo che 'id_utente' sia la colonna che indica il creatore della ricetta
         }
         query.append(" LIMIT ? OFFSET ?");
 
@@ -148,8 +160,8 @@ public class Ricette {
             if (categoria != null && !categoria.equals("Tutte")) {
                 stmt.setString(paramIndex++, categoria);
             }
-            if (soloMiei && Session.getUserId() != 0) {
-                stmt.setInt(paramIndex++, Session.getUserId());
+            if (soloMiei && currentNutrizionistaId != null && currentNutrizionistaId != 0) {
+                stmt.setInt(paramIndex++, currentNutrizionistaId);
             }
             stmt.setInt(paramIndex++, LIMIT);
             stmt.setInt(paramIndex++, offset);
@@ -161,12 +173,12 @@ public class Ricette {
                             rs.getString("nome"),
                             rs.getString("descrizione"),
                             rs.getString("categoria"),
-                            rs.getInt("id_utente"),
+                            rs.getInt("id_utente"), // Assicurati che 'id_utente' esista nella tua tabella Ricette e contenga l'ID del creatore (nutrizionista o utente)
                             rs.getDouble("kcal"),
                             rs.getDouble("proteine"),
                             rs.getDouble("carboidrati"),
                             rs.getDouble("grassi"),
-                            rs.getDouble("grassi_saturi"), // Assicurati che il nome della colonna sia esatto
+                            rs.getDouble("grassi_saturi"),
                             rs.getDouble("zuccheri"),
                             rs.getDouble("fibre"),
                             rs.getDouble("sale")
@@ -180,6 +192,7 @@ public class Ricette {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare le ricette", "Dettagli: " + e.getMessage());
         }
     }
 
@@ -202,53 +215,16 @@ public class Ricette {
         return cercaRicetta != null ? cercaRicetta.getText() : "";
     }
 
-    @FXML
-    private void apriDettaglioRicetta(MouseEvent event) {
-        if (event.getClickCount() == 2 && !tableViewRicette.getSelectionModel().isEmpty()) {
-            Ricetta ricettaSelezionata = tableViewRicette.getSelectionModel().getSelectedItem();
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DettaglioRicetta.fxml"));
-                Parent root = loader.load();
-
-                DettaglioRicettaController controller = loader.getController();
-                controller.setRicetta(ricettaSelezionata);
-                controller.setRicettaController(this);
-                controller.setOrigineFXML("Ricette.fxml");
-
-                Stage stage = new Stage();
-                stage.setTitle("Dettaglio Ricetta");
-                stage.setScene(new Scene(root));
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    // Cambia scena a Alimenti, passando l'ID utente
-    @FXML
-    private void AccessoAlimenti(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
-            Parent root = loader.load();
 
 
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    // Cambia scena a HomePage, passando l'ID utente
     @FXML
     private void AccessoHome(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
+            // Reindirizza al controller HomePageNutrizionista
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePageNutrizionista.fxml"));
             Parent root = loader.load();
-
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -256,16 +232,16 @@ public class Ricette {
 
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la HomePage per Nutrizionisti", "Verificare il percorso FXML.");
         }
     }
 
-    // Cambia scena a PaginaProfilo passando l'ID utente
     @FXML
     private void AccessoProfilo(MouseEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
+            // Reindirizza al controller ProfiloNutrizionista
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ProfiloNutrizionista.fxml"));
             Parent root = loader.load();
-
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -273,6 +249,21 @@ public class Ricette {
 
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la Pagina Profilo per Nutrizionisti", "Verificare il percorso FXML.");
+        }
+    }
+    @FXML
+    private void AccessoDieta(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DietaNutrizionista.fxml"));
+            Parent dietaRoot = fxmlLoader.load();
+            Stage dietaStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            dietaStage.setScene(new Scene(dietaRoot));
+            dietaStage.setTitle("Diete Nutrizionista"); // Titolo più specifico
+            dietaStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.", "Verificare il percorso del file FXML.");
         }
     }
 
@@ -282,8 +273,10 @@ public class Ricette {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/AggiungiRicetta.fxml"));
             Parent root = loader.load();
 
-            AggiungiRicetteController controller = loader.getController();
-            controller.setRicettaController(this);
+            // Suggerimento: potresti voler passare l'ID del nutrizionista al controller AggiungiRicetta
+            // per associare la ricetta al creatore.
+            // AggiungiRicettaController controller = loader.getController();
+            // controller.setCreatoreId(Session.getNutrizionistaId()); // Esempio di metodo nel controller AggiungiRicetta
 
             Stage stage = new Stage();
             stage.setTitle("Aggiungi Ricetta");
@@ -292,8 +285,16 @@ public class Ricette {
 
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Caricamento", "Impossibile aprire la schermata di aggiunta ricetta", "Verificare il file FXML.");
         }
     }
 
-}
 
+    private void showAlert(Alert.AlertType type, String title, String header, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+}

@@ -1,7 +1,7 @@
 package com.matteotocci.app.controller;
 
 import com.matteotocci.app.model.Dieta;
-import com.matteotocci.app.model.Session;
+import com.matteotocci.app.model.Session; // Importa la classe Session!
 import com.matteotocci.app.model.SQLiteConnessione;
 
 import javafx.collections.FXCollections;
@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable; // Importa questa interfaccia!
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -23,11 +24,13 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.IOException;
+import java.net.URL; // Necessario per Initializable
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class DietaNutrizionista {
+// La classe deve implementare Initializable
+public class DietaNutrizionista implements Initializable {
 
     @FXML
     private Button BottoneClienti;
@@ -35,6 +38,8 @@ public class DietaNutrizionista {
     private Button BottoneAlimenti;
     @FXML
     private Button BottoneDiete;
+    @FXML
+    private Button BottoneRicette; // Aggiunto per coerenza con le altre pagine
 
     @FXML
     private Label nomeUtenteLabelDieta;
@@ -53,70 +58,26 @@ public class DietaNutrizionista {
     @FXML
     private VBox contenitorePrincipale;
 
-    private String loggedInUserId;
-    private ObservableList<Dieta> observableListaDieteAssegnate = FXCollections.observableArrayList();  //le observable notificano i listener ogni volta che il loro contenuto cambia
+    // Rimosso: private String loggedInUserId;
+    // Rimosso: public void setLoggedInUserId(String userId) { ... }
+
+    private ObservableList<Dieta> observableListaDieteAssegnate = FXCollections.observableArrayList();
     private ObservableList<Dieta> observableListaDieteDaAssegnare = FXCollections.observableArrayList();
 
     private Map<String, Integer> clientiMap = new HashMap<>();
     private VBox sezioneClientiAssegnazione = null;
 
-    public void setLoggedInUserId(String userId) {
-        this.loggedInUserId = userId;
-        setNomeUtenteLabel();
-        caricaListaDiete();
-    }
-
-    @FXML
-    private void vaiAiClienti(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePageNutrizionista.fxml"));
-            Parent homePageRoot = fxmlLoader.load();
-            HomePageNutrizionista homePageController = fxmlLoader.getController();
-            homePageController.setLoggedInUserId(loggedInUserId);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(homePageRoot));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void openProfiloNutrizionista(MouseEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ProfiloNutrizionista.fxml"));
-            Parent profileRoot = fxmlLoader.load();
-            ProfiloNutrizionista profileController = fxmlLoader.getController();
-            profileController.setLoggedInUserId(loggedInUserId);
-            Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            profileStage.setScene(new Scene(profileRoot));
-            profileStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void initialize() {
-        listaDieteAssegnate.setItems(observableListaDieteAssegnate); // la ListView "osserverà" (observe) la ObservableList.
-        // Ogni volta che gli elementi vengono aggiunti, rimossi o modificati in observableListaDieteAssegnate,
-        // la listaDieteAssegnate si aggiornerà automaticamente nell'interfaccia utente
+    // Questo è il metodo initialize corretto per l'interfaccia Initializable
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        listaDieteAssegnate.setItems(observableListaDieteAssegnate);
         listaDieteDaAssegnare.setItems(observableListaDieteDaAssegnare);
 
-        ConfigurazioneCelle(listaDieteAssegnate, true); //personalizzare l'aspetto e il comportamento di ogni singola
-        // voce all'interno della listaDieteAssegnate.
+        ConfigurazioneCelle(listaDieteAssegnate, true);
         ConfigurazioneCelle(listaDieteDaAssegnare, false);
 
         filtroNomeDietaTextField.textProperty().addListener((observable, oldValue, newValue) -> filtraDiete(newValue));
-         //Quando l'applicazione si avvia, il metodo initialize() viene chiamato.
-        //All'interno di initialize(), viene impostato un listener sul testo del filtroNomeDietaTextField.
-        //L'utente inizia a digitare nel filtroNomeDietaTextField (ad esempio, digita "p").
-        //La textProperty() del TextField rileva che il suo valore è cambiato (da "" a "p").
-        //La textProperty() notifica tutti i suoi listener, inclusa la lambda che hai registrato.
-        //La lambda viene eseguita, e chiama filtraDiete("p").
-        //Il metodo filtraDiete() aggiorna le ListView mostrando solo le diete che contengono "p" nel loro nome.
-        //L'utente digita un'altra lettera (ad esempio, "a", ora il testo è "pa").
-        //Il processo si ripete: textProperty() rileva il cambiamento, notifica il listener, la lambda esegue filtraDiete("pa"), e le liste si aggiornano di conseguenza.
+
         listaDieteAssegnate.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 listaDieteDaAssegnare.getSelectionModel().clearSelection();
@@ -129,6 +90,94 @@ public class DietaNutrizionista {
                 rimuoviSezioneClientiAssegnazione();
             }
         });
+
+        // CHIAMATE ALL'INIZIALIZZAZIONE ALL'AVVIO DEL CONTROLLER
+        // Ora il controller è pronto e recupera l'ID e il ruolo dalla Session
+        setNomeUtenteLabel();
+        caricaListaDiete();
+    }
+
+    private void setNomeUtenteLabel() {
+        Integer userIdFromSession = Session.getUserId(); // Prende l'ID direttamente dalla Session
+        String userRoleFromSession = "Nutrizionista";
+
+        if (nomeUtenteLabelDieta != null && ruoloUtenteLabelDieta != null && userIdFromSession != null) {
+            String nomeUtenteCompleto = getNomeUtenteDalDatabase(userIdFromSession.toString());
+            nomeUtenteLabelDieta.setText((nomeUtenteCompleto != null && !nomeUtenteCompleto.isEmpty()) ? nomeUtenteCompleto : "Nome e Cognome");
+            ruoloUtenteLabelDieta.setText(userRoleFromSession != null ? userRoleFromSession : "");
+        } else {
+            nomeUtenteLabelDieta.setText("Nome e Cognome"); // Fallback
+            ruoloUtenteLabelDieta.setText(""); // Fallback
+            System.err.println("[ERROR - DietaNutrizionista] Impossibile impostare il nome/ruolo utente. Componenti UI o ID/ruolo dalla Sessione sono null.");
+        }
+    }
+
+    private String getNomeUtenteDalDatabase(String userId) {
+        String nomeUtenteCompleto = null;
+        String url = "jdbc:sqlite:database.db"; // Assicurati che il percorso del database sia corretto
+        String query = "SELECT Nome, Cognome FROM Utente WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                nomeUtenteCompleto = rs.getString("Nome") + " " + rs.getString("Cognome");
+            }
+        } catch (SQLException e) {
+            System.err.println("Errore DB (nome utente): " + e.getMessage());
+        }
+        return nomeUtenteCompleto;
+    }
+
+    private void caricaListaDiete() {
+        observableListaDieteAssegnate.clear();
+        observableListaDieteDaAssegnare.clear();
+
+        Integer currentNutrizionistaId = Session.getUserId(); // Ottieni l'ID del nutrizionista dalla Session
+
+        if (currentNutrizionistaId == null) {
+            System.err.println("[ERROR - DietaNutrizionista] ID nutrizionista non disponibile. Impossibile caricare le diete.");
+            return;
+        }
+
+        String url = "jdbc:sqlite:database.db";
+        String query = "SELECT d.id, d.nome_dieta, d.data_inizio, d.data_fine, d.id_cliente, COUNT(gd.id_giorno_dieta) AS numero_giorni " +
+                "FROM Diete d " +
+                "LEFT JOIN Giorno_dieta gd ON d.id = gd.id_dieta " +
+                "WHERE d.id_nutrizionista = ? " +
+                "GROUP BY d.id, d.nome_dieta, d.data_inizio, d.data_fine, d.id_cliente";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, currentNutrizionistaId); // Usa l'ID Integer direttamente
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int idDieta = rs.getInt("id");
+                String nomeDieta = rs.getString("nome_dieta");
+                String dataInizio = rs.getString("data_inizio");
+                String dataFine = rs.getString("data_fine");
+                Object idClienteObj = rs.getObject("id_cliente");
+                int numeroGiorni = rs.getInt("numero_giorni");
+
+                Dieta dieta = new Dieta(idDieta, nomeDieta, dataInizio, dataFine);
+                dieta.setNumeroGiorni(numeroGiorni);
+                if (idClienteObj != null) {
+                    dieta.setIdCliente((Integer) idClienteObj);
+                } else {
+                    dieta.setIdCliente(0); // Nessun cliente assegnato
+                }
+
+                if (dieta.getIdCliente() == 0) {
+                    observableListaDieteDaAssegnare.add(dieta);
+                } else {
+                    observableListaDieteAssegnate.add(dieta);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Errore DB (carica diete): " + e.getMessage());
+        }
     }
 
     private void ConfigurazioneCelle(ListView<Dieta> listView, boolean ListaAssegnata) {
@@ -197,8 +246,6 @@ public class DietaNutrizionista {
         }
     }
 
-
-
     private void mostraSelezioneClienti(Dieta dieta) {
         rimuoviSezioneClientiAssegnazione();
 
@@ -209,7 +256,7 @@ public class DietaNutrizionista {
         }
 
         // Carica i clienti disponibili (cioè quelli senza una dieta assegnata)
-        List<String> clientiDisponibili = caricaClienti(); // Ora questo metodo filtra già i clienti con dieta
+        List<String> clientiDisponibili = caricaClienti(); // Questo metodo ora filtra già i clienti con dieta
 
         // Blocco 2: Se non ci sono clienti disponibili per l'assegnazione
         if (clientiDisponibili.isEmpty()) {
@@ -272,7 +319,7 @@ public class DietaNutrizionista {
             int affected = ps.executeUpdate();
             if (affected > 0) {
                 mostraAlert("Successo", "Dieta assegnata correttamente.");
-                caricaListaDiete();
+                caricaListaDiete(); // Ricarica le liste dopo l'assegnazione
             } else {
                 mostraAlert("Errore", "Nessuna dieta aggiornata.");
             }
@@ -291,7 +338,7 @@ public class DietaNutrizionista {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            String url = "jdbc:sqlite:database.db";
+            String url = "jdbc:sqlite:database.db"; // Assicurati che il percorso del database sia corretto
             String sql = "UPDATE Diete SET id_cliente = NULL WHERE id = ?";
 
             try (Connection conn = SQLiteConnessione.connector();
@@ -302,7 +349,7 @@ public class DietaNutrizionista {
                 int affectedRows = ps.executeUpdate();
                 if (affectedRows > 0) {
                     mostraAlert("Successo", "Assegnazione della dieta annullata correttamente.");
-                    caricaListaDiete();
+                    caricaListaDiete(); // Ricarica le liste dopo l'annullamento
                 } else {
                     mostraAlert("Errore", "Nessuna dieta aggiornata. L'annullamento dell'assegnazione potrebbe non essere avvenuto.");
                 }
@@ -314,8 +361,6 @@ public class DietaNutrizionista {
         }
     }
 
-
-
     private List<String> caricaClienti() {
         clientiMap.clear();
         List<String> clienti = new ArrayList<>();
@@ -323,12 +368,16 @@ public class DietaNutrizionista {
                 "FROM Utente u " +
                 "JOIN Clienti c ON u.id = c.id_cliente " +
                 "WHERE c.id_nutrizionista = ? " +
-                "AND u.id NOT IN (SELECT id_cliente FROM Diete WHERE id_cliente IS NOT NULL)"; // AGGIUNTA CHIAVE: esclude clienti che hanno già una dieta assegnata
+                "AND u.id NOT IN (SELECT id_cliente FROM Diete WHERE id_cliente IS NOT NULL)"; // Esclude clienti che hanno già una dieta assegnata
 
         try (Connection conn = SQLiteConnessione.connector();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            int idNutrizionista = Session.getUserId(); // Assicurati che Session.getUserId() sia corretto
+            Integer idNutrizionista = Session.getUserId(); // Ottieni l'ID del nutrizionista dalla Session
+            if (idNutrizionista == null) {
+                System.err.println("[ERROR - DietaNutrizionista] ID nutrizionista non disponibile dalla Sessione. Impossibile caricare i clienti.");
+                return clienti;
+            }
             pstmt.setInt(1, idNutrizionista);
 
             ResultSet rs = pstmt.executeQuery();
@@ -372,6 +421,7 @@ public class DietaNutrizionista {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
+            // Ricarica le diete dopo che la finestra di modifica si è chiusa
             caricaListaDiete();
 
         } catch (IOException e) {
@@ -379,82 +429,8 @@ public class DietaNutrizionista {
         }
     }
 
-    private void setNomeUtenteLabel() {
-        if (ruoloUtenteLabelDieta != null && nomeUtenteLabelDieta != null && loggedInUserId != null) {
-            String nomeUtenteCompleto = getNomeUtenteDalDatabase(loggedInUserId);
-            nomeUtenteLabelDieta.setText((nomeUtenteCompleto != null && !nomeUtenteCompleto.isEmpty()) ? nomeUtenteCompleto : "Nome e Cognome");
-        } else {
-            System.err.println("Errore: ruoloUtenteLabelDieta o nomeUtenteLabelDieta o loggedInUserId sono null.");
-        }
-    }
-
-    private String getNomeUtenteDalDatabase(String userId) {
-        String nomeUtenteCompleto = null;
-        String url = "jdbc:sqlite:database.db";
-        String query = "SELECT Nome, Cognome FROM Utente WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                nomeUtenteCompleto = rs.getString("Nome") + " " + rs.getString("Cognome");
-            }
-        } catch (SQLException e) {
-            System.err.println("Errore DB (nome utente): " + e.getMessage());
-        }
-        return nomeUtenteCompleto;
-    }
-
-    private void caricaListaDiete() {
-        observableListaDieteAssegnate.clear();
-        observableListaDieteDaAssegnare.clear();
-
-        // RIMOSSO: boolean soloDieteDaAssegnare = (mostraSoloDieteDaAssegnareCheckBox != null && mostraSoloDieteDaAssegnareCheckBox.isSelected());
-
-        String url = "jdbc:sqlite:database.db";
-        String query = "SELECT d.id, d.nome_dieta, d.data_inizio, d.data_fine, d.id_cliente, COUNT(gd.id_giorno_dieta) AS numero_giorni " +
-                "FROM Diete d " +
-                "LEFT JOIN Giorno_dieta gd ON d.id = gd.id_dieta " +
-                "WHERE d.id_nutrizionista = ? " +
-                "GROUP BY d.id, d.nome_dieta, d.data_inizio, d.data_fine, d.id_cliente";
-
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-
-            pstmt.setInt(1, Session.getUserId());
-
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                int idDieta = rs.getInt("id");
-                String nomeDieta = rs.getString("nome_dieta");
-                String dataInizio = rs.getString("data_inizio");
-                String dataFine = rs.getString("data_fine");
-                Object idClienteObj = rs.getObject("id_cliente");
-                int numeroGiorni = rs.getInt("numero_giorni");
-
-                Dieta dieta = new Dieta(idDieta, nomeDieta, dataInizio, dataFine);
-                dieta.setNumeroGiorni(numeroGiorni);
-                if (idClienteObj != null) {
-                    dieta.setIdCliente((Integer) idClienteObj);
-                } else {
-                    dieta.setIdCliente(0);
-                }
-
-                if (dieta.getIdCliente() == 0) {
-                    observableListaDieteDaAssegnare.add(dieta);
-                } else {
-                    // RIMOSSO: if (!soloDieteDaAssegnare) {
-                    observableListaDieteAssegnate.add(dieta);
-                    // }
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Errore DB (carica diete): " + e.getMessage());
-        }
-    }
-
     private void filtraDiete(String searchText) {
-        // La logica di filtro qui è rimasta la stessa, ma ora caricaListaDiete() non considera la checkbox
+        // Ricarica le diete complete prima di filtrare per assicurarsi di avere tutti i dati
         caricaListaDiete();
 
         String lowerCaseFilter = searchText.toLowerCase();
@@ -467,6 +443,7 @@ public class DietaNutrizionista {
                 .filter(dieta -> dieta.getNome().toLowerCase().contains(lowerCaseFilter))
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
+        // Aggiorna le ObservableList con i risultati filtrati
         observableListaDieteAssegnate.setAll(filteredAssegnate);
         observableListaDieteDaAssegnare.setAll(filteredDaAssegnare);
     }
@@ -483,6 +460,7 @@ public class DietaNutrizionista {
             Window owner = ((Node) event.getSource()).getScene().getWindow();
             stage.initOwner(owner);
 
+            // Quando la finestra di NuovaDieta si chiude, ricarica le liste
             stage.setOnHidden(e -> caricaListaDiete());
 
             stage.show();
@@ -495,6 +473,7 @@ public class DietaNutrizionista {
     private void eliminaDietaSelezionata(ActionEvent event) {
         Dieta dietaSelezionata = null;
 
+        // Determina quale dieta è selezionata tra le due liste
         if (listaDieteAssegnate.getSelectionModel().getSelectedItem() != null) {
             dietaSelezionata = listaDieteAssegnate.getSelectionModel().getSelectedItem();
         } else if (listaDieteDaAssegnare.getSelectionModel().getSelectedItem() != null) {
@@ -502,11 +481,11 @@ public class DietaNutrizionista {
         }
 
         if (dietaSelezionata == null) {
-            System.err.println("Nessuna dieta selezionata da eliminare.");
             mostraAlert("Attenzione", "Seleziona una dieta da eliminare.");
             return;
         }
 
+        // Impedisci l'eliminazione di una dieta assegnata
         if (dietaSelezionata.getIdCliente() != 0) {
             mostraAlert("Errore", "Impossibile eliminare una dieta assegnata a un cliente. Rimuovi prima l'assegnazione.");
             return;
@@ -514,15 +493,16 @@ public class DietaNutrizionista {
 
         boolean conferma = confermaEliminazione(dietaSelezionata.getNome());
         if (!conferma) {
-            return;
+            return; // L'utente ha annullato
         }
 
-        String url = "jdbc:sqlite:database.db";
+        String url = "jdbc:sqlite:database.db"; // Assicurati che il percorso del database sia corretto
 
         try (Connection conn = DriverManager.getConnection(url)) {
-            conn.setAutoCommit(false);
+            conn.setAutoCommit(false); // Inizia una transazione
 
             try {
+                // 1. Recupera gli ID dei giorni di dieta associati a questa dieta
                 String queryGiorni = "SELECT id_giorno_dieta FROM Giorno_dieta WHERE id_dieta = ?";
                 PreparedStatement psGiorni = conn.prepareStatement(queryGiorni);
                 psGiorni.setInt(1, dietaSelezionata.getId());
@@ -535,6 +515,7 @@ public class DietaNutrizionista {
                 rs.close();
                 psGiorni.close();
 
+                // 2. Elimina gli alimenti associati a questi giorni di dieta (se ce ne sono)
                 if (!listaIdGiorni.isEmpty()) {
                     StringBuilder sb = new StringBuilder();
                     sb.append("DELETE FROM DietaAlimenti WHERE id_giorno_dieta IN (");
@@ -554,29 +535,33 @@ public class DietaNutrizionista {
                     psEliminaAlimenti.close();
                 }
 
+                // 3. Elimina i giorni di dieta
                 String eliminaGiorni = "DELETE FROM Giorno_dieta WHERE id_dieta = ?";
                 try (PreparedStatement ps = conn.prepareStatement(eliminaGiorni)) {
                     ps.setInt(1, dietaSelezionata.getId());
                     ps.executeUpdate();
                 }
 
+                // 4. Elimina la dieta stessa
                 String eliminaDieta = "DELETE FROM Diete WHERE id = ?";
                 try (PreparedStatement ps = conn.prepareStatement(eliminaDieta)) {
                     ps.setInt(1, dietaSelezionata.getId());
                     ps.executeUpdate();
                 }
 
-                conn.commit();
+                conn.commit(); // Conferma la transazione
 
+                // Rimuovi la dieta dalla ObservableList corrispondente nell'UI
                 if (dietaSelezionata.getIdCliente() != 0) {
                     observableListaDieteAssegnate.remove(dietaSelezionata);
                 } else {
                     observableListaDieteDaAssegnare.remove(dietaSelezionata);
                 }
+                mostraAlert("Successo", "Dieta eliminata correttamente.");
 
             } catch (SQLException e) {
-                conn.rollback();
-                System.err.println("Errore durante l'eliminazione: " + e.getMessage());
+                conn.rollback(); // Esegui il rollback in caso di errore
+                System.err.println("Errore durante l'eliminazione della dieta (rollback): " + e.getMessage());
                 mostraAlert("Errore Eliminazione", "Si è verificato un errore durante l'eliminazione della dieta: " + e.getMessage());
             }
 
@@ -587,12 +572,69 @@ public class DietaNutrizionista {
     }
 
     private boolean confermaEliminazione(String nomeDieta) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Conferma Eliminazione");
         alert.setHeaderText("Sei sicuro di voler eliminare la dieta \"" + nomeDieta + "\"?");
         alert.setContentText("Questa operazione non può essere annullata.");
 
-        java.util.Optional<javafx.scene.control.ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK;
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
+    }
+
+    // --- Metodi di Navigazione ---
+    // Questi metodi ora NON passano più l'ID utente esplicitamente.
+    // I controller delle pagine di destinazione dovranno recuperare l'ID dalla Session.
+
+    @FXML
+    private void vaiAiClienti(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePageNutrizionista.fxml"));
+            Parent homePageRoot = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(homePageRoot));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void openProfiloNutrizionista(MouseEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ProfiloNutrizionista.fxml"));
+            Parent profileRoot = fxmlLoader.load();
+            Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            profileStage.setScene(new Scene(profileRoot));
+            profileStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void AccessoAlimenti(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
+            Parent alimentiRoot = fxmlLoader.load();
+            Stage alimentiStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            alimentiStage.setScene(new Scene(alimentiRoot));
+            alimentiStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void AccessoRicette(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/RicetteNutrizionista.fxml"));
+            Parent ricetteRoot = fxmlLoader.load();
+            Stage ricetteStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            ricetteStage.setScene(new Scene(ricetteRoot));
+            ricetteStage.setTitle("Ricette");
+            ricetteStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

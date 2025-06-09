@@ -22,7 +22,7 @@
                     <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="69.0" style="-fx-padding: 10;">
                             <children>
-                                <ImageView fx:id="profileImage" onMouseClicked="#openProfiloNutrizionista" fitHeight="70.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fx:id="profileImage" fitHeight="70.0" fitWidth="68.0" onMouseClicked="#openProfiloNutrizionista" pickOnBounds="true" preserveRatio="true">
                                     <image>
                                         <Image url="@immagini/omino_profilo.jpg" />
                                     </image>
@@ -33,7 +33,7 @@
                                 </VBox>
                             </children>
                         </HBox>
-                        <Button fx:id="BottoneClienti" onAction="#vaiAiClienti" mnemonicParsing="false" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Clienti">
+                        <Button fx:id="BottoneClienti" mnemonicParsing="false" onAction="#vaiAiClienti" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Clienti">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
@@ -43,11 +43,16 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Button>
-                        <Button fx:id="BottoneDiete" mnemonicParsing="false" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Diete">
+                        <Button fx:id="BottoneRicette" mnemonicParsing="false" onAction="#AccessoRicette" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Ricette">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Button>
+                  <Button fx:id="BottoneDiete" layoutX="10.0" layoutY="259.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Diete">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
                     </children>
                 </VBox>
             </left>
@@ -93,8 +98,8 @@
 
                         <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-padding: 10 0 0 0;">
                             <children>
-                                <TextField fx:id="filtroNomeDietaTextField" promptText="Filtra per nome..." styleClass="search-field" prefWidth="200.0" />
-                                <Button mnemonicParsing="false" styleClass="button-positive" text="+ Nuova dieta" onAction="#vaiAggiungiNuovaDieta" />
+                                <TextField fx:id="filtroNomeDietaTextField" prefWidth="200.0" promptText="Filtra per nome..." styleClass="search-field" />
+                                <Button mnemonicParsing="false" onAction="#vaiAggiungiNuovaDieta" styleClass="button-positive" text="+ Nuova dieta" />
                                 <Button mnemonicParsing="false" styleClass="button-negative" text="-" />
                             </children>
                         </HBox>
