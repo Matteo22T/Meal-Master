@@ -482,61 +482,140 @@
     -fx-border-color: #E8C5C1;
 }
 
-/* CSS corretto per JavaFX - aggiungi al tuo HomePage-Style.css */
-
-.progress-arc {
-    -fx-stroke-line-cap: round; /* Estremità arrotondate */
+/* Stili base per i cerchi di progresso */
+.progress-circle {
+    -fx-stroke-line-cap: round;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);
 }
 
-/* Effetti per diversi stati dei macronutrienti */
-.progress-arc-proteine {
-    -fx-effect: dropshadow(gaussian, rgba(33, 150, 243, 0.3), 5, 0.3, 0, 0);
+/* Animazioni e transizioni */
+.progress-circle {
+    -fx-transition: -fx-stroke-dash-offset 0.8s ease-out;
 }
 
-.progress-arc-carboidrati {
-    -fx-effect: dropshadow(gaussian, rgba(255, 193, 7, 0.3), 5, 0.3, 0, 0);
+/* Stili di progresso per le proteine (blu) */
+#proteineProgressCircle.progress-low {
+    -fx-stroke: linear-gradient(to right, #2196F3, #64B5F6);
+    -fx-opacity: 0.7;
 }
 
-.progress-arc-grassi {
-    -fx-effect: dropshadow(gaussian, rgba(244, 67, 54, 0.3), 5, 0.3, 0, 0);
+#proteineProgressCircle.progress-medium {
+    -fx-stroke: linear-gradient(to right, #2196F3, #1976D2);
+    -fx-opacity: 0.85;
 }
 
-/* Effetto per progresso completo */
-.progress-arc-complete {
-    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.6), 8, 0.4, 0, 0);
+#proteineProgressCircle.progress-high {
+    -fx-stroke: linear-gradient(to right, #1976D2, #0D47A1);
+    -fx-opacity: 1.0;
+    -fx-effect: dropshadow(gaussian, #2196F3, 5, 0, 0, 0);
 }
 
-/* Hover effect per macro items */
-.macro-item:hover .progress-arc {
-    -fx-stroke-width: 8.0;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 6, 0.3, 0, 0);
+#proteineProgressCircle.progress-complete {
+    -fx-stroke: linear-gradient(to right, #0D47A1, #2196F3);
+    -fx-opacity: 1.0;
+    -fx-effect: dropshadow(gaussian, #2196F3, 8, 0, 0, 0);
 }
 
-/* Stili per diversi livelli di completamento */
-.progress-low {
-    -fx-stroke: #FF5722; /* Rosso per < 30% */
+#proteineProgressCircle.progress-over {
+    -fx-stroke: linear-gradient(to right, #FF5722, #F44336);
+    -fx-opacity: 1.0;
+    -fx-effect: dropshadow(gaussian, #FF5722, 8, 0, 0, 0);
 }
 
-.progress-medium {
-    -fx-stroke: #FF9800; /* Arancione per 30-70% */
+/* Stili di progresso per i carboidrati (giallo/arancione) */
+#carboidratiProgressCircle.progress-low {
+    -fx-stroke: linear-gradient(to right, #FFC107, #FFD54F);
+    -fx-opacity: 0.7;
 }
 
-.progress-high {
-    -fx-stroke: #4CAF50; /* Verde per > 70% */
+#carboidratiProgressCircle.progress-medium {
+    -fx-stroke: linear-gradient(to right, #FFC107, #FF8F00);
+    -fx-opacity: 0.85;
 }
 
-.progress-complete {
-    -fx-stroke: #2E7D32; /* Verde scuro per 100% */
-    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.8), 10, 0.5, 0, 0);
+#carboidratiProgressCircle.progress-high {
+    -fx-stroke: linear-gradient(to right, #FF8F00, #E65100);
+    -fx-opacity: 1.0;
+    -fx-effect: dropshadow(gaussian, #FFC107, 5, 0, 0, 0);
 }
 
-/* Animazione pulsante per completamento */
+#carboidratiProgressCircle.progress-complete {
+    -fx-stroke: linear-gradient(to right, #E65100, #FFC107);
+    -fx-opacity: 1.0;
+    -fx-effect: dropshadow(gaussian, #FFC107, 8, 0, 0, 0);
+}
+
+#carboidratiProgressCircle.progress-over {
+    -fx-stroke: linear-gradient(to right, #FF5722, #F44336);
+    -fx-opacity: 1.0;
+    -fx-effect: dropshadow(gaussian, #FF5722, 8, 0, 0, 0);
+}
+
+/* Stili di progresso per i grassi (rosso) */
+#grassiProgressCircle.progress-low {
+    -fx-stroke: linear-gradient(to right, #F44336, #EF5350);
+    -fx-opacity: 0.7;
+}
+
+#grassiProgressCircle.progress-medium {
+    -fx-stroke: linear-gradient(to right, #F44336, #D32F2F);
+    -fx-opacity: 0.85;
+}
+
+#grassiProgressCircle.progress-high {
+    -fx-stroke: linear-gradient(to right, #D32F2F, #B71C1C);
+    -fx-opacity: 1.0;
+    -fx-effect: dropshadow(gaussian, #F44336, 5, 0, 0, 0);
+}
+
+#grassiProgressCircle.progress-complete {
+    -fx-stroke: linear-gradient(to right, #B71C1C, #F44336);
+    -fx-opacity: 1.0;
+    -fx-effect: dropshadow(gaussian, #F44336, 8, 0, 0, 0);
+}
+
+#grassiProgressCircle.progress-over {
+    -fx-stroke: linear-gradient(to right, #FF5722, #FF3D00);
+    -fx-opacity: 1.0;
+    -fx-effect: dropshadow(gaussian, #FF5722, 8, 0, 0, 0);
+}
+
+/* Container dei macronutrienti */
+.macros-container {
+    -fx-background-color: #FAFAFA;
+    -fx-background-radius: 12px;
+    -fx-padding: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 2);
+}
+
+.macros-title {
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+}
+
+.macro-item {
+    -fx-alignment: center;
+    -fx-spacing: 8px;
+}
+
+.macro-value {
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+}
+
+.macro-label {
+    -fx-text-fill: #666666;
+}
+
+/* Effetti hover per i cerchi */
+.progress-circle:hover {
+    -fx-stroke-width: 7;
+    -fx-cursor: hand;
+}
+
+/* Animazione pulsante per il completamento */
 @keyframes pulse {
-    0% { -fx-scale-x: 1.0; -fx-scale-y: 1.0; }
-    50% { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
-    100% { -fx-scale-x: 1.0; -fx-scale-y: 1.0; }
-}
-
-.progress-arc-pulse {
-    -fx-animation: pulse 2s infinite;
+    0% { -fx-effect: dropshadow(gaussian, rgba(33,150,243,0.4), 0, 0, 0, 0); }
+    50% { -fx-effect: dropshadow(gaussian, rgba(33,150,243,0.8), 10, 0, 0, 0); }
+    100% { -fx-effect: dropshadow(gaussian, rgba(33,150,243,0.4), 0, 0, 0, 0); }
 }

@@ -15,6 +15,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.geometry.Point3D?>
 <AnchorPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/HomePage-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePage">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -105,9 +106,14 @@
                                           <StackPane prefHeight="70.0" prefWidth="70.0">
                                              <children>
                                                 <!-- Cerchio di sfondo (grigio) -->
-                                                <Circle fill="#ffffff00" radius="28.0" stroke="#E0E0E0" strokeType="INSIDE" strokeWidth="6.0" />
-                                                <!-- Arc di progresso -->
-                                                <Arc fx:id="proteineProgressArc" centerX="0.0" centerY="0.0" fill="#ffffff00" length="0.0" radiusX="28.0" radiusY="28.0" startAngle="90.0" stroke="#2196F3" strokeType="INSIDE" strokeWidth="6.0" styleClass="progress-arc" />
+                                                <Circle fill="TRANSPARENT" radius="28.0" stroke="#E0E0E0" strokeType="INSIDE" strokeWidth="6.0" />
+                                                <!-- Cerchio di progresso -->
+                                                <Circle fx:id="proteineProgressCircle" fill="TRANSPARENT" radius="28.0" stroke="#2196F3" strokeType="INSIDE" strokeWidth="6.0" strokeDashArray="175.929" strokeDashOffset="175.929" styleClass="progress-circle">
+                                                   <rotationAxis>
+                                                      <Point3D x="0.0" y="0.0" z="1.0" />
+                                                   </rotationAxis>
+                                                   <rotate>-90</rotate>
+                                                </Circle>
                                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                                                    <children>
                                                       <Label fx:id="labelProteineCorrenti" styleClass="macro-value" text="0/">
@@ -138,9 +144,14 @@
                                           <StackPane prefHeight="70.0" prefWidth="70.0">
                                              <children>
                                                 <!-- Cerchio di sfondo (grigio) -->
-                                                <Circle fill="#ffffff00" radius="28.0" stroke="#E0E0E0" strokeType="INSIDE" strokeWidth="6.0" />
-                                                <!-- Arc di progresso -->
-                                                <Arc fx:id="carboidratiProgressArc" centerX="0.0" centerY="0.0" fill="#ffffff00" length="0.0" radiusX="28.0" radiusY="28.0" startAngle="90.0" stroke="#FFC107" strokeType="INSIDE" strokeWidth="6.0" styleClass="progress-arc" />
+                                                <Circle fill="TRANSPARENT" radius="28.0" stroke="#E0E0E0" strokeType="INSIDE" strokeWidth="6.0" />
+                                                <!-- Cerchio di progresso -->
+                                                <Circle fx:id="carboidratiProgressCircle" fill="TRANSPARENT" radius="28.0" stroke="#FFC107" strokeType="INSIDE" strokeWidth="6.0" strokeDashArray="175.929" strokeDashOffset="175.929" styleClass="progress-circle">
+                                                   <rotationAxis>
+                                                      <Point3D x="0.0" y="0.0" z="1.0" />
+                                                   </rotationAxis>
+                                                   <rotate>-90</rotate>
+                                                </Circle>
                                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                                                    <children>
                                                       <Label fx:id="labelCarboidratiCorrenti" styleClass="macro-value" text="0/">
@@ -171,9 +182,14 @@
                                           <StackPane prefHeight="70.0" prefWidth="70.0">
                                              <children>
                                                 <!-- Cerchio di sfondo (grigio) -->
-                                                <Circle fill="#ffffff00" radius="28.0" stroke="#E0E0E0" strokeType="INSIDE" strokeWidth="6.0" />
-                                                <!-- Arc di progresso -->
-                                                <Arc fx:id="grassiProgressArc" centerX="0.0" centerY="0.0" fill="#ffffff00" length="0.0" radiusX="28.0" radiusY="28.0" startAngle="90.0" stroke="#F44336" strokeType="INSIDE" strokeWidth="6.0" styleClass="progress-arc" />
+                                                <Circle fill="TRANSPARENT" radius="28.0" stroke="#E0E0E0" strokeType="INSIDE" strokeWidth="6.0" />
+                                                <!-- Cerchio di progresso -->
+                                                <Circle fx:id="grassiProgressCircle" fill="TRANSPARENT" radius="28.0" stroke="#F44336" strokeType="INSIDE" strokeWidth="6.0" strokeDashArray="175.929" strokeDashOffset="175.929" styleClass="progress-circle">
+                                                   <rotationAxis>
+                                                      <Point3D x="0.0" y="0.0" z="1.0" />
+                                                   </rotationAxis>
+                                                   <rotate>-90</rotate>
+                                                </Circle>
                                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                                                    <children>
                                                       <Label fx:id="labelGrassiCorrenti" styleClass="macro-value" text="0/">

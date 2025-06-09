@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Arc;
+import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -62,9 +63,9 @@ public class HomePage {
     @FXML private Label merendaKcalLabel;
     @FXML private Label cenaKcalLabel;
 
-    @FXML private Arc proteineProgressArc;
-    @FXML private Arc carboidratiProgressArc;
-    @FXML private Arc grassiProgressArc;
+    @FXML private Circle proteineProgressCircle;
+    @FXML private Circle carboidratiProgressCircle;
+    @FXML private Circle grassiProgressCircle;
 
     private int targetProteine = 0; // grammi
     private int targetCarboidrati = 0; // grammi
@@ -537,7 +538,7 @@ public class HomePage {
 
             stmt.setInt(1, userId);
             stmt.setString(2, dataCorrente);
-            stmt.setInt(3, giornoSelezionato.getIdGiornoDieta()); // CORREZIONE: Aggiungi il parametro
+            stmt.setInt(3, giornoSelezionato.getIdGiornoDieta());
 
             ResultSet rs = stmt.executeQuery();
 
@@ -577,15 +578,96 @@ public class HomePage {
             labelCarboidratiCorrenti.setText(totaleCarboidrati + " /");
             labelGrassiCorrenti.setText(totaleGrassi + " /");
 
-            // Aggiorna il progresso degli archi con i totali
-            updateProgressArc(proteineProgressArc, totaleProteine, targetProteine);
-            updateProgressArc(carboidratiProgressArc, totaleCarboidrati, targetCarboidrati);
-            updateProgressArc(grassiProgressArc, totaleGrassi, targetGrassi);
+            // Aggiorna il progresso dei cerchi con i totali
+            updateProgressCircle(proteineProgressCircle, totaleProteine, targetProteine);
+            updateProgressCircle(carboidratiProgressCircle, totaleCarboidrati, targetCarboidrati);
+            updateProgressCircle(grassiProgressCircle, totaleGrassi, targetGrassi);
 
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Errore DB", "Impossibile caricare le kcal per pasto.", "Dettagli: " + e.getMessage());
         }
+    }
+
+
+
+    /**
+     * Aggiorna un singolo cerchio di progresso con animazione
+     */
+    private void updateProgressCircle(Circle circle, int current, double target) {
+        // Calcola la percentuale (da 0 a 1)
+        double percentage = Math.min(current / target, 1.0);
+
+        // Calcola la circonferenza del cerchio (2 * π * r)
+        double radius = circle.getRadius();
+        double circumference = 2 * Math.PI * radius;
+
+        // Calcola il nuovo stroke-dash-offset
+        double newOffset = circumference * (1 - percentage);
+
+        // Aggiorna le classi CSS in base al progresso
+        updateCircleProgressStyles(circle, percentage);
+
+        // Animazione fluida del riempimento
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(
+                new KeyFrame(Duration.millis(800),
+                        new KeyValue(circle.strokeDashOffsetProperty(), newOffset)
+                )
+        );
+        timeline.play();
+    }
+
+    /**
+     * Aggiorna gli stili CSS dell'arco in base alla percentuale
+     */
+    private void updateCircleProgressStyles(Circle circle, double percentage) {
+        // Rimuovi tutte le classi di progresso precedenti
+        circle.getStyleClass().removeAll("progress-low", "progress-medium", "progress-high", "progress-complete", "progress-over");
+
+        // Aggiungi la classe appropriata in base alla percentuale
+        if (percentage > 1.0) {
+            circle.getStyleClass().add("progress-over"); // Superato l'obiettivo
+        } else if (percentage >= 1.0) {
+            circle.getStyleClass().add("progress-complete"); // Obiettivo raggiunto
+        } else if (percentage >= 0.8) {
+            circle.getStyleClass().add("progress-high"); // Quasi completato
+        } else if (percentage >= 0.5) {
+            circle.getStyleClass().add("progress-medium"); // A metà strada
+        } else if (percentage > 0) {
+            circle.getStyleClass().add("progress-low"); // Iniziato
+        }
+    }
+
+    /**
+     * Resetta tutti i cerchi di progresso a zero con animazione
+     */
+    private void resetProgressCircles() {
+        resetSingleProgressCircle(proteineProgressCircle);
+        resetSingleProgressCircle(carboidratiProgressCircle);
+        resetSingleProgressCircle(grassiProgressCircle);
+    }
+
+
+    /**
+     * Resetta un singolo cerchio di progresso a zero
+     */
+    private void resetSingleProgressCircle(Circle circle) {
+        // Rimuovi tutte le classi di progresso
+        circle.getStyleClass().removeAll("progress-low", "progress-medium", "progress-high", "progress-complete", "progress-over");
+
+        // Calcola la circonferenza completa
+        double radius = circle.getRadius();
+        double circumference = 2 * Math.PI * radius;
+
+        // Animazione per tornare a vuoto (offset = circonferenza completa)
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(
+                new KeyFrame(Duration.millis(500),
+                        new KeyValue(circle.strokeDashOffsetProperty(), circumference)
+                )
+        );
+        timeline.play();
     }
 
     private void resetAllLabelsAndProgress() {
@@ -602,77 +684,10 @@ public class HomePage {
         labelCarboidratiCorrenti.setText("0 /");
         labelGrassiCorrenti.setText("0 /");
 
-        // Reset archi di progresso
-        resetProgressArcs();
+        // Reset cerchi di progresso
+        resetProgressCircles();
     }
 
-    /**
-     * Aggiorna un singolo arco di progresso con animazione
-     */
-    private void updateProgressArc(Arc arc, int current, double target) {
-        // Calcola la percentuale (da 0 a 1)
-        double percentage = Math.min(current / target, 1.0);
-
-        // Converte in gradi (360° = cerchio completo)
-        double targetAngle = -360.0 * percentage; // Negativo per andare in senso orario
-
-        // Aggiorna le classi CSS in base al progresso
-        updateProgressStyles(arc, percentage);
-
-        // Animazione fluida
-        Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(
-                new KeyFrame(Duration.millis(500),
-                        new KeyValue(arc.lengthProperty(), targetAngle)
-                )
-        );
-        timeline.play();
-    }
-
-    /**
-     * Aggiorna gli stili CSS dell'arco in base alla percentuale
-     */
-    private void updateProgressStyles(Arc arc, double percentage) {
-        // Rimuovi tutte le classi di progresso precedenti
-        arc.getStyleClass().removeAll("progress-low", "progress-medium", "progress-high", "progress-complete");
-
-        // Aggiungi la classe appropriata in base alla percentuale
-        if (percentage >= 1.0) {
-            arc.getStyleClass().add("progress-complete");
-        } else if (percentage >= 0.7) {
-            arc.getStyleClass().add("progress-high");
-        } else if (percentage >= 0.3) {
-            arc.getStyleClass().add("progress-medium");
-        } else {
-            arc.getStyleClass().add("progress-low");
-        }
-    }
-
-    /**
-     * Resetta tutti gli archi di progresso a zero con animazione
-     */
-    private void resetProgressArcs() {
-        resetSingleProgressArc(proteineProgressArc);
-        resetSingleProgressArc(carboidratiProgressArc);
-        resetSingleProgressArc(grassiProgressArc);
-    }
-
-    /**
-     * Resetta un singolo arco di progresso a zero
-     */
-    private void resetSingleProgressArc(Arc arc) {
-        // Rimuovi tutte le classi di progresso
-        arc.getStyleClass().removeAll("progress-low", "progress-medium", "progress-high", "progress-complete");
-
-        // Animazione per tornare a 0
-        Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(
-                new KeyFrame(Duration.millis(300),
-                        new KeyValue(arc.lengthProperty(), 0.0)
-                )
-        );
-        timeline.play();
-    }
 
     private boolean selectCurrentDayIfExists() {
         Integer userId = Session.getUserId();
@@ -724,6 +739,12 @@ public class HomePage {
             previousDaySelection = giorno;
         }
     }
+
+
+
+
+
+
 
 }
 
