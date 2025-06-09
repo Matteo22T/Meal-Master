@@ -259,8 +259,6 @@ public class HomePage {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
             Parent root = fxmlLoader.load();
 
-            Alimenti controller = fxmlLoader.getController();
-            controller.setLoggedInUserId(this.loggedInUserId);
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -291,12 +289,6 @@ public class HomePage {
             Parent profileRoot = fxmlLoader.load();
             PaginaProfilo profileController = fxmlLoader.getController();
 
-            if (loggedInUserId != null) {
-                System.out.println("[DEBUG - HomePage] ID utente da passare a Profilo: " + loggedInUserId);
-                profileController.setUtenteCorrenteId(loggedInUserId);
-            } else {
-                System.out.println("[DEBUG - HomePage] ID utente non ancora disponibile per il Profilo.");
-            }
 
             Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             profileStage.setScene(new Scene(profileRoot));

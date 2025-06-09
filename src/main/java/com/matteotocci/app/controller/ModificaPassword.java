@@ -1,5 +1,6 @@
 package com.matteotocci.app.controller;
 
+import com.matteotocci.app.model.Session;
 import com.matteotocci.app.model.UtenteModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -53,13 +54,10 @@ public class ModificaPassword implements Initializable {
     @FXML
     private Button BottonePianoAlimentareLeft;
 
-    private String utenteCorrenteId;
+    private String utenteCorrenteId= Session.getUserId().toString();
     private UtenteModel utenteModel;
 
-    public void setUtenteCorrenteId(String userId) {
-        this.utenteCorrenteId = userId;
-        this.utenteModel = new UtenteModel(); // Inizializza il modello quando hai l'ID
-    }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

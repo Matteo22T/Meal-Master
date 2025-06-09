@@ -1,5 +1,6 @@
 package com.matteotocci.app.controller;
 
+import com.matteotocci.app.model.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -70,12 +71,10 @@ public class PaginaProfilo implements Initializable {
     @FXML
     private GridPane gridPane;
 
-    private String utenteCorrenteId; // L'ID utente verrà impostato esternamente
+    private Integer utenteCorrenteId= Session.getUserId();
 
-    public void setUtenteCorrenteId(String userId) {
-        System.out.println("[DEBUG] setUtenteCorrenteId chiamato con ID: " + userId);
-        this.utenteCorrenteId = userId;
-        // Ora che abbiamo l'ID, possiamo inizializzare i dati
+    @FXML
+    public void initialize(){
         inizializzaDatiUtente();
     }
 
@@ -130,9 +129,9 @@ public class PaginaProfilo implements Initializable {
             if (nutrizionistaTextField != null) {
                 String idNutrizionista = getDatoUtenteDalDatabase("Clienti", utenteCorrenteId, "id_nutrizionista");
 
-                if (idNutrizionista != null && !idNutrizionista.isEmpty()) {
-                    String nomeNutrizionista = getDatoUtenteDalDatabase("Utente", idNutrizionista, "Nome");
-                    String cognomeNutrizionista = getDatoUtenteDalDatabase("Utente", idNutrizionista, "Cognome");
+                if (idNutrizionista != null) {
+                    String nomeNutrizionista = getDatoUtenteDalDatabase("Utente", Integer.parseInt(idNutrizionista), "Nome");
+                    String cognomeNutrizionista = getDatoUtenteDalDatabase("Utente", Integer.parseInt(idNutrizionista), "Cognome");
 
                     if (nomeNutrizionista != null && cognomeNutrizionista != null) {
                         nutrizionistaTextField.setText(nomeNutrizionista + " " + cognomeNutrizionista);
@@ -146,7 +145,7 @@ public class PaginaProfilo implements Initializable {
         }
     }
 
-    private String getDatoUtenteDalDatabase(String tabella, String userId, String campo) {
+    private String getDatoUtenteDalDatabase(String tabella, Integer userId, String campo) {
         String valore = null;
         String url = "jdbc:sqlite:database.db";
         String query;
@@ -159,7 +158,7 @@ public class PaginaProfilo implements Initializable {
 
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, userId);
+            pstmt.setInt(1, userId);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -188,12 +187,6 @@ public class PaginaProfilo implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
             Parent profileRoot = fxmlLoader.load();
 
-            // Ottieni il controller della pagina del profilo appena caricata
-            PaginaProfilo profileController = fxmlLoader.getController();
-
-            // Imposta l'ID dell'utente corrente nel controller
-            profileController.setUtenteCorrenteId(utenteCorrenteId);
-
             Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             profileStage.setScene(new Scene(profileRoot));
             profileStage.show();
@@ -210,10 +203,7 @@ public class PaginaProfilo implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
             Parent root = fxmlLoader.load();
-            Alimenti alimentiController = fxmlLoader.getController();
 
-            // Passa l'ID utente corrente al controller di Alimenti
-            alimentiController.setLoggedInUserId(this.utenteCorrenteId);
 
             // Cambia scena sulla finestra attuale
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -231,10 +221,6 @@ public class PaginaProfilo implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Ricette.fxml"));
             Parent root = fxmlLoader.load();
 
-            // Ottieni il controller di Ricette
-            Ricette ricetteController = fxmlLoader.getController();
-
-            // Passa l'ID utente corrente al controller di Ricette
 
             // Cambia scena sulla stessa finestra
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -254,11 +240,6 @@ public class PaginaProfilo implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ModificaPassword.fxml"));
             Parent modificaPasswordRoot = fxmlLoader.load();
 
-            // **Ottieni il controller di ModificaPassword**
-            ModificaPassword modificaPasswordController = fxmlLoader.getController();
-
-            // **Imposta l'ID utente nel controller di ModificaPassword**
-            modificaPasswordController.setUtenteCorrenteId(utenteCorrenteId);
 
             Stage modificaPasswordStage = new Stage();
             modificaPasswordStage.setTitle("Modifica Password");
@@ -315,12 +296,6 @@ public class PaginaProfilo implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/BMI.fxml"));
             Parent bmiRoot = fxmlLoader.load();
 
-            // Ottieni il controller della schermata BMI
-            // Il tipo deve corrispondere esattamente al nome della classe del controller: BMI (maiuscolo)
-            BMI bmiController = fxmlLoader.getController();
-
-            // Imposta l'ID utente nel controller della schermata BMI
-            bmiController.setUtenteCorrenteId(utenteCorrenteId);
 
             Stage bmiStage = new Stage();
             bmiStage.setTitle("Calcolo BMI");

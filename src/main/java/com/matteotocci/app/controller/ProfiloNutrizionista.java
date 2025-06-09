@@ -151,8 +151,8 @@ public class ProfiloNutrizionista implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ModificaPassword.fxml"));
             Parent modificaPasswordRoot = fxmlLoader.load();
-            ModificaPassword modificaPasswordController = fxmlLoader.getController();
-            modificaPasswordController.setUtenteCorrenteId(loggedInUserId);
+
+
             Stage modificaPasswordStage = new Stage();
             modificaPasswordStage.setTitle("Modifica Password");
             modificaPasswordStage.setScene(new Scene(modificaPasswordRoot));

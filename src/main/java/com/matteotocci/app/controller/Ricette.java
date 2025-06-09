@@ -135,7 +135,7 @@ public class Ricette {
         if (categoria != null && !categoria.equals("Tutte")) {
             query.append(" AND categoria = ?");
         }
-        if (soloMiei && Session.getUserId() != 0) {
+        if (soloMiei && Session.getUserId() != null) {
             query.append(" AND id_utente = ?");
         }
         query.append(" LIMIT ? OFFSET ?");

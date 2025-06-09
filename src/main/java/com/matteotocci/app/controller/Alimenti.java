@@ -39,35 +39,20 @@ public class Alimenti {
     @FXML private TableColumn<Alimento, Double> calorieCol, proteineCol, carboidratiCol, grassiCol;
     @FXML private TableColumn<Alimento, Double> grassiSatCol, saleCol, fibreCol, zuccheriCol;
 
-    private String loggedInUserId;
+    private Integer loggedInUserId=Session.getUserId();
     private int offset = 0;
     private final int LIMIT = 50;
     private boolean isLoading = false;
 
-    // Metodo per ricevere l'ID utente e aggiornare la label in alto
-    public void setLoggedInUserId(String userId) {
-        this.loggedInUserId = userId;
-        // Aggiorna Session globale (se usi Session)
-        if (userId != null) {
-            try {
-                Session.setUserId(Integer.parseInt(userId));
-            } catch (NumberFormatException e) {
-                System.err.println("[WARN] ID utente non valido per Session");
-            }
-        }
-        System.out.println("[DEBUG - Alimenti] ID utente ricevuto: " + this.loggedInUserId);
-        setNomeUtenteLabel();
-    }
 
     private void setNomeUtenteLabel() {
         // Usa l'ID passato o quello in Session se presente
-        String idDaUsare = loggedInUserId != null ? loggedInUserId : (Session.getUserId() != null ? Session.getUserId().toString() : null);
-        if (idDaUsare == null) {
+        if (loggedInUserId == null) {
             nomeUtenteLabelHomePage.setText("Nome e Cognome");
             return;
         }
 
-        String nomeUtente = getNomeUtenteDalDatabase(idDaUsare);
+        String nomeUtente = getNomeUtenteDalDatabase(loggedInUserId);
         if (nomeUtente != null && !nomeUtente.isEmpty()) {
             nomeUtenteLabelHomePage.setText(nomeUtente);
         } else {
@@ -75,12 +60,12 @@ public class Alimenti {
         }
     }
 
-    private String getNomeUtenteDalDatabase(String userId) {
+    private String getNomeUtenteDalDatabase(Integer userId) {
         String nomeUtente = null;
         String query = "SELECT Nome, Cognome FROM Utente WHERE id = ?";
         try (Connection conn = SQLiteConnessione.connector();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, userId);
+            pstmt.setInt(1, userId);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 nomeUtente = rs.getString("Nome") + " " + rs.getString("Cognome");
@@ -97,8 +82,6 @@ public class Alimenti {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
             Parent root = fxmlLoader.load();
 
-            Alimenti controller = fxmlLoader.getController();
-            controller.setLoggedInUserId(loggedInUserId); // Passaggio ID utente
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -147,10 +130,7 @@ public class Alimenti {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
             Parent root = fxmlLoader.load();
 
-            PaginaProfilo profileController = fxmlLoader.getController();
-            if (loggedInUserId != null) {
-                profileController.setUtenteCorrenteId(loggedInUserId);
-            }
+
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -209,7 +189,7 @@ public class Alimenti {
         });
 
         cercaAlimenti("", false);
-        setNomeUtenteLabel(); // fallback se non arriva via setLoggedInUserId
+        setNomeUtenteLabel();
     }
 
     private ScrollBar getVerticalScrollbar(TableView<?> table) {
@@ -269,7 +249,7 @@ public class Alimenti {
                 stmt.setString(paramIndex++, categoria);
             }
             if (soloMiei && loggedInUserId != null) {
-                stmt.setInt(paramIndex++, Integer.parseInt(loggedInUserId));
+                stmt.setInt(paramIndex++, loggedInUserId);
             }
             stmt.setInt(paramIndex++, LIMIT);
             stmt.setInt(paramIndex++, offset);
