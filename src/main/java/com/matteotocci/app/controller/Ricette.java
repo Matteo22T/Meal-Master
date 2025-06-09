@@ -1,5 +1,6 @@
 package com.matteotocci.app.controller;
 
+import com.matteotocci.app.model.Dieta;
 import com.matteotocci.app.model.Ricetta;
 import com.matteotocci.app.model.SQLiteConnessione;
 import com.matteotocci.app.model.Session;
@@ -39,6 +40,9 @@ public class Ricette {
     private final int LIMIT = 50;
     private boolean isLoading = false;
 
+    private Dieta dietaAssegnata;
+
+
 
     private void setNomeUtenteLabel() {
         String nomeUtente = getNomeUtenteDalDatabase(Session.getUserId().toString());
@@ -65,16 +69,50 @@ public class Ricette {
         return nomeUtente;
     }
 
+    private Dieta recuperaDietaAssegnataACliente(int idCliente) {
+        Dieta dieta = null;
+        String url = "jdbc:sqlite:database.db";
+        // Query per recuperare la dieta con l'ID del cliente
+        String query = "SELECT id, nome_dieta, data_inizio, data_fine, id_nutrizionista, id_cliente " +
+                "FROM Diete WHERE id_cliente = ?";
+
+        try (Connection conn = SQLiteConnessione.connector(); // Usa SQLiteConnessione.connector()
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, idCliente);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                dieta = new Dieta(
+                        rs.getInt("id"),
+                        rs.getString("nome_dieta"),
+                        rs.getString("data_inizio"),
+                        rs.getString("data_fine"),
+                        rs.getInt("id_nutrizionista"), // Assicurati che il costruttore di Dieta supporti questi campi
+                        rs.getInt("id_cliente")
+                );
+                System.out.println("DEBUG (HomePageNutrizionista): Recuperata dieta '" + dieta.getNome() + "' (ID: " + dieta.getId() + ") per cliente ID: " + idCliente);
+            } else {
+                System.out.println("DEBUG (HomePageNutrizionista): Nessuna dieta trovata per il cliente ID: " + idCliente);
+            }
+        } catch (SQLException e) {
+            System.err.println("ERRORE SQL (HomePageNutrizionista): Errore durante il recupero della dieta per il cliente: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return dieta;
+    }
+
     @FXML
     public void initialize() {
         nomeCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
         descrizioneCol.setCellValueFactory(new PropertyValueFactory<>("descrizione"));
         categoriaCol.setCellValueFactory(new PropertyValueFactory<>("categoria"));
 
-
         Integer userIdFromSession = Session.getUserId();
+
+
         if (userIdFromSession != null) {
             System.out.println("[DEBUG - HomePage] ID utente da Sessione: " + userIdFromSession);
+            this.dietaAssegnata=recuperaDietaAssegnataACliente(userIdFromSession);
             setNomeUtenteLabel();}
 
         cercaRicette("", false);
@@ -225,6 +263,49 @@ public class Ricette {
         }
     }
 
+
+    private Stage dietaStage; // Per gestire apertura/chiusura della finestra dieta
+
+    @FXML
+    private void AccessoPianoAlimentare(ActionEvent event) {
+        if (dietaAssegnata != null) {
+            try {
+                // Chiudi la finestra precedente se è già aperta
+                if (dietaStage != null && dietaStage.isShowing()) {
+                    dietaStage.close();
+                }
+
+
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/VisualizzaDieta.fxml"));
+                Parent visualizzaDietaRoot = fxmlLoader.load();
+
+                // PASSO 2: Ottieni il controller della nuova finestra
+                VisualizzaDieta visualizzaDietaController = fxmlLoader.getController();
+
+                // PASSO 3: Passa l'oggetto Dieta al controller della nuova finestra
+                visualizzaDietaController.impostaDietaDaVisualizzare(dietaAssegnata);
+                System.out.println("DEBUG (HomePage): Passato Dieta ID " + dietaAssegnata.getId() + " al controller VisualizzaDieta.");
+
+                dietaStage = new Stage();
+                dietaStage.setScene(new Scene(visualizzaDietaRoot));
+                dietaStage.show();
+
+            } catch (IOException e) {
+                System.err.println("ERRORE (HomePage): Errore caricamento FXML VisualizzaDieta: " + e.getMessage());
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.", "Verificare il percorso del file FXML.");
+            } catch (Exception e) {
+                System.err.println("ERRORE (HomePage): Errore generico durante l'apertura di VisualizzaDieta: " + e.getMessage());
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.", "Dettagli: " + e.getMessage());
+            }
+        } else {
+            System.out.println("DEBUG (HomePage): Nessuna dieta trovata per il cliente  (ID: " + Session.getUserId() + ").");
+            showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata",
+                    "Il cliente non ha diete assegnate o non è stato possibile recuperarle.");
+        }
+    }
+
     // Cambia scena a Alimenti, passando l'ID utente
     @FXML
     private void AccessoAlimenti(ActionEvent event) {
@@ -293,6 +374,15 @@ public class Ricette {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void showAlert(Alert.AlertType type, String title, String header, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
 }

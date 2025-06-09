@@ -406,35 +406,43 @@ public class Alimenti {
         }
     }
 
+    private Stage dietaStage; // Per gestire apertura/chiusura della finestra dieta
+
     @FXML
     private void AccessoPianoAlimentare(ActionEvent event) {
         if (dietaAssegnata != null) {
             try {
+                // Chiudi la finestra precedente se è già aperta
+                if (dietaStage != null && dietaStage.isShowing()) {
+                    dietaStage.close();
+                }
+
+
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/VisualizzaDieta.fxml"));
                 Parent visualizzaDietaRoot = fxmlLoader.load();
 
+                // PASSO 2: Ottieni il controller della nuova finestra
                 VisualizzaDieta visualizzaDietaController = fxmlLoader.getController();
 
-                // Passa l'oggetto Dieta recuperato al controller della pagina di visualizzazione
+                // PASSO 3: Passa l'oggetto Dieta al controller della nuova finestra
                 visualizzaDietaController.impostaDietaDaVisualizzare(dietaAssegnata);
-                System.out.println("DEBUG (Alimenti): Passato Dieta ID " + dietaAssegnata.getId() + " al controller VisualizzaDieta.");
+                System.out.println("DEBUG (HomePage): Passato Dieta ID " + dietaAssegnata.getId() + " al controller VisualizzaDieta.");
 
-                Stage dietaStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                dietaStage = new Stage();
                 dietaStage.setScene(new Scene(visualizzaDietaRoot));
                 dietaStage.show();
 
             } catch (IOException e) {
-                System.err.println("ERRORE (Alimenti): Errore caricamento FXML VisualizzaDieta: " + e.getMessage());
+                System.err.println("ERRORE (HomePage): Errore caricamento FXML VisualizzaDieta: " + e.getMessage());
                 e.printStackTrace();
                 showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.", "Verificare il percorso del file FXML.");
             } catch (Exception e) {
-                System.err.println("ERRORE (Alimenti): Errore generico durante l'apertura di VisualizzaDieta: " + e.getMessage());
+                System.err.println("ERRORE (HomePage): Errore generico durante l'apertura di VisualizzaDieta: " + e.getMessage());
                 e.printStackTrace();
                 showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.", "Dettagli: " + e.getMessage());
             }
         } else {
-            // QUESTO È L'ALERT CHE AVEVAMO DIMENTICATO!
-            System.out.println("DEBUG (Alimenti): Nessuna dieta trovata per il cliente (ID: " + Session.getUserId() + ").");
+            System.out.println("DEBUG (HomePage): Nessuna dieta trovata per il cliente  (ID: " + Session.getUserId() + ").");
             showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata",
                     "Il cliente non ha diete assegnate o non è stato possibile recuperarle.");
         }

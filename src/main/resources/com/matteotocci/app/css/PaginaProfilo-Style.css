@@ -1,0 +1,324 @@
+/* ===== STILI GENERALI PER PAGINA PROFILO ===== */
+.main-container {
+    -fx-background-color: linear-gradient(to bottom right, #fdf8f7, #f5efed);
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-pref-width: 1000;
+    -fx-pref-height: 640;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #8B3A3A, #A0464A);
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 2, 0);
+}
+
+.profile-section {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-background-radius: 12;
+    -fx-padding: 15 10;
+    -fx-spacing: 10;
+    -fx-alignment: center-left;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.profile-image {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 3, 0, 0, 1);
+}
+
+.profile-image:hover {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.8), 12, 0, 0, 3);
+}
+
+.profile-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.profile-subtitle {
+    -fx-text-fill: #E8C5C1;
+    -fx-font-size: 11px;
+    -fx-font-style: italic;
+}
+
+.nav-menu {
+    -fx-padding: 10 0;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #F5E6E4;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+    -fx-padding: 12 20;
+    -fx-effect: null;
+    -fx-transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.3), 8, 0, 0, 0);
+    -fx-font-weight: bold;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.nav-button-active {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.4), 10, 0, 0, 3);
+}
+
+/* ===== CONTENUTO PRINCIPALE ===== */
+.main-content {
+    -fx-background-color: transparent;
+    -fx-padding: 15;
+}
+
+.header-section {
+    -fx-alignment: center-left;
+}
+
+.logo-image {
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.3), 8, 0, 0, 2);
+}
+
+.welcome-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+
+/* ===== SEZIONE CONTENUTO ===== */
+.content-section {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-padding: 10;
+    -fx-spacing: 0;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 20, 0, 0, 8);
+    -fx-border-color: rgba(139,58,58,0.08);
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+}
+
+.section-tabs {
+    -fx-spacing: 10;
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 0 0;
+}
+
+.tab-link {
+    -fx-text-fill: #A0464A;
+    -fx-font-size: 16px;
+    -fx-font-weight: normal;
+    -fx-cursor: hand;
+    -fx-padding: 8 0;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: transparent;
+    -fx-transition: all 0.3s ease;
+}
+
+.tab-link:hover {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-weight: bold;
+    -fx-border-color: #E8C5C1;
+}
+
+.active-tab {
+    -fx-text-fill: #4F7942;
+    -fx-font-weight: bold;
+    -fx-border-color: #4F7942;
+}
+
+/* ===== FORM PROFILO ===== */
+.profile-form-container {
+    -fx-spacing: 15;
+}
+
+.profile-form {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-padding: 0;
+}
+
+.form-label {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-alignment: center-right;
+    -fx-padding: 8 10 8 0;
+}
+
+.form-field {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-background-radius: 10;
+    -fx-border-color: #E8C5C1;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+    -fx-padding: 12 15;
+    -fx-font-size: 13px;
+    -fx-text-fill: #8B3A3A;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.05), 5, 0, 0, 2);
+    -fx-pref-height: 20;
+}
+
+.form-field:focused {
+    -fx-border-color: #4F7942;
+    -fx-border-width: 2;
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f9f2f1);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 8, 0, 0, 3);
+}
+
+.form-field:hover {
+    -fx-border-color: #A0464A;
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f9f2f1);
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 8, 0, 0, 3);
+}
+
+/* Campo disabilitato */
+.form-field:disabled {
+    -fx-background-color: #f8f5f4;
+    -fx-border-color: #D4B5B0;
+    -fx-text-fill: #B8928E;
+    -fx-opacity: 0.8;
+}
+
+/* ===== LINK MODIFICA PASSWORD ===== */
+.change-password-link {
+    -fx-text-fill: #4F7942;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-underline: true;
+    -fx-cursor: hand;
+    -fx-padding: 5 0;
+    -fx-transition: all 0.3s ease;
+}
+
+.change-password-link:hover {
+    -fx-text-fill: #5A8A4A;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 5, 0, 0, 1);
+}
+
+/* ===== PULSANTI AZIONE ===== */
+.action-buttons {
+    -fx-alignment: bottom-right;
+    -fx-spacing: 15;
+}
+
+.logout-button {
+    -fx-background-color: linear-gradient(to bottom, #dc3545, #c82333);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(220,53,69,0.3), 8, 0, 0, 3);
+    -fx-transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #c82333, #bd2130);
+    -fx-effect: dropshadow(gaussian, rgba(220,53,69,0.5), 12, 0, 0, 4);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.logout-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.save-button {
+    -fx-background-color: linear-gradient(to bottom, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 3);
+    -fx-transition: all 0.3s ease;
+}
+
+.save-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #5A8A4A, #658F52);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.5), 12, 0, 0, 4);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.save-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/* ===== ANIMAZIONI E TRANSIZIONI ===== */
+.profile-image, .nav-button, .tab-link, .form-field, .change-password-link,
+.logout-button, .save-button {
+    -fx-transition: all 0.3s ease;
+}
+
+/* ===== EFFETTI HOVER AGGIUNTIVI ===== */
+.content-section:hover {
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.15), 25, 0, 0, 10);
+}
+
+.profile-form:hover .form-field:focused {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 12, 0, 0, 4);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1200px) {
+    .main-content {
+        -fx-padding: 20;
+    }
+
+    .content-section {
+        -fx-padding: 20;
+    }
+
+    .welcome-title {
+        -fx-font-size: 28px;
+    }
+}
+
+/* ===== STATI SPECIALI ===== */
+.form-field.error {
+    -fx-border-color: #dc3545;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(220,53,69,0.3), 8, 0, 0, 2);
+}
+
+.form-field.success {
+    -fx-border-color: #4F7942;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 2);
+}
+
+/* ===== MIGLIORAMENTI ACCESSIBILITÀ ===== */
+.form-field:focused,
+.nav-button:focused,
+.logout-button:focused,
+.save-button:focused {
+    -fx-focus-color: #4F7942;
+    -fx-faint-focus-color: rgba(79,121,66,0.2);
+}
+
+/* ===== PERSONALIZZAZIONE PROMPT TEXT ===== */
+.form-field .text-input {
+    -fx-prompt-text-fill: #B8928E;
+}
+
+.form-field:focused .text-input {
+    -fx-prompt-text-fill: #A0464A;
+}

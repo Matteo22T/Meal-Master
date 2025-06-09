@@ -78,7 +78,7 @@
 .main-content {
     -fx-background-color: transparent;
     -fx-padding: 20;
-    -fx-spacing: 20;
+    -fx-spacing: 5;
 }
 
 /* ===== SEZIONE STATISTICHE ===== */

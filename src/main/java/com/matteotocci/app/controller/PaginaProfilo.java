@@ -36,9 +36,6 @@ public class PaginaProfilo implements Initializable {
     private Label nomeUtenteSidebarLabel;
 
     @FXML
-    private Label benvenutoLabel;
-
-    @FXML
     private ImageView ImmagineOmino;
 
     @FXML
@@ -109,7 +106,6 @@ public class PaginaProfilo implements Initializable {
 
             String nomeCompleto = (nome != null ? nome : "") + " " + (cognome != null ? cognome : "");
             nomeUtenteSidebarLabel.setText(nomeCompleto.trim());
-            benvenutoLabel.setText("Benvenuto " + nomeCompleto.trim());
 
             nomeTextField.setText(nome != null ? nome : "");
             cognomeTextField.setText(cognome != null ? cognome : "");
@@ -155,7 +151,6 @@ public class PaginaProfilo implements Initializable {
         } else {
             System.err.println("[ERROR] ID utente non disponibile dalla Sessione. Impossibile recuperare i dati del profilo.");
             nomeUtenteSidebarLabel.setText("Utente Sconosciuto");
-            benvenutoLabel.setText("Benvenuto Utente");
             nomeTextField.setText("");
             cognomeTextField.setText("");
             if (sessoTextField != null) sessoTextField.setText("");
@@ -247,16 +242,6 @@ public class PaginaProfilo implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ModificaPassword.fxml"));
             Parent modificaPasswordRoot = fxmlLoader.load();
 
-            ModificaPassword modificaPasswordController = fxmlLoader.getController();
-
-            Integer userId = Session.getUserId();
-            if (userId != null) {
-                modificaPasswordController.setUtenteCorrenteId(userId.toString());
-            } else {
-                System.err.println("[ERROR - PaginaProfilo] ID utente non disponibile dalla Sessione per ModificaPassword.");
-                showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile modificare la password", "ID utente non disponibile. Riprova il login.");
-            }
-
             Stage modificaPasswordStage = new Stage();
             modificaPasswordStage.setTitle("Modifica Password");
             modificaPasswordStage.setScene(new Scene(modificaPasswordRoot));
@@ -310,16 +295,6 @@ public class PaginaProfilo implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/BMI.fxml"));
             Parent bmiRoot = fxmlLoader.load();
-
-            BMI bmiController = fxmlLoader.getController();
-
-            Integer userId = Session.getUserId();
-            if (userId != null) {
-                bmiController.setUtenteCorrenteId(userId.toString());
-            } else {
-                System.err.println("[ERROR - PaginaProfilo] ID utente non disponibile dalla Sessione per BMI.");
-                showAlert(Alert.AlertType.ERROR, "Errore", "Impossibile calcolare il BMI", "ID utente non disponibile. Riprova il login.");
-            }
 
             Stage bmiStage = new Stage();
             bmiStage.setTitle("Calcolo BMI");
