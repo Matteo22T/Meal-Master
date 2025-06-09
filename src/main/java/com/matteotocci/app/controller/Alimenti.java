@@ -1,5 +1,6 @@
 package com.matteotocci.app.controller;
 
+import com.matteotocci.app.model.LoginModel;
 import com.matteotocci.app.model.Alimento;
 import com.matteotocci.app.model.SQLiteConnessione;
 import com.matteotocci.app.model.Session; // Importa la classe Session
@@ -25,6 +26,10 @@ import java.sql.*;
 import java.util.Optional; // Necessario per showAlert
 
 public class Alimenti {
+
+    public LoginModel loginModel = new LoginModel();
+    String email = loginModel.getEmail(Session.getUserId());
+    String ruolo = loginModel.getRuoloUtente(email);
 
     @FXML private Button BottoneAlimenti;
     @FXML private ComboBox<String> categoriaComboBox;
@@ -348,8 +353,17 @@ public class Alimenti {
 
     @FXML
     private void AccessoAlimenti(ActionEvent event) {
+        String fxmlPath;
+        if (ruolo.equalsIgnoreCase("nutrizionista")) {
+            fxmlPath = "/com/matteotocci/app/AlimentiNutrizionista.fxml";
+        } else if (ruolo.equalsIgnoreCase("cliente")) {
+            fxmlPath = "/com/matteotocci/app/Alimenti.fxml";
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            return;
+        }
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = fxmlLoader.load();
             // Alimenti si inizializza da sola dalla Sessione, non serve passare l'ID
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -363,8 +377,17 @@ public class Alimenti {
 
     @FXML
     private void AccessoRicette(ActionEvent event) {
+        String fxmlPath;
+        if (ruolo.equalsIgnoreCase("nutrizionista")) {
+            fxmlPath = "/com/matteotocci/app/RicetteNutrizionista.fxml";
+        } else if (ruolo.equalsIgnoreCase("cliente")) {
+            fxmlPath = "/com/matteotocci/app/Ricette.fxml";
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            return;
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Ricette.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
             // Ricette si inizializza da sola dalla Sessione, non serve passare l'ID
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -376,12 +399,23 @@ public class Alimenti {
         }
     }
 
+
+
     @FXML
     private void AccessoHome(ActionEvent event) {
+
+        String fxmlPath;
+        if (ruolo.equalsIgnoreCase("nutrizionista")) {
+            fxmlPath = "/com/matteotocci/app/HomePageNutrizionista.fxml";
+        } else if (ruolo.equalsIgnoreCase("cliente")) {
+            fxmlPath = "/com/matteotocci/app/HomePage.fxml";
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            return;
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
-            // HomePage si inizializza da sola dalla Sessione, non serve passare l'ID
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -393,8 +427,17 @@ public class Alimenti {
 
     @FXML
     private void AccessoProfilo(MouseEvent event) {
+        String fxmlPath;
+        if (ruolo.equalsIgnoreCase("nutrizionista")) {
+            fxmlPath = "/com/matteotocci/app/ProfiloNutrizionista.fxml";
+        } else if (ruolo.equalsIgnoreCase("cliente")) {
+            fxmlPath = "/com/matteotocci/app/PaginaProfilo.fxml";
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            return;
+        }
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = fxmlLoader.load();
             // PaginaProfilo si inizializza da sola dalla Sessione, non serve passare l'ID
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -445,6 +488,21 @@ public class Alimenti {
             System.out.println("DEBUG (HomePage): Nessuna dieta trovata per il cliente  (ID: " + Session.getUserId() + ").");
             showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata",
                     "Il cliente non ha diete assegnate o non è stato possibile recuperarle.");
+        }
+    }
+
+    @FXML
+    private void AccessoDieta(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DietaNutrizionista.fxml"));
+            Parent dietaRoot = fxmlLoader.load();
+            Stage dietaStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            dietaStage.setScene(new Scene(dietaRoot));
+            dietaStage.setTitle("Diete Nutrizionista"); // Titolo più specifico
+            dietaStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.", "Verificare il percorso del file FXML.");
         }
     }
 }

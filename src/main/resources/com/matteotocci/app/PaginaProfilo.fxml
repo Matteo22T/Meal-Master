@@ -40,7 +40,7 @@
                         </VBox>
                     </children>
                 </HBox>
-                <VBox styleClass="nav-menu">
+                <VBox spacing="5.0" styleClass="nav-menu">
                     <children>
                         <Button fx:id="homePageButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#vaiAllaHomePage" prefHeight="50.0" styleClass="nav-button" text="🏠 Home Page" />
                         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoRicette" prefHeight="50.0" styleClass="nav-button" text="📖 Ricette" />

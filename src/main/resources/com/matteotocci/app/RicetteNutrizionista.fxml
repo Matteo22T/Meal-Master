@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<AnchorPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/Ricette-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.RicetteNutrizionista">
+<AnchorPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/Ricette-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.Ricette">
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -51,8 +51,8 @@
                         <VBox prefHeight="400.0" prefWidth="200.0" spacing="5.0" styleClass="nav-menu">
                             <children>
                                 <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoHome" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="Clienti" />
-                                <Button fx:id="BottoneAlimenti" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="🥗 Alimenti" />
-                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button,nav-button-active" text="📖 Ricette">
+                                <Button fx:id="BottoneAlimenti" mnemonicParsing="false" prefHeight="50.0" onAction="#AccessoAlimenti" prefWidth="180.0" styleClass="nav-button" text="🥗 Alimenti" />
+                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" onAction="#AccessoRicette" prefWidth="180.0" styleClass="nav-button,nav-button-active" text="📖 Ricette">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />
                                     </cursor>

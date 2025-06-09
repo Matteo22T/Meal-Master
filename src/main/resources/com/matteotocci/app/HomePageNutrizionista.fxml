@@ -50,7 +50,7 @@
                         <VBox spacing="5.0" styleClass="nav-menu" VBox.vgrow="ALWAYS">
                             <children>
                                 <Button maxWidth="Infinity" mnemonicParsing="false" prefHeight="50.0" styleClass="nav-button,nav-button-active" text="👥 Clienti" />
-                                <Button maxWidth="Infinity" mnemonicParsing="false" prefHeight="50.0" styleClass="nav-button" text="🥗 Alimenti" />
+                                <Button maxWidth="Infinity" mnemonicParsing="false" prefHeight="50.0" onAction="#AccessoAlimenti" styleClass="nav-button" text="🥗 Alimenti" />
                                 <Button fx:id="BottoneRicette" maxWidth="Infinity" mnemonicParsing="false" onAction="#AccessoRicetteNutrizionista" prefHeight="50.0" styleClass="nav-button" text="Ricette">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />

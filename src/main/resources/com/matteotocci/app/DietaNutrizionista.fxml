@@ -38,7 +38,7 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Button>
-                        <Button fx:id="BottoneAlimenti" mnemonicParsing="false" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Alimenti">
+                        <Button fx:id="BottoneAlimenti" mnemonicParsing="false" prefHeight="80.0" onAction="#AccessoAlimenti" prefWidth="212.0" styleClass="sidebar-button-active" text="Alimenti">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>

@@ -58,6 +58,22 @@ public class LoginModel {
         return null;
     }
 
+    public String getEmail(Integer id){
+        String query = "SELECT Email FROM Utente WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("Email");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+
+    }
+
     public boolean registraUtente(String nome, String cognome, String email, String password, String ruolo) {
         String query = "INSERT INTO Utente (nome, cognome, email, password, ruolo) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement ps = null;

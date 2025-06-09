@@ -1,9 +1,6 @@
 package com.matteotocci.app.controller;
 
-import com.matteotocci.app.model.Dieta;
-import com.matteotocci.app.model.Ricetta;
-import com.matteotocci.app.model.SQLiteConnessione;
-import com.matteotocci.app.model.Session;
+import com.matteotocci.app.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -41,6 +38,11 @@ public class Ricette {
     private boolean isLoading = false;
 
     private Dieta dietaAssegnata;
+
+    public LoginModel loginModel = new LoginModel();
+    String email = loginModel.getEmail(Session.getUserId());
+    String ruolo = loginModel.getRuoloUtente(email);
+
 
 
 
@@ -309,54 +311,77 @@ public class Ricette {
     // Cambia scena a Alimenti, passando l'ID utente
     @FXML
     private void AccessoAlimenti(ActionEvent event) {
+        String fxmlPath;
+        if (ruolo.equalsIgnoreCase("nutrizionista")) {
+            fxmlPath = "/com/matteotocci/app/AlimentiNutrizionista.fxml";
+        } else if (ruolo.equalsIgnoreCase("cliente")) {
+            fxmlPath = "/com/matteotocci/app/Alimenti.fxml";
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            return;
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
-            Parent root = loader.load();
-
-
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = fxmlLoader.load();
+            // Alimenti si inizializza da sola dalla Sessione, non serve passare l'ID
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la pagina Alimenti", "Verificare il percorso FXML.");
         }
     }
 
     // Cambia scena a HomePage, passando l'ID utente
     @FXML
     private void AccessoHome(ActionEvent event) {
+
+        String fxmlPath;
+        if (ruolo.equalsIgnoreCase("nutrizionista")) {
+            fxmlPath = "/com/matteotocci/app/HomePageNutrizionista.fxml";
+        } else if (ruolo.equalsIgnoreCase("cliente")) {
+            fxmlPath = "/com/matteotocci/app/HomePage.fxml";
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            return;
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/HomePage.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
-
-
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la HomePage", "Verificare il percorso FXML.");
         }
     }
 
     // Cambia scena a PaginaProfilo passando l'ID utente
     @FXML
     private void AccessoProfilo(MouseEvent event) {
+        String fxmlPath;
+        if (ruolo.equalsIgnoreCase("nutrizionista")) {
+            fxmlPath = "/com/matteotocci/app/ProfiloNutrizionista.fxml";
+        } else if (ruolo.equalsIgnoreCase("cliente")) {
+            fxmlPath = "/com/matteotocci/app/PaginaProfilo.fxml";
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            return;
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
-            Parent root = loader.load();
-
-
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = fxmlLoader.load();
+            // PaginaProfilo si inizializza da sola dalla Sessione, non serve passare l'ID
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la Pagina Profilo", "Verificare il percorso FXML.");
         }
     }
-
     @FXML
     private void handleApriAggiuntaRicetta(ActionEvent event) {
         try {
@@ -375,7 +400,44 @@ public class Ricette {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void AccessoDieta(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DietaNutrizionista.fxml"));
+            Parent dietaRoot = fxmlLoader.load();
+            Stage dietaStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            dietaStage.setScene(new Scene(dietaRoot));
+            dietaStage.setTitle("Diete Nutrizionista"); // Titolo più specifico
+            dietaStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.", "Verificare il percorso del file FXML.");
+        }
+    }
 
+    @FXML
+    private void AccessoRicette(ActionEvent event) {
+        String fxmlPath;
+        if (ruolo.equalsIgnoreCase("nutrizionista")) {
+            fxmlPath = "/com/matteotocci/app/RicetteNutrizionista.fxml";
+        } else if (ruolo.equalsIgnoreCase("cliente")) {
+            fxmlPath = "/com/matteotocci/app/Ricette.fxml";
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+            // Ricette si inizializza da sola dalla Sessione, non serve passare l'ID
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la pagina Ricette", "Verificare il percorso FXML.");
+        }
+    }
 
     private void showAlert(Alert.AlertType type, String title, String header, String content) {
         Alert alert = new Alert(type);

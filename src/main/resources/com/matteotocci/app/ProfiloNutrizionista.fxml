@@ -31,7 +31,7 @@
                     </children>
                 </HBox>
                 <Button fx:id="ClientiButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#vaiAiClienti" prefHeight="60.0" style="-fx-cursor: hand;" text="Clienti" />
-                <Button fx:id="BottoneAlimenti" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="70.0" style="-fx-cursor: hand;" text="Alimenti" />
+                <Button fx:id="BottoneAlimenti" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="70.0" style="-fx-cursor: hand;" text="Alimenti" />
                 <Button fx:id="BottoneRicette" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoRicette" prefHeight="65.0" style="-fx-cursor: hand;" text="Ricette" />
             <Button fx:id="BottoneDieta" layoutX="10.0" layoutY="131.0" maxWidth="1.7976931348623157E308" onAction="#AccessoDieta" mnemonicParsing="false" prefHeight="70.0" style="-fx-cursor: hand;" text="Diete" />
             </children>
