@@ -17,6 +17,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -104,7 +106,9 @@ public class HomePage {
                             targetGrassi = (int) Math.round(giornoSelezionato.getGrassi());
                             targetCarboidrati = (int) Math.round(giornoSelezionato.getCarboidrati());
 
-                            labelKcal.setText(Math.round(giornoSelezionato.getKcal()) + " kcal");
+                            String kcalText = Math.round(giornoSelezionato.getKcal()) + " kcal";
+                            labelKcal.setText(kcalText);
+                            AggiustaFontSize(labelKcal, kcalText);
                             labelProteine.setText(targetProteine + " g");
                             labelCarboidrati.setText(targetCarboidrati + " g");
                             labelGrassi.setText(targetGrassi + " g");
@@ -121,7 +125,10 @@ public class HomePage {
                     if (comboGiorniDieta != null) {
                         comboGiorniDieta.getItems().clear();
                     }
-                    labelKcal.setText("0 kcal");
+                    String kcalText = "0 kcal";
+                    labelKcal.setText(kcalText);
+                    AggiustaFontSize(labelKcal, kcalText);
+
                     labelProteine.setText("0 g");
                     labelCarboidrati.setText("0 g");
                     labelGrassi.setText("0 g");
@@ -135,7 +142,10 @@ public class HomePage {
             System.out.println("[DEBUG - HomePage] Session.getUserId() è null. Utente non loggato o sessione non impostata.");
             showAlert(Alert.AlertType.WARNING, "Accesso Negato", "Utente non loggato",
                     "Per accedere, è necessario effettuare il login.");
-            labelKcal.setText("0 kcal");
+            String kcalText = "0 kcal";
+            labelKcal.setText(kcalText);
+            AggiustaFontSize(labelKcal, kcalText);
+
             labelProteine.setText("0 g");
             labelCarboidrati.setText("0 g");
             labelGrassi.setText("0 g");
@@ -158,7 +168,9 @@ public class HomePage {
                         targetGrassi = (int) Math.round(newVal.getGrassi());
                         targetCarboidrati = (int) Math.round(newVal.getCarboidrati());
 
-                        labelKcal.setText(Math.round(newVal.getKcal()) + " kcal");
+                        String kcalText = Math.round(newVal.getKcal()) + " kcal";
+                        labelKcal.setText(kcalText);
+                        AggiustaFontSize(labelKcal, kcalText);
                         labelProteine.setText(targetProteine + " g");
                         labelCarboidrati.setText(targetCarboidrati + " g");
                         labelGrassi.setText(targetGrassi + " g");
@@ -166,7 +178,10 @@ public class HomePage {
                         // CORREZIONE: Aggiorna i dati quando cambia la selezione
                         aggiornaLabelKcalPerPasto();
                     } else {
-                        labelKcal.setText("0 kcal");
+                        String kcalText = "0 kcal";
+                        labelKcal.setText(kcalText);
+                        AggiustaFontSize(labelKcal, kcalText);
+
                         labelProteine.setText("0 g");
                         labelCarboidrati.setText("0 g");
                         labelGrassi.setText("0 g");
@@ -196,7 +211,10 @@ public class HomePage {
                         targetGrassi = (int) Math.round(newVal.getGrassi());
                         targetCarboidrati = (int) Math.round(newVal.getCarboidrati());
 
-                        labelKcal.setText(Math.round(newVal.getKcal()) + " kcal");
+                        String kcalText = Math.round(newVal.getKcal()) + " kcal";
+                        labelKcal.setText(kcalText);
+                        AggiustaFontSize(labelKcal, kcalText);
+
                         labelProteine.setText(targetProteine + " g");
                         labelCarboidrati.setText(targetCarboidrati + " g");
                         labelGrassi.setText(targetGrassi + " g");
@@ -204,7 +222,10 @@ public class HomePage {
                         // Aggiorna i dati per il nuovo giorno
                         aggiornaLabelKcalPerPasto();
                     } else {
-                        labelKcal.setText("0 kcal");
+                        String kcalText = "0 kcal";
+                        labelKcal.setText(kcalText);
+                        AggiustaFontSize(labelKcal, kcalText);
+
                         labelProteine.setText("0 g");
                         labelCarboidrati.setText("0 g");
                         labelGrassi.setText("0 g");
@@ -288,7 +309,6 @@ public class HomePage {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
             Parent profileRoot = fxmlLoader.load();
-            PaginaProfilo profileController = fxmlLoader.getController();
 
 
             Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -297,6 +317,52 @@ public class HomePage {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    @FXML
+    private void AccessoPastiGiornalieri(MouseEvent event) {
+        try {
+            // Carica il file FXML per PastiGiornalieri
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PastiGiornalieri.fxml"));
+            Parent pastiGiornalieriRoot = fxmlLoader.load();
+            PastiGiornalieri pastiGiornalieriController = fxmlLoader.getController();
+            pastiGiornalieriController.setHomePageController(this); // 'this' si riferisce all'istanza attuale di HomePage
+
+
+
+            // Crea un NUOVO Stage (finestra) per PastiGiornalieri
+            Stage pastiGiornalieriStage = new Stage();
+
+            // Ottieni lo Stage corrente (la tua HomePage)
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Imposta il proprietario del nuovo Stage. Questo lo rende "figlio" della HomePage.
+            pastiGiornalieriStage.initOwner(currentStage);
+
+            // Imposta la modalità modale.
+            // APPLICATION_MODAL blocca l'interazione con TUTTE le altre finestre dell'applicazione.
+            // WINDOW_MODAL blocca solo l'interazione con la finestra proprietaria (HomePage).
+            // Per la tua esigenza "senza poter interagire con quella sotto", APPLICATION_MODAL è più robusto.
+            pastiGiornalieriStage.initModality(Modality.APPLICATION_MODAL);
+
+            pastiGiornalieriStage.setTitle("Pasti Giornalieri"); // Imposta un titolo per la nuova finestra
+            pastiGiornalieriStage.setScene(new Scene(pastiGiornalieriRoot));
+
+            // Mostra il nuovo Stage e attendi che venga chiuso.
+            // Questo blocca l'interazione con la finestra proprietaria (HomePage)
+            // finché PastiGiornalieriStage non viene chiuso.
+            pastiGiornalieriStage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Mostra un messaggio di errore se il caricamento fallisce
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore di Caricamento");
+            alert.setHeaderText("Impossibile caricare la pagina Pasti Giornalieri.");
+            alert.setContentText("Verifica che il file FXML esista e il percorso sia corretto: /com/matteotocci/app/PastiGiornalieri.fxml");
+            alert.showAndWait();
         }
     }
 
@@ -573,7 +639,9 @@ public class HomePage {
             }
 
             // Aggiorna i totali correnti
-            labelKcalCorrenti.setText(totaleKcal + " /");
+            String kcalCorrentiText = totaleKcal + " /";
+            labelKcalCorrenti.setText(kcalCorrentiText);
+            AggiustaFontSize(labelKcalCorrenti, kcalCorrentiText);
             labelProteineCorrenti.setText(totaleProteine + " /");
             labelCarboidratiCorrenti.setText(totaleCarboidrati + " /");
             labelGrassiCorrenti.setText(totaleGrassi + " /");
@@ -679,7 +747,9 @@ public class HomePage {
         cenaKcalLabel.setText("0 kcal");
 
         // Reset label correnti
-        labelKcalCorrenti.setText("0 /");
+        String kcalCorrentiText = "0 /";
+        labelKcalCorrenti.setText(kcalCorrentiText);
+        AggiustaFontSize(labelKcalCorrenti, kcalCorrentiText);
         labelProteineCorrenti.setText("0 /");
         labelCarboidratiCorrenti.setText("0 /");
         labelGrassiCorrenti.setText("0 /");
@@ -742,6 +812,26 @@ public class HomePage {
 
 
 
+
+    private void AggiustaFontSize(Label label, String text) {
+        double maxWidth = 70.0;
+        Font currentFont = label.getFont();
+
+        // Calcola la larghezza del testo
+        Text textNode = new Text(text);
+        textNode.setFont(currentFont);
+        double textWidth = textNode.getBoundsInLocal().getWidth();
+
+        // Se il testo è troppo largo, riduci il font
+        if (textWidth > maxWidth) {
+            double ratio = maxWidth / textWidth;
+            double newSize = currentFont.getSize() * ratio * 0.9; // 0.9 per margine di sicurezza
+            newSize = Math.max(newSize, 12); // Font minimo 12px
+            System.out.println(label.getFont());
+            label.setFont(Font.font(currentFont.getFamily(), newSize));
+            System.out.println(label.getFont());
+        }
+    }
 
 
 

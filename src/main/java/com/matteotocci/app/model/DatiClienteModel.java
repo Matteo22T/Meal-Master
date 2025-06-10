@@ -24,18 +24,19 @@ public class DatiClienteModel {
 
 
     public boolean registraCliente(double altezza, double peso, LocalDate dataDiNascita, String livelloAttivita, String sesso, int idNutrizionista, int idUtente){
-        String query = "INSERT INTO Clienti (altezza_cm, peso_kg, data_di_nascita, livello_attivita, sesso , id_nutrizionista, id_cliente) VALUES (?, ?, ?, ?, ?,?,?)";
-        PreparedStatement ps = null; // Inizializza a null prima del try
+        String query = "INSERT INTO Clienti (id_cliente, altezza_cm, peso_kg, livello_attivita, data_di_nascita, id_nutrizionista, sesso  ) VALUES (?, ?, ?, ?, ?,?,?)";
+        PreparedStatement ps = null;
         try {
             ps = conn.prepareStatement(query);
-            ps.setDouble(1, altezza);
-            ps.setDouble(2, peso);
-            ps.setString(3, dataDiNascita.toString());
+            ps.setDouble(2, altezza);
+            ps.setDouble(3, peso);
+            ps.setString(5, dataDiNascita.toString());
             ps.setString(4, livelloAttivita);
-            ps.setString(5, sesso);
+            ps.setString(7, sesso);
             ps.setInt(6, idNutrizionista);
-            ps.setInt(7, idUtente);
+            ps.setInt(1, idUtente);
             int rowsAffected = ps.executeUpdate();
+            System.out.println(rowsAffected);
             if (rowsAffected > 0) {
                 System.out.println("Utente registrato con successo nel database."); // Aggiungi un log di successo
                 return true;

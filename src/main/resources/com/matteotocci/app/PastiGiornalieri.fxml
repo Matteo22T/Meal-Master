@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.geometry.Insets?>
+<VBox styleClass="main-container" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.PastiGiornalieri">
+    <children>
+        <!-- Header con titolo e controlli data -->
+        <BorderPane>
+            <center>
+                <HBox alignment="CENTER" spacing="20.0" styleClass="header-section">
+                    <children>
+                        <Button fx:id="btnPrecedente" mnemonicParsing="false" onAction="#onPrecedenteClick" prefHeight="35.0" prefWidth="120.0" styleClass="nav-button" text="← Precedente" />
+
+                        <VBox alignment="CENTER" spacing="5.0" styleClass="date-container">
+                            <children>
+                                <Label fx:id="lblDataCorrente" styleClass="current-date-label" text="Oggi - 10/06/2025" />
+                                <DatePicker fx:id="datePicker" onAction="#onDataSelezionata" prefHeight="30.0" prefWidth="150.0" styleClass="date-picker" />
+                            </children>
+                        </VBox>
+
+                        <Button fx:id="btnSuccessivo" mnemonicParsing="false" onAction="#onSuccessivoClick" prefHeight="35.0" prefWidth="120.0" styleClass="nav-button" text="Successivo →" />
+                    </children>
+                </HBox>
+            </center>
+            <right>
+                <Button fx:id="btnClose" mnemonicParsing="false" onAction="#handleCloseButtonAction" styleClass="close-button" text="✖" BorderPane.alignment="TOP_RIGHT">
+                    <padding>
+                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                    </padding>
+                    <BorderPane.margin>
+                        <Insets right="10.0" top="10.0" />
+                    </BorderPane.margin>
+                </Button>
+            </right>
+        </BorderPane>
+
+        <!-- Riepilogo nutrizionale giornaliero -->
+        <HBox alignment="CENTER" spacing="30.0" styleClass="stats-section">
+            <children>
+                <VBox alignment="CENTER" spacing="5.0" styleClass="calorie-summary">
+                    <children>
+                        <Label styleClass="summary-label" text="CALORIE TOTALI" />
+                        <Label fx:id="lblCalorieTotali" styleClass="calorie-value" text="0 kcal" />
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER" spacing="5.0" styleClass="macro-summary">
+                    <children>
+                        <Label styleClass="summary-label" text="PROTEINE" />
+                        <Label fx:id="lblProteineTotali" styleClass="protein-value" text="0g" />
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER" spacing="5.0" styleClass="macro-summary">
+                    <children>
+                        <Label styleClass="summary-label" text="CARBOIDRATI" />
+                        <Label fx:id="lblCarboidratiTotali" styleClass="carb-value" text="0g" />
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER" spacing="5.0" styleClass="macro-summary">
+                    <children>
+                        <Label styleClass="summary-label" text="GRASSI" />
+                        <Label fx:id="lblGrassiTotali" styleClass="fat-value" text="0g" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <!-- Contenuto principale con i pasti -->
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
+            <content>
+                <VBox fx:id="vboxPasti" spacing="10.0" styleClass="meals-container">
+
+                    <!-- Colazione -->
+                    <VBox spacing="10.0" styleClass="meal-section">
+                        <children>
+                            <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="meal-header">
+                                <children>
+                                    <Label styleClass="meal-title" text="🌅 COLAZIONE" />
+                                    <Separator prefWidth="200.0" styleClass="meal-separator" HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="lblKcalColazione" styleClass="meal-calories" text="0 kcal" />
+                                </children>
+                            </HBox>
+                            <TableView fx:id="tableColazione" prefHeight="120.0" styleClass="meal-table">
+                                <columns>
+                                    <TableColumn fx:id="colColazioneAlimento" prefWidth="200.0" text="Alimento/Ricetta" />
+                                    <TableColumn fx:id="colColazioneQuantita" prefWidth="100.0" text="Quantità (g)" />
+                                    <TableColumn fx:id="colColazioneKcal" prefWidth="80.0" text="Kcal" />
+                                    <TableColumn fx:id="colColazioneProteine" prefWidth="80.0" text="Proteine" />
+                                    <TableColumn fx:id="colColazioneCarboidrati" prefWidth="100.0" text="Carboidrati" />
+                                    <TableColumn fx:id="colColazioneGrassi" prefWidth="80.0" text="Grassi" />
+                                    <TableColumn fx:id="colColazioneAzioni" prefWidth="120.0" text="Azioni" />
+                                </columns>
+                            </TableView>
+                        </children>
+                    </VBox>
+
+                    <!-- Spuntino -->
+                    <VBox spacing="10.0" styleClass="meal-section">
+                        <children>
+                            <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="meal-header">
+                                <children>
+                                    <Label styleClass="meal-title" text="🍎 SPUNTINO" />
+                                    <Separator prefWidth="200.0" styleClass="meal-separator" HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="lblKcalSpuntino" styleClass="meal-calories" text="0 kcal" />
+                                </children>
+                            </HBox>
+                            <TableView fx:id="tableSpuntino" prefHeight="120.0" styleClass="meal-table">
+                                <columns>
+                                    <TableColumn fx:id="colSpuntinoAlimento" prefWidth="200.0" text="Alimento/Ricetta" />
+                                    <TableColumn fx:id="colSpuntinoQuantita" prefWidth="100.0" text="Quantità (g)" />
+                                    <TableColumn fx:id="colSpuntinoKcal" prefWidth="80.0" text="Kcal" />
+                                    <TableColumn fx:id="colSpuntinoProteine" prefWidth="80.0" text="Proteine" />
+                                    <TableColumn fx:id="colSpuntinoCarboidrati" prefWidth="100.0" text="Carboidrati" />
+                                    <TableColumn fx:id="colSpuntinoGrassi" prefWidth="80.0" text="Grassi" />
+                                    <TableColumn fx:id="colSpuntinoAzioni" prefWidth="120.0" text="Azioni" />
+                                </columns>
+                            </TableView>
+                        </children>
+                    </VBox>
+
+                    <!-- Pranzo -->
+                    <VBox spacing="10.0" styleClass="meal-section">
+                        <children>
+                            <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="meal-header">
+                                <children>
+                                    <Label styleClass="meal-title" text="🍽️ PRANZO" />
+                                    <Separator prefWidth="200.0" styleClass="meal-separator" HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="lblKcalPranzo" styleClass="meal-calories" text="0 kcal" />
+                                </children>
+                            </HBox>
+                            <TableView fx:id="tablePranzo" prefHeight="120.0" styleClass="meal-table">
+                                <columns>
+                                    <TableColumn fx:id="colPranzoAlimento" prefWidth="200.0" text="Alimento/Ricetta" />
+                                    <TableColumn fx:id="colPranzoQuantita" prefWidth="100.0" text="Quantità (g)" />
+                                    <TableColumn fx:id="colPranzoKcal" prefWidth="80.0" text="Kcal" />
+                                    <TableColumn fx:id="colPranzoProteine" prefWidth="80.0" text="Proteine" />
+                                    <TableColumn fx:id="colPranzoCarboidrati" prefWidth="100.0" text="Carboidrati" />
+                                    <TableColumn fx:id="colPranzoGrassi" prefWidth="80.0" text="Grassi" />
+                                    <TableColumn fx:id="colPranzoAzioni" prefWidth="120.0" text="Azioni" />
+                                </columns>
+                            </TableView>
+                        </children>
+                    </VBox>
+
+                    <!-- Merenda -->
+                    <VBox spacing="10.0" styleClass="meal-section">
+                        <children>
+                            <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="meal-header">
+                                <children>
+                                    <Label styleClass="meal-title" text="🧁 MERENDA" />
+                                    <Separator prefWidth="200.0" styleClass="meal-separator" HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="lblKcalMerenda" styleClass="meal-calories" text="0 kcal" />
+                                </children>
+                            </HBox>
+                            <TableView fx:id="tableMerenda" prefHeight="120.0" styleClass="meal-table">
+                                <columns>
+                                    <TableColumn fx:id="colMerendaAlimento" prefWidth="200.0" text="Alimento/Ricetta" />
+                                    <TableColumn fx:id="colMerendaQuantita" prefWidth="100.0" text="Quantità (g)" />
+                                    <TableColumn fx:id="colMerendaKcal" prefWidth="80.0" text="Kcal" />
+                                    <TableColumn fx:id="colMerendaProteine" prefWidth="80.0" text="Proteine" />
+                                    <TableColumn fx:id="colMerendaCarboidrati" prefWidth="100.0" text="Carboidrati" />
+                                    <TableColumn fx:id="colMerendaGrassi" prefWidth="80.0" text="Grassi" />
+                                    <TableColumn fx:id="colMerendaAzioni" prefWidth="120.0" text="Azioni" />
+                                </columns>
+                            </TableView>
+                        </children>
+                    </VBox>
+
+                    <!-- Cena -->
+                    <VBox spacing="10.0" styleClass="meal-section">
+                        <children>
+                            <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="meal-header">
+                                <children>
+                                    <Label styleClass="meal-title" text="🌙 CENA" />
+                                    <Separator prefWidth="200.0" styleClass="meal-separator" HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="lblKcalCena" styleClass="meal-calories" text="0 kcal" />
+                                </children>
+                            </HBox>
+                            <TableView fx:id="tableCena" prefHeight="120.0" styleClass="meal-table">
+                                <columns>
+                                    <TableColumn fx:id="colCenaAlimento" prefWidth="200.0" text="Alimento/Ricetta" />
+                                    <TableColumn fx:id="colCenaQuantita" prefWidth="100.0" text="Quantità (g)" />
+                                    <TableColumn fx:id="colCenaKcal" prefWidth="80.0" text="Kcal" />
+                                    <TableColumn fx:id="colCenaProteine" prefWidth="80.0" text="Proteine" />
+                                    <TableColumn fx:id="colCenaCarboidrati" prefWidth="100.0" text="Carboidrati" />
+                                    <TableColumn fx:id="colCenaGrassi" prefWidth="80.0" text="Grassi" />
+                                    <TableColumn fx:id="colCenaAzioni" prefWidth="120.0" text="Azioni" />
+                                </columns>
+                            </TableView>
+                        </children>
+                    </VBox>
+
+                </VBox>
+            </content>
+        </ScrollPane>
+
+    </children>
+
+    <!-- Impostazioni dimensioni finestra -->
+    <prefWidth>1100.0</prefWidth>
+    <prefHeight>700.0</prefHeight>
+    <minWidth>900.0</minWidth>
+    <minHeight>600.0</minHeight>
+
+</VBox>

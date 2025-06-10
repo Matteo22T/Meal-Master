@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Point3D?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -11,11 +12,9 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Arc?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.geometry.Point3D?>
 <AnchorPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/HomePage-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.HomePage">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -71,18 +70,23 @@
                         <!-- CONTATORE CALORIE -->
                         <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="calories-container">
                            <children>
-                              <Circle fill="#4F7942" radius="60.0" styleClass="calories-circle" />
-                              <Circle fill="#ffffff00" radius="55.0" stroke="#4F7942" strokeType="INSIDE" strokeWidth="8.0" styleClass="calories-progress" />
-                              <VBox alignment="CENTER" prefHeight="120.0" prefWidth="120.0">
+                              <Circle fill="TRANSPARENT" radius="60.0" stroke="#E0E0E0" strokeType="INSIDE" strokeWidth="13.0" />
+                              <Circle fill="TRANSPARENT" radius="60.0" stroke="#4F7942" strokeDashArray="376.990" strokeDashOffset="376.990" strokeType="INSIDE" strokeWidth="13.0" styleClass="progress-circle">
+                                    <rotationAxis>
+                                       <Point3D x="0.0" y="0.0" z="1.0" />
+                                    </rotationAxis>
+                                    <rotate>-90</rotate>
+                              </Circle>
+                                 <VBox alignment="CENTER" prefHeight="120.0" prefWidth="120.0">
                                  <children>
-                                    <Label fx:id="labelKcalCorrenti" alignment="CENTER" contentDisplay="CENTER" prefHeight="33.0" prefWidth="76.0" styleClass="calories-number" text="0/">
+                                    <Label fx:id="labelKcalCorrenti" alignment="CENTER" contentDisplay="CENTER" maxWidth="70.0" prefHeight="33.0" styleClass="calories-number" text="0/">
                                        <font>
-                                          <Font name="Segoe UI" size="28.0" />
+                                          <Font name="Segoe UI" size="24.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="labelKcal" alignment="CENTER" styleClass="calories-number" text="0 kcal">
+                                    <Label fx:id="labelKcal" alignment="CENTER" maxWidth="70.0" styleClass="calories-number" text="0 kcal">
                                        <font>
-                                          <Font name="Segoe UI Bold" size="28.0" />
+                                          <Font name="Segoe UI" size="24.0" />
                                        </font>
                                     </Label>
                                  </children>
@@ -108,7 +112,7 @@
                                                 <!-- Cerchio di sfondo (grigio) -->
                                                 <Circle fill="TRANSPARENT" radius="28.0" stroke="#E0E0E0" strokeType="INSIDE" strokeWidth="6.0" />
                                                 <!-- Cerchio di progresso -->
-                                                <Circle fx:id="proteineProgressCircle" fill="TRANSPARENT" radius="28.0" stroke="#2196F3" strokeType="INSIDE" strokeWidth="6.0" strokeDashArray="175.929" strokeDashOffset="175.929" styleClass="progress-circle">
+                                                <Circle fx:id="proteineProgressCircle" fill="TRANSPARENT" radius="28.0" stroke="#2196F3" strokeDashArray="175.929" strokeDashOffset="175.929" strokeType="INSIDE" strokeWidth="6.0" styleClass="progress-circle">
                                                    <rotationAxis>
                                                       <Point3D x="0.0" y="0.0" z="1.0" />
                                                    </rotationAxis>
@@ -146,7 +150,7 @@
                                                 <!-- Cerchio di sfondo (grigio) -->
                                                 <Circle fill="TRANSPARENT" radius="28.0" stroke="#E0E0E0" strokeType="INSIDE" strokeWidth="6.0" />
                                                 <!-- Cerchio di progresso -->
-                                                <Circle fx:id="carboidratiProgressCircle" fill="TRANSPARENT" radius="28.0" stroke="#FFC107" strokeType="INSIDE" strokeWidth="6.0" strokeDashArray="175.929" strokeDashOffset="175.929" styleClass="progress-circle">
+                                                <Circle fx:id="carboidratiProgressCircle" fill="TRANSPARENT" radius="28.0" stroke="#FFC107" strokeDashArray="175.929" strokeDashOffset="175.929" strokeType="INSIDE" strokeWidth="6.0" styleClass="progress-circle">
                                                    <rotationAxis>
                                                       <Point3D x="0.0" y="0.0" z="1.0" />
                                                    </rotationAxis>
@@ -184,7 +188,7 @@
                                                 <!-- Cerchio di sfondo (grigio) -->
                                                 <Circle fill="TRANSPARENT" radius="28.0" stroke="#E0E0E0" strokeType="INSIDE" strokeWidth="6.0" />
                                                 <!-- Cerchio di progresso -->
-                                                <Circle fx:id="grassiProgressCircle" fill="TRANSPARENT" radius="28.0" stroke="#F44336" strokeType="INSIDE" strokeWidth="6.0" strokeDashArray="175.929" strokeDashOffset="175.929" styleClass="progress-circle">
+                                                <Circle fx:id="grassiProgressCircle" fill="TRANSPARENT" radius="28.0" stroke="#F44336" strokeDashArray="175.929" strokeDashOffset="175.929" strokeType="INSIDE" strokeWidth="6.0" styleClass="progress-circle">
                                                    <rotationAxis>
                                                       <Point3D x="0.0" y="0.0" z="1.0" />
                                                    </rotationAxis>
@@ -225,7 +229,14 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="60.0" prefWidth="800.0" spacing="15.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                              <Label fx:id="visualizzaPastiLabel" onMouseClicked="#AccessoPastiGiornalieri" prefHeight="18.0" prefWidth="142.0" text="Visualizza Pasti" textFill="#2196f3"> <font>
+                                 <Font name="Segoe UI Bold" size="14.0" />
+                              </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Region prefHeight="54.0" prefWidth="33.0" HBox.hgrow="ALWAYS" />
                               <Label alignment="CENTER" styleClass="meals-title" text="PASTI GIORNALIERI">
                                  <font>
                                     <Font name="Segoe UI Bold" size="20.0" />

@@ -104,7 +104,7 @@
 }
 
 .calories-number {
-    -fx-text-fill: white;
+    -fx-text-fill: #4F7942;
     -fx-font-weight: bold;
 }
 
@@ -619,3 +619,4 @@
     50% { -fx-effect: dropshadow(gaussian, rgba(33,150,243,0.8), 10, 0, 0, 0); }
     100% { -fx-effect: dropshadow(gaussian, rgba(33,150,243,0.4), 0, 0, 0, 0); }
 }
+

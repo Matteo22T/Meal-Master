@@ -10,19 +10,24 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AggiungiPasto {
 
@@ -126,6 +131,7 @@ public class AggiungiPasto {
 
 
     public void initialize() {
+
         immagineCol.setCellValueFactory(new PropertyValueFactory<>("immagine"));
         nomeCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
         brandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
@@ -215,7 +221,10 @@ public class AggiungiPasto {
         this.tipoPasto = tipoPasto;
         this.idCliente = idCliente;
         System.out.println("AggiungiPastoController - GiornoDieta ID: " + idGiornoDieta + ", Tipo Pasto: " + tipoPasto + ", Cliente ID: " + idCliente);
+        inizializzaContenutoDieta(idGiornoDieta,tipoPasto);
     }
+
+
 
     @FXML
     void confermaPasto(ActionEvent event) {
@@ -354,7 +363,7 @@ public class AggiungiPasto {
                     insertAlimentoStmt.setDouble(3, quantita);
                     insertAlimentoStmt.executeUpdate();
                 }
-
+                HomePageController.aggiornaLabelKcalPerPasto();
                 System.out.println("Ricetta aggiunta correttamente al pasto!");
 
             } catch (SQLException e) {
@@ -622,5 +631,184 @@ public class AggiungiPasto {
         CheckBoxAlimenti.setVisible(false);
         CheckBoxRicette.setVisible(true);
     }
+
+    public List<Node> caricaAlimentiERicette(int idGiornoDieta, String tipoPasto) {
+        List<Node> items = new ArrayList<>();
+
+        String queryAlimenti = """
+    SELECT f.nome, d.quantita_grammi, f.id  
+    FROM DietaAlimenti d
+    JOIN foods f ON d.id_alimento = f.id
+    WHERE d.id_giorno_dieta = ? AND d.pasto = ?
+    """;
+
+        String queryRicette = """
+    SELECT r.nome, d.quantita_grammi, r.id  
+    FROM DietaRicette d
+    JOIN Ricette r ON d.id_ricetta = r.id
+    WHERE d.id_giorno_dieta = ? AND d.pasto = ?
+    """;
+
+        try (Connection conn = SQLiteConnessione.connector()) {
+            // Alimenti
+            try (PreparedStatement stmt = conn.prepareStatement(queryAlimenti)) {
+                stmt.setInt(1, idGiornoDieta);
+                stmt.setString(2, tipoPasto);
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    String nome = rs.getString("nome");
+                    double quantita = rs.getDouble("quantita_grammi");
+                    int id = rs.getInt("id"); // Recupera l'ID
+                    System.out.println(nome + " " + quantita + " (ID: " + id + ")");
+                    items.add(creaBoxElemento(nome, quantita, id, false)); // Passa l'ID
+                }
+            }
+
+            // Ricette
+            try (PreparedStatement stmt = conn.prepareStatement(queryRicette)) {
+                stmt.setInt(1, idGiornoDieta);
+                stmt.setString(2, tipoPasto);
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    String nome = rs.getString("nome");
+                    double quantita = rs.getDouble("quantita_grammi");
+                    int id = rs.getInt("id"); // Recupera l'ID
+                    System.out.println(nome + " " + quantita + " (ID: " + id + ")");
+                    items.add(creaBoxElemento(nome, quantita, id, true)); // Passa l'ID
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return items;
+    }
+
+    // Modifica la firma del metodo creaBoxElemento
+    private HBox creaBoxElemento(String nome, double quantita, int idElemento, boolean isRicetta) {
+        Label nomeLabel = new Label((isRicetta ? "[Ricetta] " : "[Alimento] ") + nome);
+        Label quantitaLabel = new Label(quantita + " g");
+
+        HBox hbox = new HBox(10, nomeLabel, quantitaLabel);
+        hbox.setPadding(new Insets(5));
+        hbox.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #ccc; -fx-border-radius: 5;");
+
+        hbox.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                if (isRicetta) {
+                    cercaRicettePerId(idElemento); // Chiama un nuovo metodo per ricerca per ID
+                    mostraTabellaRicette(null);
+                } else {
+                    cercaAlimentiPerId(idElemento); // Chiama un nuovo metodo per ricerca per ID
+                    mostraTabellaAlimenti(null);
+                }
+            }
+        });
+
+        return hbox;
+    }
+
+    @FXML
+    private VBox vboxContenuto;
+
+    public void inizializzaContenutoDieta(int idGiornoDieta, String tipoPasto) {
+        System.out.println(idGiornoDieta+" "+tipoPasto);
+        vboxContenuto.getChildren().clear();
+        List<Node> elementi = caricaAlimentiERicette(idGiornoDieta, tipoPasto.toLowerCase());
+        System.out.println("Numero di elementi caricati: " + elementi.size());
+        vboxContenuto.getChildren().addAll(elementi);
+    }
+
+    private void cercaAlimentiPerId(int id) {
+        ObservableList<Alimento> alimenti = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM foods WHERE id = ?";
+
+        try (Connection conn = SQLiteConnessione.connector();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    alimenti.add(new Alimento(
+                            rs.getString("nome"),
+                            rs.getString("brand"),
+                            rs.getDouble("kcal"),
+                            rs.getDouble("proteine"),
+                            rs.getDouble("carboidrati"),
+                            rs.getDouble("grassi"),
+                            rs.getDouble("grassiSaturi"),
+                            rs.getDouble("sale"),
+                            rs.getDouble("fibre"),
+                            rs.getDouble("zuccheri"),
+                            rs.getString("immaginePiccola"),
+                            rs.getString("immagineGrande"),
+                            rs.getInt("user_id"),
+                            rs.getInt("id")
+                    ));
+                }
+                tableViewAlimenti.setItems(alimenti);
+
+                // Optional: Seleziona l'elemento nella tabella
+                if (!alimenti.isEmpty()) {
+                    tableViewAlimenti.getSelectionModel().selectFirst();
+                    tableViewAlimenti.scrollTo(alimenti.get(0));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void cercaRicettePerId(int id) {
+        ObservableList<Ricetta> ricette = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM Ricette WHERE id = ?";
+
+        try (Connection conn = SQLiteConnessione.connector();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Ricetta ricetta = new Ricetta(
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getString("descrizione"),
+                            rs.getString("categoria"),
+                            rs.getInt("id_utente"),
+                            rs.getDouble("kcal"),
+                            rs.getDouble("proteine"),
+                            rs.getDouble("carboidrati"),
+                            rs.getDouble("grassi"),
+                            rs.getDouble("grassi_saturi"),
+                            rs.getDouble("zuccheri"),
+                            rs.getDouble("fibre"),
+                            rs.getDouble("sale")
+                    );
+                    ricette.add(ricetta);
+                }
+                tableViewRicette.setItems(ricette);
+
+                // Optional: Seleziona l'elemento nella tabella
+                if (!ricette.isEmpty()) {
+                    tableViewRicette.getSelectionModel().selectFirst();
+                    tableViewRicette.scrollTo(ricette.get(0));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
 }

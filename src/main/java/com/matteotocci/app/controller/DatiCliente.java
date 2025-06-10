@@ -104,7 +104,7 @@ public class DatiCliente {
         ObservableList<String> opzioniSesso = FXCollections.observableArrayList(
                 "Maschio",
                 "Femmina",
-                "Altro/Non specificato" // O le opzioni che preferisci
+                "Altro" // O le opzioni che preferisci
         );
         genereBox.setItems(opzioniSesso);
 
@@ -171,15 +171,13 @@ public class DatiCliente {
         double peso = pesoSlider.getValue();
         LocalDate dataDiNascita = datadinascitaPicker.getValue();
         String livelloAttivita = livelloattivitàBox.getValue();
-        String sessoSelezionato = genereBox.getValue();
+        String sessoSelezionato = genereBox.getValue().toLowerCase();
         String nutrizionistaSelezionato = nutrizionistaBox.getValue();
         Integer idNutrizionista = mappaNutrizionisti.get(nutrizionistaSelezionato);
 
 
         boolean successo = datiCliente.registraCliente(altezza, peso, dataDiNascita, livelloAttivita,sessoSelezionato, idNutrizionista, idUtente);
-        // --- Fine Logica di Registrazione ---
 
-        // --- Gestione Risultato e Navigazione ---
         if (successo) {
             // Ora esegui l'azione originale di "Registrato": carica la nuova pagina
             try {
