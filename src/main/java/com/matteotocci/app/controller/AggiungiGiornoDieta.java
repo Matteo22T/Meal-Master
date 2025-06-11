@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.application.Platform; // Necessario per Platform.runLater
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -350,11 +351,9 @@ public class AggiungiGiornoDieta {
 
                 if (!rs.next()) {
                     System.err.println("Dieta non trovata. Impossibile salvare il piano.");
-                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                    errorAlert.setTitle("Errore di Salvataggio");
-                    errorAlert.setHeaderText(null);
-                    errorAlert.setContentText("Impossibile trovare la dieta. Assicurati che sia stata creata correttamente.");
-                    errorAlert.showAndWait();
+
+                    showAlert(Alert.AlertType.ERROR,"Errore di Salvataggio","Impossibile trovare la dieta. Assicurati che sia stata creata correttamente.");
+
                     return;
                 }
                 currentIdDieta = rs.getInt("id");
@@ -476,11 +475,8 @@ public class AggiungiGiornoDieta {
 
             conn.commit(); // Conferma la transazione
             System.out.println("Piano salvato correttamente.");
-            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-            successAlert.setTitle("Salvataggio Completato");
-            successAlert.setHeaderText(null);
-            successAlert.setContentText("Dieta salvata con successo!");
-            successAlert.showAndWait();
+            showAlert(Alert.AlertType.INFORMATION,"Salvataggio Completato","Dieta salvata con successo!");
+
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.close();
 
@@ -493,11 +489,8 @@ public class AggiungiGiornoDieta {
             }
             // Mostra un alert all'utente in caso di errore generale di salvataggio
             Platform.runLater(() -> {
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle("Errore di Salvataggio");
-                errorAlert.setHeaderText("Impossibile salvare il piano dieta.");
-                errorAlert.setContentText("Dettagli: " + e.getMessage());
-                errorAlert.showAndWait();
+                showAlert(Alert.AlertType.ERROR,"Errore di Salvataggio","Dettagli: " + e.getMessage());
+
             });
         } finally {
             try {
@@ -887,6 +880,33 @@ public class AggiungiGiornoDieta {
             }
         }
     }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Apply the base style class
+            // Add specific style class based on AlertType for custom styling
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Corrected error message
+        }
+
+        alert.showAndWait();
+    }
+
 
 
 }

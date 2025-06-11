@@ -15,13 +15,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="551.0" prefWidth="531.0"  stylesheets="@css/PrimaPagina-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.DatiCliente">
+<AnchorPane prefHeight="604.0" prefWidth="580.0" stylesheets="@css/PrimaPagina-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.DatiCliente">
     <children>
-        <BorderPane layoutX="51.0" prefHeight="551.0" prefWidth="478.0" >
-            <top>
-                <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <BorderPane layoutX="51.0" prefHeight="551.0" prefWidth="478.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="0.0">
+            <styleClass>
+                <String fx:value="pagina-tonda" />
+                <String fx:value="border-color" />
+                <String fx:value="container-shadow" /> </styleClass>
+            <center>
+                <AnchorPane>
                     <children>
-                        <VBox fx:id="registerBox" alignment="TOP_CENTER" prefHeight="548.0" prefWidth="476.0" spacing="15.0" styleClass="pagina-tonda">
+                        <VBox fx:id="registerBox" alignment="TOP_CENTER" prefHeight="600.0" prefWidth="478.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <children>
                                 <ImageView fitHeight="224.0" fitWidth="277.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -31,95 +35,100 @@
                                         <Insets bottom="10.0" />
                                     </VBox.margin>
                                 </ImageView>
-                        <HBox prefHeight="18.0" prefWidth="300.0" VBox.vgrow="NEVER">
-                           <children>
-                              <Label fx:id="altezzaLabel" prefHeight="18.0" prefWidth="69.0" text="0 cm" HBox.hgrow="NEVER">
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <Label fx:id="pesoLabel" prefHeight="18.0" prefWidth="85.0" text="0 kg" HBox.hgrow="NEVER">
-                                 <HBox.margin>
-                                    <Insets left="120.0" />
-                                 </HBox.margin>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="-20.0" />
-                           </VBox.margin>
-                        </HBox>
-                                <HBox alignment="CENTER" prefHeight="38.0" prefWidth="358.0" spacing="40.0">
+                                <HBox prefHeight="18.0" prefWidth="300.0" VBox.vgrow="NEVER">
                                     <children>
-                              <Slider fx:id="altezzaSlider" blockIncrement="1.0" max="250.0" min="50.0" prefHeight="14.0" prefWidth="148.0" snapToTicks="true" />
-                              <Slider fx:id="pesoSlider" blockIncrement="0.1" max="200.0" min="30.0" prefHeight="14.0" prefWidth="147.0" snapToTicks="true" />
+                              <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                              <Label fx:id="altezzaLabel" prefHeight="18.0" prefWidth="69.0" text="0 cm" />
+                                              <Slider fx:id="altezzaSlider" blockIncrement="1.0" max="250.0" min="50.0" prefHeight="14.0" prefWidth="148.0" snapToTicks="true">
+                                       <padding>
+                                          <Insets right="10.0" />
+                                       </padding>
+                                    </Slider>
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                              <Label fx:id="pesoLabel" prefHeight="18.0" prefWidth="85.0" text="0 kg" />
+                                              <Slider fx:id="pesoSlider" blockIncrement="0.1" max="200.0" min="30.0" prefHeight="14.0" prefWidth="147.0" snapToTicks="true">
+                                       <VBox.margin>
+                                          <Insets right="10.0" />
+                                       </VBox.margin>
+                                    </Slider>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </HBox.margin>
+                              </VBox>
                                     </children>
+                                    <VBox.margin>
+                                        <Insets bottom="-20.0" />
+                                    </VBox.margin>
                                 </HBox>
-                        <HBox prefHeight="18.0" prefWidth="300.0">
-                           <children>
-                              <Label text="Livello di Attività">
+                                <HBox prefHeight="18.0" prefWidth="300.0">
+                                    <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                              <Label styleClass="label-senza-id" text="Livello di Attività" />
+                                              <ChoiceBox fx:id="livelloattivitàBox" prefWidth="150.0" styleClass="box" VBox.vgrow="ALWAYS">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </ChoiceBox>
+                                 </children>
                                  <HBox.margin>
-                                    <Insets left="10.0" />
+                                    <Insets right="10.0" />
                                  </HBox.margin>
-                              </Label>
-                              <Label text="Nutrizionista">
+                              </VBox>
+                              <VBox prefHeight="87.0" prefWidth="120.0">
+                                 <children>
+                                              <Label styleClass="label-senza-id" text="Sesso" />
+                                            <ChoiceBox fx:id="genereBox" prefHeight="23.0" prefWidth="175.0" styleClass="box" />
+                                 </children>
                                  <HBox.margin>
-                                    <Insets left="100.0" />
+                                    <Insets right="10.0" />
                                  </HBox.margin>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="-20.0" top="-20.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <HBox alignment="CENTER" prefHeight="38.0" prefWidth="358.0" spacing="40.0">
-                           <children>
-                              <ChoiceBox fx:id="livelloattivitàBox" prefWidth="150.0" />
-                              <ChoiceBox fx:id="nutrizionistaBox" prefWidth="150.0" />
-                           </children>
-                        </HBox>
-                        <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="300.0">
-                           <children>
-                              <Label text="Sesso">
+                              </VBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                              <Label styleClass="label-senza-id" text="Nutrizionista" />
+                                              <ChoiceBox fx:id="nutrizionistaBox" prefWidth="150.0" styleClass="box" />
+                                 </children>
                                  <HBox.margin>
-                                    <Insets left="10.0" />
+                                    <Insets bottom="10.0" />
                                  </HBox.margin>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="-15.0" top="-20.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <ChoiceBox fx:id="genereBox" prefHeight="26.0" prefWidth="175.0" />
-                        <HBox alignment="CENTER" prefHeight="33.0" prefWidth="356.0">
-                           <children>
-                              <Label prefHeight="29.0" prefWidth="86.0" text="Data di nascita">
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="-15.0" top="-15.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <DatePicker fx:id="datadinascitaPicker" />
-                                <Button fx:id="BottoneConferma" mnemonicParsing="false" onAction="#Conferma" prefHeight="40.0" prefWidth="120.0" styleClass="bottone1" text="Conferma">
+                              </VBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets top="10.0" />
+                                    </VBox.margin>
+                                </HBox>
+                                <HBox alignment="CENTER" prefHeight="33.0" prefWidth="356.0">
+                                    <children>
+                                        <Label prefHeight="30.0" prefWidth="98.0" styleClass="label-senza-id" text="Data di nascita">
+                                            <opaqueInsets>
+                                                <Insets />
+                                            </opaqueInsets>
+                                        </Label>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="-15.0" top="-15.0" />
+                                    </VBox.margin>
+                                </HBox>
+                                <DatePicker fx:id="datadinascitaPicker" />
+                                <Button fx:id="BottoneConferma" mnemonicParsing="false" onAction="#Conferma" prefHeight="43.0" prefWidth="137.0" styleClass="bottone1" text="Conferma">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />
                                     </cursor>
                                 </Button>
                             </children>
                             <padding>
-                                <Insets left="60.0" right="60.0" top="40.0" />
+                                <Insets left="25.0" right="25.0" top="25.0" />
                             </padding>
                         </VBox>
                     </children>
                 </AnchorPane>
-            </top>
+            </center>
         </BorderPane>
     </children>
-    <styleClass>
-        <String fx:value="pagina-tonda" />
-        <String fx:value="border-color" />
-    </styleClass>
 </AnchorPane>

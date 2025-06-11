@@ -68,10 +68,12 @@ public class HomePage {
     @FXML private Circle proteineProgressCircle;
     @FXML private Circle carboidratiProgressCircle;
     @FXML private Circle grassiProgressCircle;
+    @FXML private Circle kcalProgressCircle;
 
     private int targetProteine = 0; // grammi
     private int targetCarboidrati = 0; // grammi
     private int targetGrassi = 0; // grammi
+    private int targetKcal =0;
 
     private boolean isProgrammaticChange = false;
 
@@ -106,7 +108,8 @@ public class HomePage {
                             targetGrassi = (int) Math.round(giornoSelezionato.getGrassi());
                             targetCarboidrati = (int) Math.round(giornoSelezionato.getCarboidrati());
 
-                            String kcalText = Math.round(giornoSelezionato.getKcal()) + " kcal";
+                            targetKcal = (int) Math.round(giornoSelezionato.getKcal());
+                            String kcalText= targetKcal+" kcal";
                             labelKcal.setText(kcalText);
                             AggiustaFontSize(labelKcal, kcalText);
                             labelProteine.setText(targetProteine + " g");
@@ -168,7 +171,8 @@ public class HomePage {
                         targetGrassi = (int) Math.round(newVal.getGrassi());
                         targetCarboidrati = (int) Math.round(newVal.getCarboidrati());
 
-                        String kcalText = Math.round(newVal.getKcal()) + " kcal";
+                        targetKcal = (int) Math.round(newVal.getKcal());
+                        String kcalText = targetKcal + " kcal";
                         labelKcal.setText(kcalText);
                         AggiustaFontSize(labelKcal, kcalText);
                         labelProteine.setText(targetProteine + " g");
@@ -211,7 +215,8 @@ public class HomePage {
                         targetGrassi = (int) Math.round(newVal.getGrassi());
                         targetCarboidrati = (int) Math.round(newVal.getCarboidrati());
 
-                        String kcalText = Math.round(newVal.getKcal()) + " kcal";
+                        targetKcal = (int) Math.round(newVal.getKcal());
+                        String kcalText = targetKcal + " kcal";
                         labelKcal.setText(kcalText);
                         AggiustaFontSize(labelKcal, kcalText);
 
@@ -651,6 +656,8 @@ public class HomePage {
             updateProgressCircle(proteineProgressCircle, totaleProteine, targetProteine);
             updateProgressCircle(carboidratiProgressCircle, totaleCarboidrati, targetCarboidrati);
             updateProgressCircle(grassiProgressCircle, totaleGrassi, targetGrassi);
+            updateProgressCircle(kcalProgressCircle, totaleKcal, targetKcal );
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -715,6 +722,7 @@ public class HomePage {
         resetSingleProgressCircle(proteineProgressCircle);
         resetSingleProgressCircle(carboidratiProgressCircle);
         resetSingleProgressCircle(grassiProgressCircle);
+        resetSingleProgressCircle(kcalProgressCircle);
     }
 
 

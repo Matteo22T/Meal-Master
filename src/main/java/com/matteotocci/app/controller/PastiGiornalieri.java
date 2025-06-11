@@ -315,6 +315,13 @@ public class PastiGiornalieri {
         dialog.setHeaderText("Modifica la quantità per " + entry.getName() + " nel pasto " + mealType);
         dialog.setContentText("Nuova quantità (grammi/porzioni):");
 
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css").toExternalForm());
+        // Aggiungi la classe base 'dialog-pane' per applicare gli stili generali
+        dialog.getDialogPane().getStyleClass().add("dialog-pane");
+        // Non è necessario aggiungere classi specifiche come 'alert-information',
+        // poiché il tuo CSS usa già il selettore '.text-input-dialog' che JavaFX
+        // applica automaticamente a questo tipo di dialogo.
+
         // 2. Mostra il dialogo e attendi la risposta dell'utente
         Optional<String> result = dialog.showAndWait();
 
