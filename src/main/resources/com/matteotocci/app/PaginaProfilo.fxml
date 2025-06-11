@@ -34,18 +34,15 @@
                                 </ImageView>
                             </children>
                         </StackPane>
-                        <VBox alignment="CENTER_LEFT" spacing="2.0">
+                        <VBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="130.0" HBox.hgrow="ALWAYS">
                             <children>
                                 <Label fx:id="nomeUtenteSidebarLabel" styleClass="profile-name" text="Nome e Cognome" />
-                                <Label styleClass="profile-subtitle" text="Il tuo profilo" />
+                                <Label styleClass="profile-subtitle" text="Benvenuto!" />
                             </children>
-                            <HBox.margin>
-                                <Insets left="10.0" />
-                            </HBox.margin>
                         </VBox>
                     </children>
                 </HBox>
-                <VBox spacing="5.0" styleClass="nav-menu">
+                <VBox prefHeight="400.0" prefWidth="200.0" spacing="5.0" styleClass="nav-menu" VBox.vgrow="ALWAYS">
                     <children>
                         <Button fx:id="homePageButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#vaiAllaHomePage" prefHeight="50.0" styleClass="nav-button" text="🏠 Home Page" />
                         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoRicette" prefHeight="50.0" styleClass="nav-button" text="📖 Ricette" />

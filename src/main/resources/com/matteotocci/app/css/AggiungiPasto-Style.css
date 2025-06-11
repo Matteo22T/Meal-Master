@@ -1,0 +1,365 @@
+/* ===== STILI GENERALI ===== */
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #fdf8f7, #f5efed);
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ===== CONTENITORE PRINCIPALE ===== */
+.main-hbox {
+    -fx-background-color: linear-gradient(to bottom right, #fdf8f7, #f5efed);
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+
+/* ===== SEZIONE SINISTRA - PANNELLO PRINCIPALE ===== */
+.left-section {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 5;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 15, 0, 0, 5);
+}
+
+/* ===== PULSANTI TIPO (ALIMENTI/RICETTE) ===== */
+.bottoneAttivo {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.4), 12, 0, 3, 3);
+    -fx-border-color: transparent;
+}
+
+.bottoneAttivo:hover {
+    -fx-background-color: linear-gradient(to right, #5A8A4A, #658F52);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.6), 15, 0, 4, 4);
+
+}
+
+.bottoneSpento {
+    -fx-background-color: rgba(255,255,255,0.9);
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.2), 8, 0, 2, 2);
+
+    -fx-border-radius: 0 15 15 0;
+}
+
+.bottoneSpento:hover {
+    -fx-background-color: rgba(255,255,255,1.0);
+    -fx-text-fill: #A0464A;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.4), 12, 0, 3, 3);
+
+}
+
+
+
+
+/* ===== CAMPI DI RICERCA ===== */
+#textCercaAlimento, #textCercaRicetta {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(139,58,58,0.2);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 10 15;
+    -fx-font-size: 14px;
+    -fx-text-fill: #8B3A3A;
+    -fx-prompt-text-fill: #B8928E;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.05), 5, 0, 0, 2);
+}
+
+#textCercaAlimento:focused, #textCercaRicetta:focused {
+    -fx-border-color: #4F7942;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 8, 0, 0, 2);
+}
+
+/* ===== PULSANTI CERCA ===== */
+#ButtonCercaAlimento, #ButtonCercaRicetta {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 2);
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+#ButtonCercaAlimento:hover, #ButtonCercaRicetta:hover {
+    -fx-background-color: linear-gradient(to right, #5A8A4A, #658F52);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.5), 12, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ===== COMBOBOX CATEGORIE ===== */
+#ComboBoxAlimento, #ComboBoxRicetta {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(139,58,58,0.2);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 10 0;
+    -fx-font-size: 14px;
+    -fx-text-fill: #8B3A3A;
+    -fx-prompt-text-fill: #B8928E;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.05), 5, 0, 0, 2);
+}
+
+#ComboBoxAlimento:focused, #ComboBoxRicetta:focused {
+    -fx-border-color: #4F7942;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 8, 0, 0, 2);
+}
+
+/* ===== CHECKBOX ===== */
+#CheckBoxAlimenti, #CheckBoxRicette {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+#CheckBoxAlimenti .box, #CheckBoxRicette .box {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-border-color: rgba(139,58,58,0.3);
+    -fx-border-radius: 4;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 3, 0, 0, 1);
+}
+
+#CheckBoxAlimenti:selected .box, #CheckBoxRicette:selected .box {
+    -fx-background-color: linear-gradient(to bottom, #4F7942, #5A8A4A);
+    -fx-border-color: #4F7942;
+}
+
+#CheckBoxAlimenti:selected .mark, #CheckBoxRicette:selected .mark {
+    -fx-background-color: white;
+}
+
+#CheckBoxAlimenti:hover, #CheckBoxRicette:hover {
+    -fx-text-fill: #4F7942;
+}
+
+/* ===== TABELLE ===== */
+#tableViewAlimenti, #tableViewRicette {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(139,58,58,0.1);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.05), 10, 0, 0, 3);
+}
+
+/* ===== INTESTAZIONI TABELLE ===== */
+#tableViewAlimenti .column-header-background,
+#tableViewRicette .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #8B3A3A, #A0464A);
+    -fx-background-radius: 10 10 0 0;
+}
+
+#tableViewAlimenti .column-header,
+#tableViewRicette .column-header {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-border-color: rgba(255,255,255,0.2);
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 6 3;
+}
+
+/* ===== RIGHE TABELLE ===== */
+#tableViewAlimenti .table-row-cell,
+#tableViewRicette .table-row-cell {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-border-color: rgba(139,58,58,0.08);
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 3;
+    -fx-cursor: hand;
+}
+
+#tableViewAlimenti .column-header .label{
+    -fx-text-fill: white !important;
+}
+#tableViewRicette .column-header .label{
+    -fx-text-fill: white !important;
+}
+#tableViewAlimenti .table-row-cell:hover,
+#tableViewRicette .table-row-cell:hover {
+    -fx-background-color: linear-gradient(to bottom, #f9f2f1, #f5efed);
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 5, 0, 0, 2);
+}
+
+#tableViewAlimenti .table-row-cell:selected,
+#tableViewRicette .table-row-cell:selected {
+    -fx-background-color: linear-gradient(to bottom, #E8C5C1, #DDB5B0);
+    -fx-text-fill: #8B3A3A;
+}
+
+/* ===== CELLE TABELLE ===== */
+#tableViewAlimenti .table-cell,
+#tableViewRicette .table-cell {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 11px;
+    -fx-padding: 5 3;
+    -fx-alignment: center;
+    -fx-border-color: rgba(139,58,58,0.05);
+    -fx-border-width: 0 1 0 0;
+}
+
+/* ===== SEZIONE DESTRA - LA MIA DIETA ===== */
+.right-section {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 15, 0, 0, 5);
+}
+
+.diet-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* ===== SCROLLPANE ===== */
+#scrollPane {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(139,58,58,0.1);
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+#vboxContenuto {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+    -fx-spacing: 8;
+}
+
+/* ===== SPINNER QUANTITÀ ===== */
+#quantitaSpinner {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(139,58,58,0.2);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.05), 5, 0, 0, 2);
+}
+
+#quantitaSpinner:focused {
+    -fx-border-color: #4F7942;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 8, 0, 0, 2);
+}
+
+#quantitaSpinner .text-field {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 14px;
+    -fx-background-color: transparent;
+}
+
+#quantitaSpinner .increment-arrow-button,
+#quantitaSpinner .decrement-arrow-button {
+    -fx-background-color: linear-gradient(to bottom, #4F7942, #5A8A4A);
+}
+
+#quantitaSpinner .increment-arrow,
+#quantitaSpinner .decrement-arrow {
+    -fx-background-color: white;
+}
+
+/* ===== ETICHETTA GRAMMI ===== */
+.quantity-label {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+/* ===== PULSANTI AGGIUNGI ===== */
+#confermaPastoButton, #confermaPasto2Button {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 2);
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-min-width: 80;
+}
+
+#confermaPastoButton:hover, #confermaPasto2Button:hover {
+    -fx-background-color: linear-gradient(to right, #5A8A4A, #658F52);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.5), 12, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ===== SEPARATORE VERTICALE ===== */
+.separator:vertical {
+    -fx-background-color: rgba(139,58,58,0.2);
+    -fx-background-radius: 2;
+}
+
+/* ===== SCROLLBAR PERSONALIZZATE ===== */
+.scroll-bar:vertical .track {
+    -fx-background-color: rgba(139,58,58,0.1);
+    -fx-background-radius: 5;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: linear-gradient(to bottom, #8B3A3A, #A0464A);
+    -fx-background-radius: 5;
+}
+
+.scroll-bar:horizontal .track {
+    -fx-background-color: rgba(139,58,58,0.1);
+    -fx-background-radius: 5;
+}
+
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: linear-gradient(to right, #8B3A3A, #A0464A);
+    -fx-background-radius: 5;
+}
+
+/* ===== ANIMAZIONI E TRANSIZIONI ===== */
+.type-button, #ButtonCercaAlimento, #ButtonCercaRicetta,
+#confermaPastoButton, #confermaPasto2Button {
+    -fx-transition: all 0.3s ease;
+}
+
+/* ===== STILI AGGIUNTIVI PER CONTAINER ===== */
+.hbox-container {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+
+.vbox-container {
+    -fx-spacing: 5;
+    -fx-alignment: top-left;
+}
+
+.stackpane-container {
+    -fx-alignment: center;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+.compact-mode .table-cell {
+    -fx-padding: 3 2;
+    -fx-font-size: 10px;
+}
+
+.compact-mode .column-header {
+    -fx-padding: 4 2;
+    -fx-font-size: 11px;
+}

@@ -1,0 +1,254 @@
+/* ===== STILI PER ALERT E DIALOG ===== */
+
+/* ===== CONTENITORE PRINCIPALE DIALOG ===== */
+.dialog-pane {
+    -fx-background-color: linear-gradient(to bottom right, #fdf8f7, #f5efed);
+    -fx-background-radius: 15;
+    -fx-border-color: rgba(139,58,58,0.3);
+    -fx-border-radius: 15;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.2), 20, 0, 0, 5);
+    -fx-padding: 0;
+}
+
+/* ===== HEADER DEL DIALOG ===== */
+.dialog-pane .header-panel {
+    -fx-background-color: linear-gradient(to right, #8B3A3A, #A0464A);
+    -fx-background-radius: 13 13 0 0;
+    -fx-padding: 15 20;
+    -fx-border-color: transparent;
+}
+
+.dialog-pane .header-panel .label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ===== CONTENUTO DEL DIALOG ===== */
+.dialog-pane .content {
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+}
+
+.dialog-pane .content .label {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 2;
+}
+
+/* ===== AREA BOTTONI DEL DIALOG ===== */
+.dialog-pane .button-bar {
+    -fx-background-color: linear-gradient(to bottom, #f8f5f4, #f0ebe9);
+    -fx-background-radius: 0 0 13 13;
+    -fx-padding: 15 20;
+    -fx-spacing: 10;
+    -fx-border-color: rgba(139,58,58,0.1);
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ===== BOTTONI DIALOG ===== */
+.dialog-pane .button-bar .button {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-min-width: 80;
+    -fx-pref-width: 80;
+}
+
+/* Bottone OK/Conferma */
+.dialog-pane .button-bar .button:default {
+    -fx-background-color: linear-gradient(to bottom, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 2);
+}
+
+.dialog-pane .button-bar .button:default:hover {
+    -fx-background-color: linear-gradient(to bottom, #5A8A4A, #658F52);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.5), 12, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.dialog-pane .button-bar .button:default:pressed {
+    -fx-background-color: linear-gradient(to bottom, #3E6535, #4F7942);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.6), 6, 0, 0, 1);
+}
+
+/* Bottone Annulla */
+.dialog-pane .button-bar .button:cancel-button {
+    -fx-background-color: linear-gradient(to bottom, #95a5a6, #7f8c8d);
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(127,140,141,0.3), 8, 0, 0, 2);
+}
+
+.dialog-pane .button-bar .button:cancel-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #7f8c8d, #6c7b7d);
+    -fx-effect: dropshadow(gaussian, rgba(127,140,141,0.5), 12, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ===== STILI SPECIFICI PER TIPI DI ALERT ===== */
+
+/* Alert di Informazione */
+.alert.information .dialog-pane .header-panel {
+    -fx-background-color: linear-gradient(to right, #3498db, #2980b9);
+}
+
+.alert.information .dialog-pane .graphic-container {
+    -fx-background-color: rgba(52,152,219,0.1);
+    -fx-background-radius: 25;
+    -fx-padding: 10;
+}
+
+/* Alert di Avvertimento */
+.alert.warning .dialog-pane .header-panel {
+    -fx-background-color: linear-gradient(to right, #f39c12, #e67e22);
+}
+
+.alert.warning .dialog-pane .graphic-container {
+    -fx-background-color: rgba(243,156,18,0.1);
+    -fx-background-radius: 25;
+    -fx-padding: 10;
+}
+
+/* Alert di Errore */
+.alert.error .dialog-pane .header-panel {
+    -fx-background-color: linear-gradient(to right, #e74c3c, #c0392b);
+}
+
+.alert.error .dialog-pane .graphic-container {
+    -fx-background-color: rgba(231,76,60,0.1);
+    -fx-background-radius: 25;
+    -fx-padding: 10;
+}
+
+/* Alert di Conferma */
+.alert.confirmation .dialog-pane .header-panel {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+}
+
+.alert.confirmation .dialog-pane .graphic-container {
+    -fx-background-color: rgba(79,121,66,0.1);
+    -fx-background-radius: 25;
+    -fx-padding: 10;
+}
+
+/* ===== STILI PER TEXT INPUT DIALOG ===== */
+.text-input-dialog .dialog-pane .content .text-field {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(139,58,58,0.3);
+    -fx-border-radius: 8;
+    -fx-border-width: 2;
+    -fx-padding: 10 12;
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-text-fill: #8B3A3A;
+    -fx-prompt-text-fill: rgba(139,58,58,0.6);
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 5, 0, 0, 2);
+}
+
+.text-input-dialog .dialog-pane .content .text-field:focused {
+    -fx-border-color: #4F7942;
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f9f6f5);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 8, 0, 0, 2);
+}
+
+/* ===== STILI PER CHOICE DIALOG ===== */
+.choice-dialog .dialog-pane .content .choice-box {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(139,58,58,0.3);
+    -fx-border-radius: 8;
+    -fx-border-width: 2;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-text-fill: #8B3A3A;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 5, 0, 0, 2);
+}
+
+.choice-dialog .dialog-pane .content .choice-box:focused {
+    -fx-border-color: #4F7942;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 8, 0, 0, 2);
+}
+
+/* ===== PERSONALIZZAZIONI AGGIUNTIVE ===== */
+
+/* Rimozione bordi di default */
+.dialog-pane .button-bar .container {
+    -fx-border-color: transparent;
+}
+
+/* Stile per il close button (X) */
+.dialog-pane .button-bar .button.cancel-button {
+    -fx-background-color: linear-gradient(to bottom, #ff6b6b, #e74c3c);
+    -fx-text-fill: white;
+}
+
+.dialog-pane .button-bar .button.cancel-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #e74c3c, #c0392b);
+}
+
+/* ===== STILI PER PROGRESS DIALOG (se necessario) ===== */
+.progress-dialog .dialog-pane .content .progress-bar {
+    -fx-background-color: rgba(139,58,58,0.2);
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 2;
+}
+
+.progress-dialog .dialog-pane .content .progress-bar .bar {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media screen and (max-width: 800px) {
+    .dialog-pane {
+        -fx-max-width: 400;
+        -fx-pref-width: 400;
+    }
+
+    .dialog-pane .content .label {
+        -fx-font-size: 12px;
+    }
+
+    .dialog-pane .button-bar .button {
+        -fx-font-size: 11px;
+        -fx-min-width: 70;
+        -fx-pref-width: 70;
+    }
+}
+
+/* ===== ANIMAZIONI ===== */
+.dialog-pane .button-bar .button {
+    -fx-transition: all 0.2s ease;
+}
+
+/* ===== CLASSI CUSTOM PER DIVERSI TIPI DI DIALOG ===== */
+.success-dialog .dialog-pane .header-panel {
+    -fx-background-color: linear-gradient(to right, #27ae60, #2ecc71);
+}
+
+.delete-confirmation-dialog .dialog-pane .header-panel {
+    -fx-background-color: linear-gradient(to right, #e74c3c, #c0392b);
+}
+
+.edit-dialog .dialog-pane .header-panel {
+    -fx-background-color: linear-gradient(to right, #3498db, #2980b9);
+}

@@ -294,11 +294,12 @@ public class HomePage {
     private void AccessoRicette(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Ricette.fxml"));
-            Parent loginRoot = fxmlLoader.load();
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(loginRoot));
-            loginStage.show();
-            ((Stage) BottoneRicette.getScene().getWindow()).close();
+            Parent root = fxmlLoader.load();
+
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -601,7 +601,25 @@ public class AggiungiPasto {
     }
 
     @FXML
+    private Button btnRicette;
+    @FXML
+    private Button btnAlimenti;
+
+    private void highlightButton(Button active, Button inactive) {
+        if(active.getStyleClass().contains("bottoneAttivo")) {
+            return;
+        }
+        active.getStyleClass().remove("bottoneSpento");
+        inactive.getStyleClass().remove("bottoneAttivo");
+
+        active.getStyleClass().add("bottoneAttivo");
+        inactive.getStyleClass().add("bottoneSpento");
+
+    }
+    @FXML
     void mostraTabellaAlimenti(ActionEvent event) {
+        highlightButton(btnAlimenti, btnRicette);
+
         tableViewAlimenti.setVisible(true);
         tableViewRicette.setVisible(false);
         confermaPastoButton.setVisible(true);
@@ -616,8 +634,12 @@ public class AggiungiPasto {
         CheckBoxRicette.setVisible(false);
     }
 
+
+
     @FXML
     void mostraTabellaRicette(ActionEvent event) {
+        highlightButton(btnRicette, btnAlimenti);
+
         tableViewAlimenti.setVisible(false);
         tableViewRicette.setVisible(true);
         confermaPastoButton.setVisible(false);

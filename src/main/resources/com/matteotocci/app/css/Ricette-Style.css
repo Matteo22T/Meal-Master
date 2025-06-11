@@ -65,7 +65,7 @@
     -fx-font-weight: normal;
     -fx-background-radius: 8;
     -fx-cursor: hand;
-    -fx-alignment: center;
+    -fx-alignment: center-left;
     -fx-padding: 10 15;
     -fx-effect: null;
     -fx-border-color: transparent;
@@ -245,6 +245,10 @@
     -fx-border-color: rgba(255,255,255,0.2);
     -fx-border-width: 0 1 0 0;
     -fx-padding: 8 5;
+}
+
+.ricette-table .column-header .label{
+    -fx-text-fill: white;
 }
 
 .ricette-table .table-row-cell {

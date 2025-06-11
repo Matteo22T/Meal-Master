@@ -196,8 +196,8 @@ public class PastiGiornalieri {
             public TableCell<PastoSpecifico, Void> call(final TableColumn<PastoSpecifico, Void> param) {
                 final TableCell<PastoSpecifico, Void> cell = new TableCell<>() {
 
-                    private final Button deleteButton = new Button("Elimina");
-                    private final Button editButton = new Button("Modifica");
+                    private final Button deleteButton = new Button("X");
+                    private final Button editButton = new Button("Mod");
                     private final HBox pane = new HBox(5, deleteButton, editButton);
 
                     {
@@ -306,13 +306,7 @@ public class PastiGiornalieri {
         }
     }
 
-    @FXML
-    private void handleCloseButtonAction(ActionEvent event) {
-        // Ottiene la finestra (Stage) dal pulsante che ha generato l'evento
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close(); // Chiude la finestra corrente
-    }
+
 
     private void handleEditPastoSpecifico(PastoSpecifico entry, String mealType) {
         System.out.println("Modifica " + entry.getName() + " in " + mealType);

@@ -13,10 +13,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="640.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiPasto">
+<AnchorPane prefHeight="500.0" prefWidth="800.0" stylesheets="@css/AggiungiPasto-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiPasto">
     <children>
         <HBox prefHeight="640.0" prefWidth="1000.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <padding>
@@ -29,8 +30,8 @@
                         <!-- Sezione selezione tipo (Alimenti/Ricette) -->
                         <HBox alignment="CENTER" prefHeight="30.0" prefWidth="650.0">
                             <children>
-                                <Button mnemonicParsing="false" onAction="#mostraTabellaAlimenti" text="Alimenti" />
-                                <Button mnemonicParsing="false" onAction="#mostraTabellaRicette" text="Ricette" />
+                                <Button fx:id="btnAlimenti" mnemonicParsing="false" onAction="#mostraTabellaAlimenti" prefHeight="80.0" styleClass="bottoneAttivo" text="Alimenti" />
+                                <Button fx:id="btnRicette" mnemonicParsing="false" onAction="#mostraTabellaRicette" prefHeight="80.0" styleClass="bottoneSpento" text="Ricette" />
                             </children>
                         </HBox>
 
@@ -69,17 +70,17 @@
                             <children>
                                 <TableView fx:id="tableViewAlimenti" editable="true" prefHeight="350.0" prefWidth="630.0">
                                     <columns>
-                                        <TableColumn fx:id="immagineCol" prefWidth="60.0" text="Immagine" />
+                                        <TableColumn fx:id="immagineCol" text="Immagine" />
                                         <TableColumn fx:id="nomeCol" prefWidth="120.0" text="Nome" />
                                         <TableColumn fx:id="brandCol" prefWidth="80.0" text="Brand" />
-                                        <TableColumn fx:id="calorieCol" prefWidth="60.0" text="Calorie" />
-                                        <TableColumn fx:id="proteineCol" prefWidth="60.0" text="Proteine" />
-                                        <TableColumn fx:id="carboidratiCol" prefWidth="70.0" text="Carboidrati" />
-                                        <TableColumn fx:id="grassiCol" prefWidth="50.0" text="Grassi" />
-                                        <TableColumn fx:id="grassiSatCol" prefWidth="70.0" text="Grassi Sat." />
-                                        <TableColumn fx:id="saleCol" prefWidth="50.0" text="Sale" />
-                                        <TableColumn fx:id="fibreCol" prefWidth="50.0" text="Fibre" />
-                                        <TableColumn fx:id="zuccheriCol" prefWidth="60.0" text="Zuccheri" />
+                                        <TableColumn fx:id="calorieCol" text="Calorie" />
+                                        <TableColumn fx:id="proteineCol" text="Proteine" />
+                                        <TableColumn fx:id="carboidratiCol" text="Carboidrati" />
+                                        <TableColumn fx:id="grassiCol" text="Grassi" />
+                                        <TableColumn fx:id="grassiSatCol" text="Grassi Sat." />
+                                        <TableColumn fx:id="saleCol" text="Sale" />
+                                        <TableColumn fx:id="fibreCol" text="Fibre" />
+                                        <TableColumn fx:id="zuccheriCol" text="Zuccheri" />
                                     </columns>
                                 </TableView>
                                 <TableView fx:id="tableViewRicette" prefHeight="350.0" prefWidth="630.0" visible="false">
@@ -92,28 +93,28 @@
                             </children>
                         </StackPane>
 
-                        <!-- Controlli quantità -->
+                              <!-- Controlli quantità -->
                         <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="650.0" spacing="10.0">
                             <children>
-                                <Label text="Quantità:" />
                                 <Spinner fx:id="quantitaSpinner" amountToStepBy="50" editable="true" initialValue="100" max="1000" min="1" prefWidth="100.0" />
                                 <Label text="grammi" />
+                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+      
+                              <!-- Pulsanti conferma -->
+                              <StackPane alignment="CENTER_RIGHT" prefHeight="39.0" prefWidth="121.0">
+                                  <padding>
+                                      <Insets right="10.0" />
+                                  </padding>
+                                  <children>
+                                      <Button fx:id="confermaPasto2Button" mnemonicParsing="false" onAction="#confermaPasto2" text="Aggiungi" visible="false" />
+                                      <Button fx:id="confermaPastoButton" mnemonicParsing="false" onAction="#confermaPasto" text="Aggiungi" visible="true" />
+                                  </children>
+                              </StackPane>
                             </children>
                             <padding>
                                 <Insets left="10.0" />
                             </padding>
                         </HBox>
-
-                        <!-- Pulsanti conferma -->
-                        <StackPane alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="650.0">
-                            <padding>
-                                <Insets right="10.0" />
-                            </padding>
-                            <children>
-                                <Button fx:id="confermaPastoButton" mnemonicParsing="false" onAction="#confermaPasto" text="Aggiungi" visible="true" />
-                                <Button fx:id="confermaPasto2Button" mnemonicParsing="false" onAction="#confermaPasto2" text="Aggiungi" visible="false" />
-                            </children>
-                        </StackPane>
                     </children>
                 </VBox>
 
@@ -123,23 +124,22 @@
                 <!-- Sezione destra - La Mia Dieta -->
                 <VBox prefHeight="630.0" prefWidth="320.0" spacing="10.0">
                     <children>
-                        <!-- Intestazione sezione dieta -->
-                        <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="320.0" spacing="10.0">
+                          <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="La Mia Dieta" />
+                  <VBox prefWidth="100.0">
                      <children>
-                                <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="La Mia Dieta" />
+      
+                              <!-- ScrollPane con contenuto della dieta -->
+                              <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="457.0" prefWidth="211.0" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+                           <content>
+                              <VBox fx:id="vboxContenuto" alignment="TOP_CENTER" fillWidth="true" spacing="8.0">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                              </ScrollPane>
                      </children>
-                        </HBox>
-
-                        <!-- ScrollPane con contenuto della dieta -->
-                        <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="540.0" prefWidth="320.0" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
-                     <content>
-                        <VBox fx:id="vboxContenuto" alignment="TOP_CENTER" fillWidth="true" prefHeight="540.0" spacing="8.0" >
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </VBox>
-                     </content>
-                        </ScrollPane>
+                  </VBox>
                     </children>
                 </VBox>
             </children>

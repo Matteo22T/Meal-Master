@@ -80,7 +80,7 @@
 /* ===== CONTENUTO PRINCIPALE ===== */
 .main-content {
     -fx-background-color: transparent;
-    -fx-padding: 15;
+    -fx-padding: 10;
 }
 
 .header-section {
