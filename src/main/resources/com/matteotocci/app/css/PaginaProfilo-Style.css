@@ -145,7 +145,7 @@
 
 .profile-form {
     -fx-hgap: 10;
-    -fx-vgap: 10;
+    -fx-vgap: 30;
     -fx-padding: 0;
 }
 
@@ -321,4 +321,38 @@
 
 .form-field:focused .text-input {
     -fx-prompt-text-fill: #A0464A;
+}
+
+/* Titoli delle sezioni */
+.form-section-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 0;
+}
+
+/* Campi editabili evidenziati */
+.editable-field {
+    -fx-border-color: #4F7942 !important;
+    -fx-border-width: 2 !important;
+}
+
+.editable-field:hover {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 10, 0, 0, 3);
+}
+
+/* Unità di misura */
+.form-unit {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Stile ComboBox */
+.combo-box {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fdf8f7);
+    -fx-background-radius: 10;
+    -fx-border-color: #4F7942;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
 }

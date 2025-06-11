@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -37,6 +39,9 @@
                                 <Label fx:id="nomeUtenteSidebarLabel" styleClass="profile-name" text="Nome e Cognome" />
                                 <Label styleClass="profile-subtitle" text="Il tuo profilo" />
                             </children>
+                            <HBox.margin>
+                                <Insets left="10.0" />
+                            </HBox.margin>
                         </VBox>
                     </children>
                 </HBox>
@@ -54,72 +59,142 @@
     <center>
         <VBox styleClass="main-content" BorderPane.alignment="CENTER">
             <children>
-
+                <HBox alignment="CENTER_LEFT" styleClass="header-section">
+                    <children>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image">
+                            <image>
+                                <Image url="@immagini/logo-removebg-preview.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="welcome-title" text="Il tuo Profilo">
+                            <HBox.margin>
+                                <Insets left="15.0" />
+                            </HBox.margin>
+                        </Label>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="20.0" top="10.0" />
+                    </VBox.margin>
+                </HBox>
                 <VBox styleClass="content-section" VBox.vgrow="ALWAYS">
                     <children>
                         <HBox styleClass="section-tabs">
                             <children>
-                                <Label styleClass="tab-link" text="✏️ Modifica il tuo profilo" />
-                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                <Label onMouseClicked="#mostraBMI" text="📊 Le mie statistiche">
-                           <styleClass>
-                              <String fx:value="active-tab" />
-                              <String fx:value="tab-link" />
-                           </styleClass></Label>
+                                <Label styleClass="tab-link" text="INFORMAZIONI PERSONALI">
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                </Label>
+                                <Region prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                <Label onMouseClicked="#mostraBMI" text="📊 Calcolo BMI">
+                                    <styleClass>
+                                        <String fx:value="active-tab" />
+                                        <String fx:value="tab-link" />
+                                    </styleClass>
+                                </Label>
                             </children>
+                            <VBox.margin>
+                                <Insets bottom="20.0" top="10.0" />
+                            </VBox.margin>
                         </HBox>
-
-                        <VBox styleClass="profile-form-container">
+                        <VBox styleClass="profile-form-container" VBox.vgrow="ALWAYS">
                             <children>
-                                <GridPane fx:id="gridPane" styleClass="profile-form">
+                                <!-- Sezione dati personali fissi -->
+                                <Label styleClass="form-section-title" text="📋 Dati Personali (Non modificabili)">
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <GridPane hgap="15.0" styleClass="profile-form" vgap="10.0">
                                     <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="120.0" prefWidth="130.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="300.0" />
+                                        <ColumnConstraints hgrow="NEVER" minWidth="120.0" prefWidth="120.0" />
+                                        <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" />
+                                        <ColumnConstraints hgrow="NEVER" minWidth="120.0" prefWidth="120.0" />
+                                        <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" />
                                     </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
                                     <children>
-                                        <Label styleClass="form-label" text="Nome:" GridPane.rowIndex="0" />
-                                        <TextField fx:id="nomeTextField" editable="false" promptText="Inserisci il nome" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-
-                                        <Label styleClass="form-label" text="Cognome:" GridPane.rowIndex="1" />
-                                        <TextField fx:id="cognomeTextField" editable="false" promptText="Inserisci il cognome" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
-                                        <Label styleClass="form-label" text="Sesso:" GridPane.rowIndex="2" />
-                                        <TextField fx:id="sessoTextField" editable="false" promptText="Inserisci il sesso" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-
-                                        <Label styleClass="form-label" text="Data Nascita:" GridPane.rowIndex="3" />
-                                        <TextField fx:id="dataNascitaTextField" editable="false" promptText="GG/MM/AAAA" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-                                        <Label styleClass="form-label" text="Altezza (cm):" GridPane.rowIndex="4" />
-                                        <TextField fx:id="altezzaTextField" editable="false" promptText="Inserisci l'altezza in cm" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-
-                                        <Label styleClass="form-label" text="Peso Attuale (kg):" GridPane.rowIndex="5" />
-                                        <TextField fx:id="pesoAttualeTextField" editable="false" promptText="Inserisci il peso attuale in kg" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-
-                                        <Label styleClass="form-label" text="Livello attività:" GridPane.rowIndex="6" />
-                                        <TextField fx:id="livelloAttivitaTextField" editable="false" promptText="Inserisci il tuo tipo di attività" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-
-                                        <Label styleClass="form-label" text="Nutrizionista:" GridPane.rowIndex="7" />
-                                        <TextField fx:id="nutrizionistaTextField" editable="false" promptText="Scegli il tuo nutrizionista" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                        <Label styleClass="form-label" text="Nome:" />
+                                        <TextField fx:id="nomeTextField" editable="false" styleClass="form-field" GridPane.columnIndex="1" />
+                                        <Label styleClass="form-label" text="Cognome:" GridPane.columnIndex="2" />
+                                        <TextField fx:id="cognomeTextField" editable="false" styleClass="form-field" GridPane.columnIndex="3" />
+                                        <Label styleClass="form-label" text="Data di Nascita:" GridPane.rowIndex="1" />
+                                        <TextField fx:id="dataNascitaTextField" editable="false" promptText="dd/mm/yyyy" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <Label styleClass="form-label" text="Sesso:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                        <TextField fx:id="sessoTextField" editable="false" promptText="M/F/Altro" styleClass="form-field" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                     </children>
+                                    <VBox.margin>
+                                        <Insets bottom="20.0" />
+                                    </VBox.margin>
+                                </GridPane>
+
+                                <!-- Sezione dati modificabili -->
+                                <Label styleClass="form-section-title" text="✏ Dati Modificabili">
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <GridPane fx:id="gridPane" hgap="15.0" styleClass="profile-form" vgap="15.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="NEVER" minWidth="120.0" prefWidth="120.0" />
+                                        <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" />
+                                        <ColumnConstraints hgrow="NEVER" minWidth="120.0" prefWidth="120.0" />
+                                        <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" />
+                                    </columnConstraints>
                                     <rowConstraints>
                                         <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
                                         <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
+                                    <children>
+                                        <Label styleClass="form-label" text="Altezza (cm):" />
+                                        <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1">
+                                            <children>
+                                                <TextField fx:id="altezzaTextField" prefWidth="100.0" promptText="es. 175">
+                                       <styleClass>
+                                          <String fx:value="form-field" />
+                                          <String fx:value="editable-field" />
+                                       </styleClass></TextField>
+                                            </children>
+                                        </HBox>
+                                        <Label styleClass="form-label" text="Peso (kg):" GridPane.columnIndex="2" />
+                                        <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="3">
+                                            <children>
+                                                <TextField fx:id="pesoAttualeTextField" prefWidth="100.0" promptText="es. 70.5">
+                                       <styleClass>
+                                          <String fx:value="form-field" />
+                                          <String fx:value="editable-field" />
+                                       </styleClass></TextField>
+                                            </children>
+                                        </HBox>
+                                        <Label styleClass="form-label" text="Livello Attività:" GridPane.rowIndex="1" />
+                                        <ComboBox fx:id="livelloAttivitaComboBox" prefWidth="200.0" promptText="Seleziona livello" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <styleClass>
+                                    <String fx:value="editable-field" />
+                                    <String fx:value="form-field" />
+                                 </styleClass></ComboBox>
+                                        <Label styleClass="form-label" text="Nutrizionista:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                        <ComboBox fx:id="nutrizionistaComboBox" prefWidth="200.0" promptText="" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                            <styleClass>
+                                                <String fx:value="editable-field" />
+                                                <String fx:value="form-field" />
+                                            </styleClass></ComboBox>                                    </children>
                                 </GridPane>
 
-                                <Label onMouseClicked="#mostraSchermataModificaPassword" styleClass="change-password-link" text="🔐 Modifica Password" />
+                                <Region prefHeight="30.0" prefWidth="728.0" VBox.vgrow="ALWAYS" />
 
-                                <HBox styleClass="action-buttons">
+                                <HBox alignment="BOTTOM_RIGHT" spacing="15.0" styleClass="action-buttons">
                                     <children>
-                                        <Button fx:id="LogoutButton" mnemonicParsing="false" onAction="#eseguiLogout" styleClass="logout-button" text="🚪 Logout" />
-                                        <Button styleClass="save-button" text="💾 Salva Modifiche" />
+                                        <Label onMouseClicked="#mostraSchermataModificaPassword" prefHeight="28.0" prefWidth="268.0" styleClass="change-password-link" text="Clicca qui per modificare la password" />
+                                        <Region prefHeight="42.0" prefWidth="146.0" HBox.hgrow="ALWAYS" />
+                                        <Button fx:id="LogoutButton" mnemonicParsing="false" onAction="#eseguiLogout" prefHeight="42.0" prefWidth="168.0" styleClass="logout-button" text="🚪 Logout" />
+                                        <Button mnemonicParsing="false" onAction="#salvaProfilo" prefHeight="42.0" prefWidth="227.0" styleClass="save-button" text="💾 Salva Modifiche" />
                                     </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
                                 </HBox>
                             </children>
                         </VBox>
