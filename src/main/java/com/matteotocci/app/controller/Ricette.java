@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -18,8 +19,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.util.ResourceBundle;
 
-public class Ricette {
+public class Ricette implements Initializable {
 
     @FXML private Button BottoneAlimenti;
     @FXML private Button BottoneHome;
@@ -105,7 +107,7 @@ public class Ricette {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         nomeCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
         descrizioneCol.setCellValueFactory(new PropertyValueFactory<>("descrizione"));
         categoriaCol.setCellValueFactory(new PropertyValueFactory<>("categoria"));

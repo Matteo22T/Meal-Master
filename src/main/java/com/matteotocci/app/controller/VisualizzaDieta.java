@@ -144,11 +144,6 @@ public class VisualizzaDieta {
         caricaEVisualizzaDettagliDieta();
     }
 
-    @FXML
-    public void initialize() {
-        // L'inizializzazione specifica della UI viene fatta in caricaEVisualizzaDettagliDieta
-        // dopo che la dietaCorrente è stata impostata.
-    }
 
     private void caricaEVisualizzaDettagliDieta() {
         if (dietaCorrente == null) {

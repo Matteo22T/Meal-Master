@@ -5,6 +5,7 @@ import com.matteotocci.app.model.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,11 +21,12 @@ import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ResourceBundle;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
-public class NuovaDieta {
+public class NuovaDieta implements Initializable {
 
     @FXML
     private TextField titoloPianoTextField;
@@ -47,7 +49,7 @@ public class NuovaDieta {
     private int numeroGiorni; // Questa variabile continuerà a conservare il numero di giorni calcolato
 
     @FXML
-    public void initialize() {
+    public void initialize(URL url, ResourceBundle resources) {
         // Imposta un CellFactory per DatePicker per disabilitare le date passate
         dataInizioDatePicker.setDayCellFactory(picker -> new DateCell() {
             @Override

@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -25,9 +26,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 
-public class PastiGiornalieri {
+public class PastiGiornalieri implements Initializable {
     @FXML private Button btnPrecedente;
     @FXML private Button btnSuccessivo;
     @FXML private Label lblDataCorrente;
@@ -95,7 +97,7 @@ public class PastiGiornalieri {
         homePageController = homePage;
     }
 
-    public void initialize() {
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         dataCorrente = LocalDate.now();
         AggiornaData();
         inizializzaTabelle();

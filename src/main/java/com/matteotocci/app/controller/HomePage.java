@@ -95,8 +95,8 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
      * @param location L'URL del documento FXML che ha dato origine a questo controller.
      * @param resources Le risorse utilizzate per localizzare gli oggetti radice, o null se la radice non è stata localizzata.
      */
-    @Override // ANNOTAZIONE AGGIUNTA: Indica che questo metodo fa l'override di un metodo dell'interfaccia Initializable
-    public void initialize(URL location, ResourceBundle resources) { // MODIFICA: La firma del metodo ora corrisponde a quella di Initializable
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         // Recupera l'ID dell'utente loggato dalla classe Session
         Integer userIdFromSession = Session.getUserId();
 

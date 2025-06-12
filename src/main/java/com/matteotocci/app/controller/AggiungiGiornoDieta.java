@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,8 +22,9 @@ import java.net.URL;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
-public class AggiungiGiornoDieta {
+public class AggiungiGiornoDieta implements Initializable {
 
     private String titoloPiano;
     private int numeroGiorni;
@@ -130,7 +132,7 @@ public class AggiungiGiornoDieta {
 
 
     @FXML
-    private void initialize() {
+    public void initialize(URL url, ResourceBundle resources) {
         // Inizializza le mappe dei pasti per il giorno corrente all'avvio
         giorniPastiAlimenti.put(giornoCorrente, creaMappaPastiAlimentiVuota()); // Rinominato da giorniPasti
         giorniPastiRicette.put(giornoCorrente, creaMappaPastiRicetteVuota()); // AGGIUNTO: Inizializza anche per le ricette

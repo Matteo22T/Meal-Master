@@ -31,7 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-public class PaginaProfilo {
+public class PaginaProfilo implements Initializable{
 
 
     @FXML
@@ -75,7 +75,7 @@ public class PaginaProfilo {
 
 
     @FXML
-    public void initialize() {
+    public void initialize(URL url, ResourceBundle resourceBundle) {
 
         ObservableList<String> livelliAttivita = FXCollections.observableArrayList(
                 "Sedentario",

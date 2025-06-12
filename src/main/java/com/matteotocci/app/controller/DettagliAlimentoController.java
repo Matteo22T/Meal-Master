@@ -6,6 +6,7 @@ import com.matteotocci.app.model.SQLiteConnessione; // Classe per gestire la con
 import com.matteotocci.app.model.Session; // Classe per la gestione della sessione utente (es. ID utente loggato)
 import javafx.event.ActionEvent; // Tipo di evento generato dalle azioni dell'utente (es. click su un bottone)
 import javafx.fxml.FXML; // Annotazione per collegare elementi dell'interfaccia utente definiti in FXML al codice Java
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert; // Finestra di dialogo per avvisi o errori
 import javafx.scene.control.Button; // Elemento bottone della UI
 import javafx.scene.control.ButtonType;
