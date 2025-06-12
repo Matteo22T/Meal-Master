@@ -16,6 +16,7 @@ import javafx.scene.control.DateCell;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -130,11 +131,7 @@ public class NuovaDieta {
 
 
         if (errorMessage != null) {
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.setTitle("Errore di input");
-            alert.setHeaderText(null);
-            alert.setContentText(errorMessage);
-            alert.showAndWait();
+            showAlert(AlertType.WARNING,"Attenzione!",errorMessage);
             return;
         }
 
@@ -202,19 +199,12 @@ public class NuovaDieta {
                 System.err.println("Errore durante il rollback: " + ex.getMessage());
                 ex.printStackTrace();
             }
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Errore Database");
-            alert.setHeaderText("Errore durante il salvataggio della dieta.");
-            alert.setContentText("Si è verificato un problema durante la connessione o l'operazione sul database. Riprova più tardi.");
-            alert.showAndWait();
+            showAlert(AlertType.ERROR,"Errore","Errore durante il salvataggio della dieta.");
         } catch (IOException e) {
             System.err.println("Errore nel caricamento della schermata successiva: " + e.getMessage());
             e.printStackTrace();
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Errore Applicazione");
-            alert.setHeaderText("Errore nel caricamento della schermata successiva.");
-            alert.setContentText("Impossibile caricare la prossima schermata. Contatta il supporto.");
-            alert.showAndWait();
+            showAlert(AlertType.ERROR,"Errore","Errore nel caricamento della schermata successiva.");
+
         } finally {
             try {
                 if (generatedKeys != null) generatedKeys.close();
@@ -227,5 +217,34 @@ public class NuovaDieta {
                 ex.printStackTrace();
             }
         }
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType); // Crea una nuova istanza di Alert
+        alert.setTitle(title); // Imposta il titolo
+        alert.setHeaderText(null); // Non mostra un header text
+        alert.setContentText(message); // Imposta il contenuto
+
+        // Cerca il file CSS per lo stile personalizzato degli alert
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            // Se il CSS viene trovato, lo aggiunge al DialogPane dell'alert
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Applica la classe di stile base
+            // Aggiunge una classe di stile specifica in base al tipo di alert per una maggiore personalizzazione
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Messaggio di errore se il CSS non è trovato
+        }
+
+        alert.showAndWait(); // Mostra l'avviso e attende che l'utente lo chiuda
     }
 }

@@ -174,13 +174,12 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
                 // Gestione degli errori durante il recupero della dieta o il popolamento della ComboBox
                 System.err.println("ERRORE: Errore durante il recupero dieta o popolamento ComboBox: " + e.getMessage());
                 e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Errore Caricamento Dati", "Impossibile caricare i dati della dieta.", "Dettagli: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR, "Errore Caricamento Dati", "Impossibile caricare i dati della dieta.");
             }
         } else {
             // Se l'ID utente dalla sessione è null (utente non loggato)
             System.out.println("[DEBUG - HomePage] Session.getUserId() è null. Utente non loggato o sessione non impostata.");
-            showAlert(Alert.AlertType.WARNING, "Accesso Negato", "Utente non loggato",
-                    "Per accedere, è necessario effettuare il login.");
+            showAlert(Alert.AlertType.WARNING, "Accesso Negato", "Utente non loggato");
             // Resetta le etichette dei target a 0
             String kcalText = "0 kcal";
             labelKcal.setText(kcalText);
@@ -198,7 +197,6 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
                 System.out.println(isProgrammaticChange); // Stampa lo stato del flag programmatico
                 if (isProgrammaticChange) {
                     isProgrammaticChange = false; // Resetta il flag se il cambiamento è programmatico
-                    System.out.println("nooooo"); // Debug
                     return; // Esce dal listener per evitare l'alert di conferma
                 }
                 // Evita di mostrare l'alert all'inizializzazione o se la selezione non è effettivamente cambiata
@@ -238,6 +236,10 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
                 alert.setTitle("Conferma Cambio Giorno");
                 alert.setHeaderText("Sei sicuro di voler cambiare giorno?");
                 alert.setContentText("Perderai i pasti mangiati finora per il giorno corrente.");
+                alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css").toExternalForm());
+                alert.getDialogPane().getStyleClass().add("dialog-pane");
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+
 
                 Optional<ButtonType> result = alert.showAndWait(); // Mostra l'alert e attende la risposta dell'utente
 
@@ -430,11 +432,7 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
         } catch (IOException e) {
             e.printStackTrace(); // Stampa l'errore
             // Mostra un messaggio di errore se il caricamento fallisce
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Errore di Caricamento");
-            alert.setHeaderText("Impossibile caricare la pagina Pasti Giornalieri.");
-            alert.setContentText("Verifica che il file FXML esista e il percorso sia corretto: /com/matteotocci/app/PastiGiornalieri.fxml");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR,"Errore di caricamento","Impossibile caricare la pagina Pasti Giornalieri");
         }
     }
 
@@ -474,16 +472,16 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
             } catch (IOException e) {
                 System.err.println("ERRORE (HomePage): Errore caricamento FXML VisualizzaDieta: " + e.getMessage());
                 e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.", "Verificare il percorso del file FXML.");
+                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.");
             } catch (Exception e) {
                 System.err.println("ERRORE (HomePage): Errore generico durante l'apertura di VisualizzaDieta: " + e.getMessage());
                 e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.", "Dettagli: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.");
             }
         } else {
             // Se nessuna dieta è stata trovata
             System.out.println("DEBUG (HomePage): Nessuna dieta trovata per il cliente  (ID: " + Session.getUserId() + ").");
-            showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata",
+            showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta",
                     "Il cliente non ha diete assegnate o non è stato possibile recuperarle.");
         }
     }
@@ -564,18 +562,36 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
 
     /**
      * Metodo helper per mostrare messaggi di avviso all'utente.
-     * @param type Il tipo di avviso (ERROR, INFORMATION, WARNING, CONFIRMATION).
-     * @param title Il titolo della finestra di avviso.
-     * @param header L'intestazione del messaggio.
-     * @param content Il contenuto del messaggio.
      */
-    private void showAlert(Alert.AlertType type, String title, String header, String content) {
-        Alert alert = new Alert(type); // Crea una nuova istanza di Alert
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType); // Crea una nuova istanza di Alert
         alert.setTitle(title); // Imposta il titolo
-        alert.setHeaderText(header); // Imposta l'intestazione
-        alert.setContentText(content); // Imposta il contenuto
-        alert.showAndWait(); // Mostra l'alert e attende che venga chiuso
+        alert.setHeaderText(null); // Non mostra un header text
+        alert.setContentText(message); // Imposta il contenuto
+
+        // Cerca il file CSS per lo stile personalizzato degli alert
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            // Se il CSS viene trovato, lo aggiunge al DialogPane dell'alert
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Applica la classe di stile base
+            // Aggiunge una classe di stile specifica in base al tipo di alert per una maggiore personalizzazione
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Messaggio di errore se il CSS non è trovato
+        }
+
+        alert.showAndWait(); // Mostra l'avviso e attende che l'utente lo chiuda
     }
+
 
     // --- Metodi per l'aggiunta di pasti ---
 
@@ -614,7 +630,7 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
         GiornoDieta giornoSelezionato = comboGiorniDieta.getSelectionModel().getSelectedItem();
         if (giornoSelezionato == null) {
             // Se nessun giorno è selezionato, mostra un avviso
-            showAlert(Alert.AlertType.WARNING, "Selezione Giorno", "Nessun giorno selezionato", "Seleziona un giorno della dieta prima di aggiungere un pasto.");
+            showAlert(Alert.AlertType.WARNING, "Selezione Giorno", "Nessun giorno selezionato, seleziona un giorno della dieta prima di aggiungere un pasto.");
             return;
         }
 
@@ -645,7 +661,7 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
         } catch (IOException e) {
             System.err.println("ERRORE (HomePage): Errore caricamento FXML AggiungiPasto: " + e.getMessage());
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Caricamento", "Impossibile aprire la finestra di aggiunta pasto.", "Dettagli: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore Caricamento", "Impossibile aprire la finestra di aggiunta pasto.");
         }
     }
 
@@ -783,7 +799,7 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
 
         } catch (SQLException e) {
             e.printStackTrace(); // Stampa l'errore SQL
-            showAlert(Alert.AlertType.ERROR, "Errore DB", "Impossibile caricare le kcal per pasto.", "Dettagli: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore DB", "Impossibile caricare le kcal per pasto.");
         }
     }
 

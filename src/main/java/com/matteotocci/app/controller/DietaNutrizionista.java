@@ -43,8 +43,6 @@ public class DietaNutrizionista implements Initializable {
 
     @FXML
     private Label nomeUtenteLabelDieta;
-    @FXML
-    private Label ruoloUtenteLabelDieta;
 
     @FXML
     private ListView<Dieta> listaDieteAssegnate;
@@ -53,13 +51,10 @@ public class DietaNutrizionista implements Initializable {
 
     @FXML
     private TextField filtroNomeDietaTextField;
-    @FXML
-    private ImageView profileImage;
+
     @FXML
     private VBox contenitorePrincipale;
 
-    // Rimosso: private String loggedInUserId;
-    // Rimosso: public void setLoggedInUserId(String userId) { ... }
 
     private ObservableList<Dieta> observableListaDieteAssegnate = FXCollections.observableArrayList();
     private ObservableList<Dieta> observableListaDieteDaAssegnare = FXCollections.observableArrayList();
@@ -99,15 +94,12 @@ public class DietaNutrizionista implements Initializable {
 
     private void setNomeUtenteLabel() {
         Integer userIdFromSession = Session.getUserId(); // Prende l'ID direttamente dalla Session
-        String userRoleFromSession = "Nutrizionista";
 
-        if (nomeUtenteLabelDieta != null && ruoloUtenteLabelDieta != null && userIdFromSession != null) {
+        if (nomeUtenteLabelDieta != null  && userIdFromSession != null) {
             String nomeUtenteCompleto = getNomeUtenteDalDatabase(userIdFromSession.toString());
             nomeUtenteLabelDieta.setText((nomeUtenteCompleto != null && !nomeUtenteCompleto.isEmpty()) ? nomeUtenteCompleto : "Nome e Cognome");
-            ruoloUtenteLabelDieta.setText(userRoleFromSession != null ? userRoleFromSession : "");
         } else {
             nomeUtenteLabelDieta.setText("Nome e Cognome"); // Fallback
-            ruoloUtenteLabelDieta.setText(""); // Fallback
             System.err.println("[ERROR - DietaNutrizionista] Impossibile impostare il nome/ruolo utente. Componenti UI o ID/ruolo dalla Sessione sono null.");
         }
     }
@@ -186,7 +178,7 @@ public class DietaNutrizionista implements Initializable {
             private final Label nomeLabel = new Label();
             private final Button btnModifica = new Button("Modifica Piano");
             private final Button btnAssegna = new Button("Assegna Piano");
-            private final Button btnAnnullaAssegnazione = new Button("Annulla Assegnazione");
+            private final Button btnAnnullaAssegnazione = new Button("Rimuovi");
 
             {
                 hbox.getChildren().addAll(nomeLabel, btnModifica);
@@ -251,7 +243,7 @@ public class DietaNutrizionista implements Initializable {
 
         // Blocco 1: Se la dieta selezionata è già assegnata, non mostrare la selezione del cliente.
         if (dieta.getIdCliente() != 0) { // Un id_cliente diverso da 0 significa che è assegnata
-            mostraAlert("Attenzione", "Questa dieta è già assegnata. Annulla prima l'assegnazione corrente se vuoi cambiarla.");
+            showAlert(Alert.AlertType.WARNING,"Attenzione", "Questa dieta è già assegnata. Annulla prima l'assegnazione corrente se vuoi cambiarla.");
             return;
         }
 
@@ -260,7 +252,7 @@ public class DietaNutrizionista implements Initializable {
 
         // Blocco 2: Se non ci sono clienti disponibili per l'assegnazione
         if (clientiDisponibili.isEmpty()) {
-            mostraAlert("Attenzione", "Nessun cliente disponibile per l'assegnazione di una nuova dieta. Tutti i clienti hanno già una dieta assegnata.");
+            showAlert(Alert.AlertType.WARNING,"Attenzione", "Nessun cliente disponibile per l'assegnazione di una nuova dieta. Tutti i clienti hanno già una dieta assegnata.");
             return;
         }
 
@@ -306,7 +298,7 @@ public class DietaNutrizionista implements Initializable {
         Integer idCliente = clientiMap.get(nomeCliente);
 
         if (idCliente == null) {
-            mostraAlert("Errore", "Cliente non valido.");
+            showAlert(Alert.AlertType.ERROR,"Errore", "Cliente non valido.");
             return;
         }
 
@@ -318,15 +310,15 @@ public class DietaNutrizionista implements Initializable {
 
             int affected = ps.executeUpdate();
             if (affected > 0) {
-                mostraAlert("Successo", "Dieta assegnata correttamente.");
+                showAlert(Alert.AlertType.INFORMATION,"Successo", "Dieta assegnata correttamente.");
                 caricaListaDiete(); // Ricarica le liste dopo l'assegnazione
             } else {
-                mostraAlert("Errore", "Nessuna dieta aggiornata.");
+                showAlert(Alert.AlertType.ERROR,"Errore", "Nessuna dieta aggiornata.");
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            mostraAlert("Errore", "Errore durante l'assegnazione: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR,"Errore", "Errore durante l'assegnazione: " + e.getMessage());
         }
     }
 
@@ -335,6 +327,10 @@ public class DietaNutrizionista implements Initializable {
         alert.setTitle("Conferma Annullamento Assegnazione");
         alert.setHeaderText("Sei sicuro di voler annullare l'assegnazione della dieta \"" + dieta.getNome() + "\"?");
         alert.setContentText("Questa azione renderà la dieta nuovamente disponibile per l'assegnazione.");
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
+        alert.getDialogPane().getStyleClass().add("alert-confirmation");
+
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -348,15 +344,15 @@ public class DietaNutrizionista implements Initializable {
 
                 int affectedRows = ps.executeUpdate();
                 if (affectedRows > 0) {
-                    mostraAlert("Successo", "Assegnazione della dieta annullata correttamente.");
+                    showAlert(Alert.AlertType.INFORMATION,"Successo", "Assegnazione della dieta annullata correttamente.");
                     caricaListaDiete(); // Ricarica le liste dopo l'annullamento
                 } else {
-                    mostraAlert("Errore", "Nessuna dieta aggiornata. L'annullamento dell'assegnazione potrebbe non essere avvenuto.");
+                    showAlert(Alert.AlertType.ERROR,"Errore", "Nessuna dieta aggiornata. L'annullamento dell'assegnazione potrebbe non essere avvenuto.");
                 }
 
             } catch (SQLException e) {
                 e.printStackTrace();
-                mostraAlert("Errore DB", "Errore durante l'annullamento dell'assegnazione: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR,"Errore DB", "Errore durante l'annullamento dell'assegnazione: " + e.getMessage());
             }
         }
     }
@@ -391,18 +387,38 @@ public class DietaNutrizionista implements Initializable {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            mostraAlert("Errore DB", "Errore durante il caricamento dei clienti disponibili: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR,"Errore DB", "Errore durante il caricamento dei clienti disponibili: " + e.getMessage());
         }
         return clienti;
     }
 
-    private void mostraAlert(String titolo, String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titolo);
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(messaggio);
+        alert.setContentText(message);
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Apply the base style class
+            // Add specific style class based on AlertType for custom styling
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Corrected error message
+        }
+
         alert.showAndWait();
     }
+
+
 
     private void apriFinestraModificaGiornoDieta(Dieta dieta, Window ownerWindow) {
         try {
@@ -473,32 +489,23 @@ public class DietaNutrizionista implements Initializable {
     private void eliminaDietaSelezionata(ActionEvent event) {
         Dieta dietaSelezionata = null;
 
-        // Determina quale dieta è selezionata tra le due liste
-        if (listaDieteAssegnate.getSelectionModel().getSelectedItem() != null) {
-            dietaSelezionata = listaDieteAssegnate.getSelectionModel().getSelectedItem();
-        } else if (listaDieteDaAssegnare.getSelectionModel().getSelectedItem() != null) {
+        if (listaDieteDaAssegnare.getSelectionModel().getSelectedItem() != null) {
             dietaSelezionata = listaDieteDaAssegnare.getSelectionModel().getSelectedItem();
         }
 
         if (dietaSelezionata == null) {
-            mostraAlert("Attenzione", "Seleziona una dieta da eliminare.");
+            showAlert(Alert.AlertType.ERROR,"Attenzione", "Seleziona una dieta non assegnata da eliminare.");
             return;
         }
 
-        // Impedisci l'eliminazione di una dieta assegnata
-        if (dietaSelezionata.getIdCliente() != 0) {
-            mostraAlert("Errore", "Impossibile eliminare una dieta assegnata a un cliente. Rimuovi prima l'assegnazione.");
-            return;
-        }
 
         boolean conferma = confermaEliminazione(dietaSelezionata.getNome());
         if (!conferma) {
             return; // L'utente ha annullato
         }
 
-        String url = "jdbc:sqlite:database.db"; // Assicurati che il percorso del database sia corretto
 
-        try (Connection conn = DriverManager.getConnection(url)) {
+        try (Connection conn = SQLiteConnessione.connector()) {
             conn.setAutoCommit(false); // Inizia una transazione
 
             try {
@@ -552,22 +559,20 @@ public class DietaNutrizionista implements Initializable {
                 conn.commit(); // Conferma la transazione
 
                 // Rimuovi la dieta dalla ObservableList corrispondente nell'UI
-                if (dietaSelezionata.getIdCliente() != 0) {
-                    observableListaDieteAssegnate.remove(dietaSelezionata);
-                } else {
-                    observableListaDieteDaAssegnare.remove(dietaSelezionata);
-                }
-                mostraAlert("Successo", "Dieta eliminata correttamente.");
+
+                observableListaDieteDaAssegnare.remove(dietaSelezionata);
+
+                showAlert(Alert.AlertType.INFORMATION,"Successo", "Dieta eliminata correttamente.");
 
             } catch (SQLException e) {
                 conn.rollback(); // Esegui il rollback in caso di errore
                 System.err.println("Errore durante l'eliminazione della dieta (rollback): " + e.getMessage());
-                mostraAlert("Errore Eliminazione", "Si è verificato un errore durante l'eliminazione della dieta: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR,"Errore Eliminazione", "Si è verificato un errore durante l'eliminazione della dieta: " + e.getMessage());
             }
 
         } catch (SQLException e) {
             System.err.println("Errore di connessione DB: " + e.getMessage());
-            mostraAlert("Errore Connessione", "Impossibile connettersi al database: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR,"Errore Connessione", "Impossibile connettersi al database: " + e.getMessage());
         }
     }
 
@@ -575,7 +580,11 @@ public class DietaNutrizionista implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Conferma Eliminazione");
         alert.setHeaderText("Sei sicuro di voler eliminare la dieta \"" + nomeDieta + "\"?");
-        alert.setContentText("Questa operazione non può essere annullata.");
+        alert.setContentText("La dieta non potrà essere recuperata.");
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
+        alert.getDialogPane().getStyleClass().add("alert-confirmation");
+
 
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;

@@ -1,0 +1,391 @@
+/* ===== STILI GENERALI ===== */
+.main-container {
+    -fx-background-color: linear-gradient(to bottom right, #fdf8f7, #f5efed);
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ===== SIDEBAR NUTRIZIONISTA ===== */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #8B3A3A, #A0464A);
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 2, 0);
+}
+
+.profile-section {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-background-radius: 12;
+    -fx-padding: 15 10;
+    -fx-spacing: 10;
+    -fx-alignment: center-left;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.profile-circle {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 8, 0, 0, 2);
+}
+
+.profile-image {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 3, 0, 0, 1);
+}
+
+.profile-image:hover {
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.8), 8, 0, 0, 2);
+}
+
+.profile-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.profile-subtitle {
+    -fx-text-fill: #E8C5C1;
+    -fx-font-size: 11px;
+}
+
+.nav-menu {
+    -fx-padding: 10 0;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #F5E6E4;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+    -fx-padding: 0 15;
+    -fx-effect: null;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 5, 0, 0, 0);
+}
+
+.nav-button-active {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.4), 8, 0, 0, 2);
+}
+
+/* ===== CONTENUTO PRINCIPALE ===== */
+.content-panel {
+    -fx-background-color: transparent;
+    -fx-spacing: 20;
+}
+
+/* ===== TITOLI ===== */
+.page-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.2), 3, 0, 0, 1);
+}
+
+.section-title {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.15), 2, 0, 0, 1);
+}
+
+/* ===== LISTE DIETE ===== */
+.diet-list {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(139,58,58,0.1);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.08), 10, 0, 0, 3);
+}
+
+.diet-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 13px;
+    -fx-padding: 12 15;
+    -fx-border-color: rgba(139,58,58,0.05);
+    -fx-border-width: 0 0 1 0;
+}
+
+.diet-list .list-cell:odd {
+    -fx-background-color: rgba(139,58,58,0.02);
+}
+
+.diet-list .list-cell:selected {
+    -fx-background-color: linear-gradient(to right, rgba(79,121,66,0.2), rgba(79,121,66,0.1));
+    -fx-text-fill: #4F7942;
+    -fx-font-weight: bold;
+}
+
+.diet-list .list-cell:hover {
+    -fx-background-color: rgba(139,58,58,0.05);
+}
+
+.diet-list .list-cell:focused {
+    -fx-border-color: #4F7942;
+    -fx-border-width: 2;
+}
+
+/* ===== SCROLL BAR PERSONALIZZATA PER LISTE ===== */
+.diet-list .scroll-bar:vertical {
+    -fx-background-color: rgba(139,58,58,0.1);
+    -fx-background-radius: 5;
+    -fx-pref-width: 8;
+}
+
+.diet-list .scroll-bar:vertical .track {
+    -fx-background-color: rgba(139,58,58,0.05);
+    -fx-background-radius: 5;
+}
+
+.diet-list .scroll-bar:vertical .thumb {
+    -fx-background-color: linear-gradient(to bottom, #8B3A3A, #A0464A);
+    -fx-background-radius: 5;
+}
+
+.diet-list .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: linear-gradient(to bottom, #A0464A, #B54C50);
+}
+
+/* ===== CAMPO DI RICERCA ===== */
+.search-field {
+    -fx-background-color: linear-gradient(to bottom, #fdf8f7, #f9f2f1);
+    -fx-background-radius: 25;
+    -fx-border-color: rgba(139,58,58,0.2);
+    -fx-border-radius: 25;
+    -fx-border-width: 2;
+    -fx-padding: 12 20;
+    -fx-font-size: 14px;
+    -fx-text-fill: #8B3A3A;
+    -fx-prompt-text-fill: #B8928E;
+    -fx-effect: innershadow(gaussian, rgba(139,58,58,0.05), 3, 0, 0, 1);
+}
+
+.search-field:focused {
+    -fx-border-color: #4F7942;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 8, 0, 0, 2);
+}
+
+/* ===== PULSANTI POSITIVI (AGGIUNGI) ===== */
+.button-positive {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 6, 0, 0, 2);
+}
+
+.button-positive:hover {
+    -fx-background-color: linear-gradient(to right, #5A8A4A, #658F52);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.5), 10, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.button-positive:pressed {
+    -fx-background-color: linear-gradient(to right, #4A7039, #4F7942);
+    -fx-effect: innershadow(gaussian, rgba(79,121,66,0.4), 3, 0, 0, 1);
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* ===== PULSANTI NEGATIVI (RIMUOVI) ===== */
+.button-negative {
+    -fx-background-color: linear-gradient(to right, #8B3A3A, #A0464A);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 10 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.3), 6, 0, 0, 2);
+    -fx-min-width: 40;
+    -fx-pref-width: 40;
+}
+
+.button-negative:hover {
+    -fx-background-color: linear-gradient(to right, #A0464A, #B54C50);
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.5), 10, 0, 0, 3);
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.button-negative:pressed {
+    -fx-background-color: linear-gradient(to right, #7A3333, #8B3A3A);
+    -fx-effect: innershadow(gaussian, rgba(139,58,58,0.4), 3, 0, 0, 1);
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/* ===== ANIMAZIONI E TRANSIZIONI ===== */
+.search-field, .button-positive, .button-negative, .nav-button, .profile-image {
+    -fx-transition: all 0.3s ease;
+}
+
+/* ===== STATI FOCUS GENERALI ===== */
+.diet-list:focused {
+    -fx-border-color: #4F7942;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.2), 12, 0, 0, 4);
+}
+
+/* ===== UTILITY CLASSES ===== */
+.accent-red {
+    -fx-text-fill: #8B3A3A;
+}
+
+.accent-green {
+    -fx-text-fill: #4F7942;
+}
+
+.accent-light-red {
+    -fx-text-fill: #B8928E;
+}
+
+.background-light-red {
+    -fx-background-color: #FDF8F7;
+}
+
+.border-red {
+    -fx-border-color: #E8C5C1;
+}
+
+.text-white {
+    -fx-text-fill: white;
+}
+
+.background-gradient-primary {
+    -fx-background-color: linear-gradient(to right, #8B3A3A, #A0464A);
+}
+
+.background-gradient-secondary {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+}
+
+
+
+/* ===== BOTTONI PRIMARY (MODIFICA E ASSEGNA) ===== */
+.button-primary {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 18;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-min-width: 100;
+    -fx-pref-width: 120;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 5, 0, 0, 2);
+    -fx-transition: all 0.3s ease;
+}
+
+.button-primary:hover {
+    -fx-background-color: linear-gradient(to right, #5A8A4A, #658F52);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.5), 8, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.button-primary:pressed {
+    -fx-background-color: linear-gradient(to right, #4A7039, #4F7942);
+    -fx-effect: innershadow(gaussian, rgba(79,121,66,0.4), 3, 0, 0, 1);
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.button-primary:focused {
+    -fx-border-color: #4F7942;
+    -fx-border-width: 2;
+    -fx-border-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.4), 10, 0, 0, 3);
+}
+
+/* ===== BOTTONE DANGER (ANNULLA ASSEGNAZIONE) ===== */
+.button-danger {
+    -fx-background-color: linear-gradient(to right, #8B3A3A, #A0464A);
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 18;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-min-width: 120;
+    -fx-pref-width: 120;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.3), 5, 0, 0, 2);
+    -fx-transition: all 0.3s ease;
+}
+
+.button-danger:hover {
+    -fx-background-color: linear-gradient(to right, #A0464A, #B54C50);
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.5), 8, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.button-danger:pressed {
+    -fx-background-color: linear-gradient(to right, #7A3333, #8B3A3A);
+    -fx-effect: innershadow(gaussian, rgba(139,58,58,0.4), 3, 0, 0, 1);
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.button-danger:focused {
+    -fx-border-color: #8B3A3A;
+    -fx-border-width: 2;
+    -fx-border-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.4), 10, 0, 0, 3);
+}
+
+/* ===== STILI PER IL CONTENITORE HBOX DELLE CELLE ===== */
+.list-cell .h-box {
+    -fx-alignment: center-left;
+    -fx-spacing: 10;
+    -fx-padding: 5;
+}
+
+/* ===== STILI PER I LABEL NELLE CELLE ===== */
+.list-cell .label {
+    -fx-text-fill: #8B3A3A;
+    -fx-font-size: 13px;
+    -fx-font-weight: normal;
+    -fx-alignment: center-left;
+}
+
+/* ===== STILI AGGIUNTIVI PER LE CELLE DELLA LISTA ===== */
+.list-cell:selected .label {
+    -fx-text-fill: #4F7942;
+    -fx-font-weight: bold;
+}
+
+/* ===== RESPONSIVE DESIGN PER BOTTONI PICCOLI ===== */
+.button-primary.compact,
+.button-danger.compact {
+    -fx-font-size: 11px;
+    -fx-padding: 6 12;
+    -fx-min-width: 80;
+    -fx-pref-width: 100;
+}
+
+/* ===== STILI DISABILITATI ===== */
+.button-primary:disabled {
+    -fx-background-color: linear-gradient(to right, #B8928E, #C9A5A1);
+    -fx-text-fill: rgba(255,255,255,0.7);
+    -fx-effect: none;
+    -fx-cursor: default;
+}
+
+.button-danger:disabled {
+    -fx-background-color: linear-gradient(to right, #B8928E, #C9A5A1);
+    -fx-text-fill: rgba(255,255,255,0.7);
+    -fx-effect: none;
+    -fx-cursor: default;
+}

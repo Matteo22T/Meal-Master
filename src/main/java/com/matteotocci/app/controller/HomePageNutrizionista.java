@@ -91,16 +91,15 @@ public class HomePageNutrizionista implements Initializable {
                                 } catch (IOException e) {
                                     System.err.println("ERRORE (HomePageNutrizionista): Errore caricamento FXML VisualizzaDieta: " + e.getMessage());
                                     e.printStackTrace();
-                                    showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.", "Verificare il percorso del file FXML.");
+                                    showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.");
                                 } catch (Exception e) {
                                     System.err.println("ERRORE (HomePageNutrizionista): Errore generico durante l'apertura di VisualizzaDieta: " + e.getMessage());
                                     e.printStackTrace();
-                                    showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.", "Dettagli: " + e.getMessage());
+                                    showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.");
                                 }
                             } else {
                                 System.out.println("DEBUG (HomePageNutrizionista): Nessuna dieta trovata per il cliente " + cliente.getNome() + " (ID: " + cliente.getId() + ").");
-                                showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata",
-                                        "Il cliente selezionato non ha diete assegnate o non è stato possibile recuperarle.");
+                                showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata");
                             }
                         });
                     }
@@ -153,7 +152,7 @@ public class HomePageNutrizionista implements Initializable {
             }
         } catch (SQLException e) {
             System.err.println("Errore DB (nome utente): " + e.getMessage());
-            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare il nome utente.", "Dettagli: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare il nome utente.");
         }
         return nomeUtente;
     }
@@ -184,7 +183,7 @@ public class HomePageNutrizionista implements Initializable {
         } catch (SQLException e) {
             System.err.println("ERRORE SQL (HomePageNutrizionista): Errore durante il recupero della dieta per il cliente: " + e.getMessage());
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile recuperare la dieta.", "Dettagli: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile recuperare la dieta.");
         }
         return dieta;
     }
@@ -195,7 +194,7 @@ public class HomePageNutrizionista implements Initializable {
 
         if (currentNutrizionistaId == null) {
             System.err.println("[ERROR - HomePageNutrizionista] ID nutrizionista non disponibile dalla Sessione. Impossibile caricare i clienti.");
-            showAlert(Alert.AlertType.WARNING, "Utente non loggato", "ID Nutrizionista non disponibile", "Impossibile caricare la lista clienti. Riprovare il login.");
+            showAlert(Alert.AlertType.WARNING, "Utente non loggato", "ID Nutrizionista non disponibile");
             return;
         }
 
@@ -214,7 +213,7 @@ public class HomePageNutrizionista implements Initializable {
             tabellaClienti.setItems(listaClienti);
         } catch (SQLException e) {
             System.err.println("Errore DB (caricaClienti): " + e.getMessage());
-            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare i clienti.", "Dettagli: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare i clienti.");
         }
     }
 
@@ -268,7 +267,7 @@ public class HomePageNutrizionista implements Initializable {
             dietaStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.", "Verificare il percorso del file FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.");
         }
     }
 
@@ -283,7 +282,7 @@ public class HomePageNutrizionista implements Initializable {
             alimentiStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Alimenti'.", "Verificare il percorso del file FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Alimenti'.");
         }
     }
 
@@ -301,7 +300,7 @@ public class HomePageNutrizionista implements Initializable {
             ricetteNutrizionistaStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Le Mie Ricette (Nutrizionista)'.", "Verificare il percorso del file FXML (RicetteNutrizionista.fxml).");
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Le Mie Ricette (Nutrizionista)'.");
         }
     }
 
@@ -317,15 +316,36 @@ public class HomePageNutrizionista implements Initializable {
             profileStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Profilo Nutrizionista'.", "Verificare il percorso del file FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Profilo Nutrizionista'.");
         }
     }
 
-    private void showAlert(Alert.AlertType type, String title, String header, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait();
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType); // Crea una nuova istanza di Alert
+        alert.setTitle(title); // Imposta il titolo
+        alert.setHeaderText(null); // Non mostra un header text
+        alert.setContentText(message); // Imposta il contenuto
+
+        // Cerca il file CSS per lo stile personalizzato degli alert
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            // Se il CSS viene trovato, lo aggiunge al DialogPane dell'alert
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Applica la classe di stile base
+            // Aggiunge una classe di stile specifica in base al tipo di alert per una maggiore personalizzazione
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Messaggio di errore se il CSS non è trovato
+        }
+
+        alert.showAndWait(); // Mostra l'avviso e attende che l'utente lo chiuda
     }
 }

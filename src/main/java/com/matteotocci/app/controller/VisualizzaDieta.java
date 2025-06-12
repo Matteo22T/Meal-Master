@@ -8,6 +8,7 @@ import com.matteotocci.app.model.SQLiteConnessione;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
@@ -33,6 +34,7 @@ import java.awt.Color; // Ora useremo solo java.awt.Color
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -449,7 +451,7 @@ public class VisualizzaDieta {
     @FXML
     private void handleScaricaPdf(ActionEvent event) {
         if (dietaCorrente == null) {
-            showAlert("Errore", "Nessuna dieta caricata da scaricare.");
+            showAlert(Alert.AlertType.ERROR ,"Errore", "Nessuna dieta caricata da scaricare.");
             return;
         }
 
@@ -567,20 +569,42 @@ public class VisualizzaDieta {
                     document.add(tableGiorno);
                 }
                 document.close();
-                showAlert("Successo", "Dieta salvata come PDF con successo!");
+                showAlert(Alert.AlertType.INFORMATION,"Successo", "Dieta salvata come PDF con successo!");
             } catch (DocumentException | IOException e) {
                 e.printStackTrace();
-                showAlert("Errore", "Errore durante la generazione o il salvataggio del PDF: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR,"Errore", "Errore durante la generazione o il salvataggio del PDF: " + e.getMessage());
             }
         }
     }
 
-    private void showAlert(String title, String message) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType); // Crea una nuova istanza di Alert
+        alert.setTitle(title); // Imposta il titolo
+        alert.setHeaderText(null); // Non mostra un header text
+        alert.setContentText(message); // Imposta il contenuto
+
+        // Cerca il file CSS per lo stile personalizzato degli alert
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            // Se il CSS viene trovato, lo aggiunge al DialogPane dell'alert
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Applica la classe di stile base
+            // Aggiunge una classe di stile specifica in base al tipo di alert per una maggiore personalizzazione
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Messaggio di errore se il CSS non è trovato
+        }
+
+        alert.showAndWait(); // Mostra l'avviso e attende che l'utente lo chiuda
     }
+
 }
 

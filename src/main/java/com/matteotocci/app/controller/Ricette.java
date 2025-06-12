@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 
 public class Ricette {
@@ -295,16 +296,15 @@ public class Ricette {
             } catch (IOException e) {
                 System.err.println("ERRORE (HomePage): Errore caricamento FXML VisualizzaDieta: " + e.getMessage());
                 e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.", "Verificare il percorso del file FXML.");
+                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.");
             } catch (Exception e) {
                 System.err.println("ERRORE (HomePage): Errore generico durante l'apertura di VisualizzaDieta: " + e.getMessage());
                 e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.", "Dettagli: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.");
             }
         } else {
             System.out.println("DEBUG (HomePage): Nessuna dieta trovata per il cliente  (ID: " + Session.getUserId() + ").");
-            showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata",
-                    "Il cliente non ha diete assegnate o non è stato possibile recuperarle.");
+            showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata, il cliente non ha diete assegnate o non è stato possibile recuperarle.");
         }
     }
 
@@ -317,7 +317,7 @@ public class Ricette {
         } else if (ruolo.equalsIgnoreCase("cliente")) {
             fxmlPath = "/com/matteotocci/app/Alimenti.fxml";
         } else {
-            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.");
             return;
         }
         try {
@@ -329,7 +329,7 @@ public class Ricette {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la pagina Alimenti", "Verificare il percorso FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la pagina Alimenti");
         }
     }
 
@@ -343,7 +343,7 @@ public class Ricette {
         } else if (ruolo.equalsIgnoreCase("cliente")) {
             fxmlPath = "/com/matteotocci/app/HomePage.fxml";
         } else {
-            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.");
             return;
         }
         try {
@@ -354,7 +354,7 @@ public class Ricette {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la HomePage", "Verificare il percorso FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la HomePage");
         }
     }
 
@@ -367,7 +367,7 @@ public class Ricette {
         } else if (ruolo.equalsIgnoreCase("cliente")) {
             fxmlPath = "/com/matteotocci/app/PaginaProfilo.fxml";
         } else {
-            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.");
             return;
         }
         try {
@@ -379,7 +379,7 @@ public class Ricette {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la Pagina Profilo", "Verificare il percorso FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la Pagina Profilo");
         }
     }
     @FXML
@@ -411,7 +411,7 @@ public class Ricette {
             dietaStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.", "Verificare il percorso del file FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.");
         }
     }
 
@@ -423,7 +423,7 @@ public class Ricette {
         } else if (ruolo.equalsIgnoreCase("cliente")) {
             fxmlPath = "/com/matteotocci/app/Ricette.fxml";
         } else {
-            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.");
             return;
         }
         try {
@@ -435,17 +435,39 @@ public class Ricette {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la pagina Ricette", "Verificare il percorso FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la pagina Ricette");
         }
     }
 
-    private void showAlert(Alert.AlertType type, String title, String header, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait();
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType); // Crea una nuova istanza di Alert
+        alert.setTitle(title); // Imposta il titolo
+        alert.setHeaderText(null); // Non mostra un header text
+        alert.setContentText(message); // Imposta il contenuto
+
+        // Cerca il file CSS per lo stile personalizzato degli alert
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            // Se il CSS viene trovato, lo aggiunge al DialogPane dell'alert
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Applica la classe di stile base
+            // Aggiunge una classe di stile specifica in base al tipo di alert per una maggiore personalizzazione
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Messaggio di errore se il CSS non è trovato
+        }
+
+        alert.showAndWait(); // Mostra l'avviso e attende che l'utente lo chiuda
     }
+
 
 }
 

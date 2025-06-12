@@ -11,48 +11,53 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="531.0" prefWidth="922.0" styleClass="anchor-pane" stylesheets="@css/stile_HomePage.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.DietaNutrizionista">
+<AnchorPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/DietaNutrizionista-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.DietaNutrizionista">
     <children>
-        <BorderPane prefHeight="531.0" prefWidth="922.0">
+        <BorderPane prefHeight="531.0" prefWidth="922.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <left>
-                <VBox prefHeight="578.0" prefWidth="212.0">
+                <VBox prefWidth="200.0" styleClass="sidebar" HBox.hgrow="NEVER" VBox.vgrow="ALWAYS">
                     <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="69.0" style="-fx-padding: 10;">
+
+                        <!-- PROFILO NUTRIZIONISTA -->
+                        <HBox prefHeight="80.0" prefWidth="200.0" styleClass="profile-section">
                             <children>
-                                <ImageView fx:id="profileImage" fitHeight="70.0" fitWidth="68.0" onMouseClicked="#openProfiloNutrizionista" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@immagini/omino_profilo.jpg" />
-                                    </image>
-                                </ImageView>
-                                <VBox style="-fx-padding: 0 0 0 10;">
-                                    <Label fx:id="nomeUtenteLabelDieta" prefHeight="35.0" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
-                                    <Label fx:id="ruoloUtenteLabelDieta" prefHeight="39.0" prefWidth="113.0" style="-fx-font-size: 13px;" text="Nutrizionista" />
+                                <StackPane prefHeight="60.0" prefWidth="60.0">
+                                    <children>
+                                        <Circle fill="#ffffff" radius="25.0" styleClass="profile-circle" />
+                                        <ImageView fx:id="profileImage" fitHeight="45.0" fitWidth="45.0" onMouseClicked="#openProfiloNutrizionista" pickOnBounds="true" preserveRatio="true" styleClass="profile-image">
+                                            <image>
+                                                <Image url="@immagini/logo.png" />
+                                            </image>
+                                        </ImageView>
+                                    </children>
+                                </StackPane>
+                                <VBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="130.0">
+                                    <children>
+                                        <Label fx:id="nomeUtenteLabelDieta" styleClass="profile-name" text="Benvenuto" />
+                                        <Label styleClass="profile-subtitle" text="Nutrizionista" />
+                                    </children>
                                 </VBox>
                             </children>
                         </HBox>
-                        <Button fx:id="BottoneClienti" mnemonicParsing="false" onAction="#vaiAiClienti" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Clienti">
-                            <cursor>
-                                <Cursor fx:constant="HAND" />
-                            </cursor>
-                        </Button>
-                        <Button fx:id="BottoneAlimenti" mnemonicParsing="false" prefHeight="80.0" onAction="#AccessoAlimenti" prefWidth="212.0" styleClass="sidebar-button-active" text="Alimenti">
-                            <cursor>
-                                <Cursor fx:constant="HAND" />
-                            </cursor>
-                        </Button>
-                        <Button fx:id="BottoneRicette" mnemonicParsing="false" onAction="#AccessoRicette" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Ricette">
-                            <cursor>
-                                <Cursor fx:constant="HAND" />
-                            </cursor>
-                        </Button>
-                  <Button fx:id="BottoneDiete" layoutX="10.0" layoutY="259.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="212.0" styleClass="sidebar-button-active" text="Diete">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
+
+                        <!-- MENU NAVIGAZIONE NUTRIZIONISTA -->
+                        <VBox spacing="5.0" styleClass="nav-menu" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#vaiAiClienti" prefHeight="50.0" styleClass="nav-button" text="👥 Clienti" />
+                                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="50.0" styleClass="nav-button" text="🥗 Alimenti" />
+                                <Button fx:id="BottoneRicette" maxWidth="Infinity" mnemonicParsing="false" onAction="#AccessoRicette" prefHeight="50.0" styleClass="nav-button" text="📖 Ricette">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Button>
+                                <Button layoutX="10.0" layoutY="76.0" maxWidth="Infinity" mnemonicParsing="false" prefHeight="50.0" styleClass="nav-button,nav-button-active" text="📋 Diete" />
+                            </children>
+                        </VBox>
                     </children>
                 </VBox>
             </left>
@@ -100,7 +105,7 @@
                             <children>
                                 <TextField fx:id="filtroNomeDietaTextField" prefWidth="200.0" promptText="Filtra per nome..." styleClass="search-field" />
                                 <Button mnemonicParsing="false" onAction="#vaiAggiungiNuovaDieta" styleClass="button-positive" text="+ Nuova dieta" />
-                                <Button mnemonicParsing="false" styleClass="button-negative" text="-" />
+                                <Button mnemonicParsing="false" onAction="#eliminaDietaSelezionata" styleClass="button-negative" text="-" />
                             </children>
                         </HBox>
                     </children>

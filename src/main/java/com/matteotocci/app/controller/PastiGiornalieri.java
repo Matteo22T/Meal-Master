@@ -13,6 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -253,13 +255,13 @@ public class PastiGiornalieri {
 
                     caricaPasti(dataCorrente); // Ricarica i pasti per riflettere i cambiamenti
                     homePageController.aggiornaLabelKcalPerPasto();
-                    showAlert("Eliminato!", "'" + entry.getName() + "' eliminato con successo.");
+                    showAlert(Alert.AlertType.INFORMATION,"Eliminato!", "'" + entry.getName() + "' eliminato con successo.");
                 } else {
-                    showAlert("Errore Eliminazione", "Impossibile eliminare '" + entry.getName() + "'. Record non trovato nel database.");
+                    showAlert(Alert.AlertType.ERROR,"Errore Eliminazione", "Impossibile eliminare '" + entry.getName() + "'. Record non trovato nel database.");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                showAlert("Errore Database", "Si è verificato un errore durante l'eliminazione: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR,"Errore Database", "Si è verificato un errore durante l'eliminazione: " + e.getMessage());
             }
         }
     }
@@ -278,7 +280,7 @@ public class PastiGiornalieri {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert("Errore Database", "Impossibile recuperare l'ID del pasto giornaliero per l'aggiornamento dei totali: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR,"Errore Database", "Impossibile recuperare l'ID del pasto giornaliero per l'aggiornamento dei totali: " + e.getMessage());
             return;
         }
 
@@ -299,7 +301,7 @@ public class PastiGiornalieri {
                 System.out.println("Totali PastiGiornalieri aggiornati.");
             } catch (SQLException e) {
                 e.printStackTrace();
-                showAlert("Errore Database", "Si è verificato un errore durante l'aggiornamento dei totali del pasto giornaliero: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR,"Errore Database", "Si è verificato un errore durante l'aggiornamento dei totali del pasto giornaliero: " + e.getMessage());
             }
         } else {
             System.err.println("Attenzione: ID del pasto giornaliero non trovato per il pasto con ID: " + pastoId);
@@ -331,13 +333,13 @@ public class PastiGiornalieri {
                 double newQuantity = Double.parseDouble(newQuantityString);
 
                 if (newQuantity <= 0) {
-                    showAlert("Quantità non valida", "La quantità deve essere un numero positivo.");
+                    showAlert(Alert.AlertType.ERROR,"Quantità non valida", "La quantità deve essere un numero positivo.");
                     return;
                 }
 
                 // Confronta con la vecchia quantità per evitare aggiornamenti inutili
                 if (newQuantity == entry.getQuantity()) {
-                    showAlert("Nessuna modifica", "La quantità non è cambiata.");
+                    showAlert(Alert.AlertType.ERROR,"Nessuna modifica", "La quantità non è cambiata.");
                     return;
                 }
 
@@ -345,7 +347,7 @@ public class PastiGiornalieri {
                 updatePastoQuantity(entry, newQuantity);
 
             } catch (NumberFormatException e) {
-                showAlert("Input non valido", "Per favore, inserisci un numero valido per la quantità.");
+                showAlert(Alert.AlertType.ERROR,"Input non valido", "Per favore, inserisci un numero valido per la quantità.");
             }
         });
     }
@@ -448,15 +450,15 @@ public class PastiGiornalieri {
                         homePageController.aggiornaLabelKcalPerPasto();
                     }
 
-                    showAlert("Successo", "Quantità per '" + entry.getName() + "' aggiornata a " + String.format("%.1f", newQuantity) + ".");
+                    showAlert(Alert.AlertType.INFORMATION,"Successo", "Quantità per '" + entry.getName() + "' aggiornata a " + String.format("%.1f", newQuantity) + ".");
                 } else {
-                    showAlert("Errore", "Impossibile aggiornare la quantità. Record non trovato.");
+                    showAlert(Alert.AlertType.ERROR,"Errore", "Impossibile aggiornare la quantità. Record non trovato.");
                 }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert("Errore Database", "Si è verificato un errore durante l'aggiornamento: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR,"Errore Database", "Si è verificato un errore durante l'aggiornamento: " + e.getMessage());
         }
     }
 
@@ -620,7 +622,7 @@ public class PastiGiornalieri {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert("Database Error", "Failed to load daily meals: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR,"Errore", "Caricamento fallito" + e.getMessage());
         }
 
         // Update overall daily nutrition summary
@@ -689,14 +691,34 @@ public class PastiGiornalieri {
 
         return null;
     }
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType); // Crea una nuova istanza di Alert
+        alert.setTitle(title); // Imposta il titolo
+        alert.setHeaderText(null); // Non mostra un header text
+        alert.setContentText(message); // Imposta il contenuto
 
+        // Cerca il file CSS per lo stile personalizzato degli alert
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            // Se il CSS viene trovato, lo aggiunge al DialogPane dell'alert
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Applica la classe di stile base
+            // Aggiunge una classe di stile specifica in base al tipo di alert per una maggiore personalizzazione
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Messaggio di errore se il CSS non è trovato
+        }
+
+        alert.showAndWait(); // Mostra l'avviso e attende che l'utente lo chiuda
+    }
 
     private double fixNegativeZero(double value) {
         return Math.abs(value) < 0.0001 ? 0.0 : value;

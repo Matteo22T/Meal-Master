@@ -189,6 +189,9 @@ public class ProfiloNutrizionista implements Initializable {
         alert.setTitle("Conferma Logout");
         alert.setHeaderText("Sei sicuro di voler uscire?");
         alert.setContentText("Clicca OK per confermare o Annulla per rimanere.");
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
+        alert.getDialogPane().getStyleClass().add("alert-confirmation");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {

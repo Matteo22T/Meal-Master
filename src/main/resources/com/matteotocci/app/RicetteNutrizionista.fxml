@@ -41,7 +41,7 @@
                                 <VBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="130.0">
                                     <children>
                                         <Label fx:id="nomeUtenteLabelHomePage" styleClass="profile-name" text="Nome e Cognome" />
-                                        <Label styleClass="profile-subtitle" text="Benvenuto!" />
+                                        <Label styleClass="profile-subtitle" text="Nutrizionista" />
                                     </children>
                                 </VBox>
                             </children>

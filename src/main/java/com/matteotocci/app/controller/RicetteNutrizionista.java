@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -71,7 +72,7 @@ public class RicetteNutrizionista {
             }
         } catch (SQLException e) {
             System.err.println("Errore durante la lettura del nome nutrizionista dal database: " + e.getMessage());
-            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare il nome del nutrizionista.", "Dettagli: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare il nome del nutrizionista.");
         }
         return nomeNutrizionista;
     }
@@ -192,7 +193,7 @@ public class RicetteNutrizionista {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare le ricette", "Dettagli: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare le ricette");
         }
     }
 
@@ -232,7 +233,7 @@ public class RicetteNutrizionista {
 
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la HomePage per Nutrizionisti", "Verificare il percorso FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la HomePage per Nutrizionisti");
         }
     }
 
@@ -249,7 +250,7 @@ public class RicetteNutrizionista {
 
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la Pagina Profilo per Nutrizionisti", "Verificare il percorso FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la Pagina Profilo per Nutrizionisti");
         }
     }
     @FXML
@@ -263,7 +264,7 @@ public class RicetteNutrizionista {
             dietaStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.", "Verificare il percorso del file FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.");
         }
     }
 
@@ -285,16 +286,38 @@ public class RicetteNutrizionista {
 
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Caricamento", "Impossibile aprire la schermata di aggiunta ricetta", "Verificare il file FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Caricamento", "Impossibile aprire la schermata di aggiunta ricetta");
         }
     }
 
 
-    private void showAlert(Alert.AlertType type, String title, String header, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait();
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType); // Crea una nuova istanza di Alert
+        alert.setTitle(title); // Imposta il titolo
+        alert.setHeaderText(null); // Non mostra un header text
+        alert.setContentText(message); // Imposta il contenuto
+
+        // Cerca il file CSS per lo stile personalizzato degli alert
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            // Se il CSS viene trovato, lo aggiunge al DialogPane dell'alert
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Applica la classe di stile base
+            // Aggiunge una classe di stile specifica in base al tipo di alert per una maggiore personalizzazione
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Messaggio di errore se il CSS non è trovato
+        }
+
+        alert.showAndWait(); // Mostra l'avviso e attende che l'utente lo chiuda
     }
+
 }
