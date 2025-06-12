@@ -501,10 +501,13 @@ public class AggiungiPasto implements Initializable { // AGGIUNTA: Implementa l'
 
             DettagliAlimentoController controller = loader.getController(); // Ottiene il controller
             controller.setAlimento(alimento); // Passa l'alimento selezionato
+            controller.setOrigineFXML("AggiungiPasto.fxml");
 
             Stage stage = new Stage(); // Crea un nuovo Stage
             stage.setTitle("Dettaglio Alimento"); // Imposta il titolo
             stage.setScene(new Scene(root)); // Imposta la scena
+            stage.setResizable(false);
+            stage.setFullScreen(false);
             stage.show(); // Mostra la finestra
         } catch (IOException e) {
             e.printStackTrace(); // Stampa l'errore
@@ -625,7 +628,7 @@ public class AggiungiPasto implements Initializable { // AGGIUNTA: Implementa l'
 
                 DettaglioRicettaController controller = loader.getController(); // Ottiene il controller
                 controller.setRicetta(ricettaSelezionata); // Passa la ricetta selezionata
-                controller.setOrigineFXML("Ricette.fxml"); // Indica la schermata di origine
+                controller.setOrigineFXML("AggiungiPasto.fxml"); // Indica la schermata di origine
 
                 Stage stage = new Stage(); // Crea un nuovo Stage
                 stage.setTitle("Dettaglio Ricetta"); // Imposta il titolo

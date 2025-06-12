@@ -17,6 +17,8 @@ public class RegistrazioneConferma {
         Parent root = FXMLLoader.load(getClass().getResource("/com/matteotocci/app/PrimaPagina.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
+        stage.setResizable(false);
+        stage.setFullScreen(false);
         stage.setTitle("Login");
         stage.show();
     }

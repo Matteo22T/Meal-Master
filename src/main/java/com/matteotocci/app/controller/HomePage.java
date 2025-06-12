@@ -649,6 +649,8 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
             Stage stage = new Stage(); // Crea un nuovo Stage per AggiungiPasto
             stage.setTitle("Aggiungi " + tipoPasto); // Imposta il titolo
             stage.setScene(new Scene(root)); // Imposta la scena
+            stage.setResizable(false);
+            stage.setFullScreen(false);
             stage.initModality(Modality.APPLICATION_MODAL); // Rende la finestra modale (blocca interazione con altre finestre)
             // Imposta la finestra corrente (quella del pasto) come proprietaria della nuova finestra modale
             stage.initOwner(((Node) mealCaloriesLabel).getScene().getWindow());

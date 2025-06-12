@@ -14,28 +14,31 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiAlimentoDieta">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@css/AggiungiPasto-Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiAlimentoDieta">
     <children>
         <VBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="600.0">
                     <children>
-                        <Button mnemonicParsing="false" onAction="#mostraTabellaAlimenti" text="Alimenti" />
-                        <Button mnemonicParsing="false" onAction="#mostraTabellaRicette" text="Ricette" />
+                        <Button fx:id="btnAlimenti" mnemonicParsing="false" onAction="#mostraTabellaAlimenti" styleClass="bottoneAttivo" text="Alimenti" />
+                        <Button fx:id="btnRicette" mnemonicParsing="false" onAction="#mostraTabellaRicette" styleClass="bottoneSpento" text="Ricette" />
                     </children>
                 </HBox>
                 <HBox prefHeight="100.0" prefWidth="600.0">
                     <children>
                         <StackPane prefHeight="150.0" prefWidth="200.0">
                             <children>
-                                <TextField fx:id="textCercaAlimento" promptText="Cerca alimento..." />
+                                <TextField fx:id="textCercaAlimento" promptText="Cerca alimento...">
+                           <StackPane.margin>
+                              <Insets left="15.0" />
+                           </StackPane.margin></TextField>
                                 <TextField fx:id="textCercaRicetta" layoutX="10.0" layoutY="37.0" promptText="Cerca ricetta..." visible="false" />
                             </children>
                         </StackPane>
                         <StackPane layoutX="200.0" layoutY="0.0" prefHeight="150.0" prefWidth="100.0">
                             <children>
-                                <Button fx:id="ButtonCercaAlimento" mnemonicParsing="false" text="Cerca" onAction="#handleCercaAlimento" />
-                                <Button fx:id="ButtonCercaRicetta" layoutX="10.0" layoutY="37.0" mnemonicParsing="false" text="Cerca" onAction="#handleCercaRicetta" visible="false" />
+                                <Button fx:id="ButtonCercaAlimento" mnemonicParsing="false" onAction="#handleCercaAlimento" text="Cerca" />
+                                <Button fx:id="ButtonCercaRicetta" layoutX="10.0" layoutY="37.0" mnemonicParsing="false" onAction="#handleCercaRicetta" text="Cerca" visible="false" />
                             </children>
                         </StackPane>
                         <StackPane layoutX="300.0" layoutY="0.0" prefHeight="150.0" prefWidth="150.0">
@@ -69,10 +72,10 @@
                                 <TableColumn fx:id="zuccheriCol" prefWidth="80" text="Zuccheri" />
                             </columns>
                         </TableView>
-                        <TableView fx:id="tableViewRicette" visible="false">
+                        <TableView fx:id="tableViewRicette" editable="true" maxWidth="-Infinity" prefWidth="546.0" visible="false">
                             <columns>
                                 <TableColumn fx:id="nomeColRic" prefWidth="200" text="Nome" />
-                                <TableColumn fx:id="descrizioneColRic" prefWidth="642.0" text="Descrizione" />
+                                <TableColumn fx:id="descrizioneColRic" prefWidth="500.0" text="Descrizione" />
                                 <TableColumn fx:id="categoriaColRic" prefWidth="100.0" text="Categoria" />
                             </columns>
                         </TableView>
@@ -81,7 +84,7 @@
                 <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="600.0" spacing="10.0">
                     <children>
                         <Label text="Quantità:" />
-                        <Spinner fx:id="quantitaSpinner" editable="true" initialValue="100" min="1" max="1000" amountToStepBy="50" prefWidth="100.0" />
+                        <Spinner fx:id="quantitaSpinner" amountToStepBy="50" editable="true" initialValue="100" max="1000" min="1" prefWidth="100.0" />
                         <Label text="grammi" />
                     </children>
                     <padding>
@@ -93,8 +96,8 @@
                         <Insets right="10.0" />
                     </padding>
                     <children>
-                        <Button fx:id="confermaAlimentiButton" mnemonicParsing="false" text="Conferma Alimenti" visible="true" onAction="#confermaAlimenti" />
-                        <Button fx:id="confermaRicetteButton" mnemonicParsing="false" text="Conferma Ricette" visible="false" onAction="#confermaRicette" />
+                        <Button fx:id="confermaAlimentiButton" mnemonicParsing="false" onAction="#confermaAlimenti" text="Conferma Alimenti" visible="true" />
+                        <Button fx:id="confermaRicetteButton" mnemonicParsing="false" onAction="#confermaRicette" text="Conferma Ricette" visible="false" />
                     </children>
                 </StackPane>
             </children>

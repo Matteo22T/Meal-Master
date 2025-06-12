@@ -320,6 +320,8 @@ public class Alimenti implements Initializable { // AGGIUNTA: Implementa l'inter
             Stage stage = new Stage(); // Crea un nuovo Stage (finestra)
             stage.setTitle("Dettaglio Alimento"); // Imposta il titolo
             Scene scene = new Scene(root);
+            stage.setResizable(false);
+            stage.setFullScreen(false);
             // Carica un CSS specifico per la finestra di dettaglio se necessario
             scene.getStylesheets().add(getClass().getResource("/com/matteotocci/app/css/DettaglioAlimento-Style.css").toExternalForm());
             stage.setScene(scene);
@@ -348,6 +350,8 @@ public class Alimenti implements Initializable { // AGGIUNTA: Implementa l'inter
             Stage stage = new Stage(); // Crea un nuovo Stage
             stage.setTitle("Aggiungi Alimento"); // Imposta il titolo
             stage.setScene(new Scene(root)); // Imposta la scena
+            stage.setResizable(false);
+            stage.setFullScreen(false);
             stage.show(); // Mostra la finestra
 
         } catch (IOException e) {

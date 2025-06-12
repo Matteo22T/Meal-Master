@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.geometry.Point3D?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -65,7 +66,7 @@
                <children>
 
                   <!-- SEZIONE CALORIE E MACRONUTRIENTI -->
-                  <HBox prefHeight="170.0" prefWidth="800.0" styleClass="stats-section" VBox.vgrow="ALWAYS">
+                  <HBox prefHeight="170.0" prefWidth="800.0" styleClass="stats-section" VBox.vgrow="NEVER">
                      <children>
                         <!-- CONTATORE CALORIE -->
                         <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="calories-container">
@@ -101,6 +102,9 @@
                                  <font>
                                     <Font name="Segoe UI Bold" size="18.0" />
                                  </font>
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" />
+                                 </VBox.margin>
                               </Label>
                               <HBox alignment="CENTER" prefHeight="110.0" prefWidth="600.0" spacing="30.0" styleClass="macros-grid" VBox.vgrow="ALWAYS">
                                  <children>

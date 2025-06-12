@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.matteotocci.app.controller.NuovaDieta">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="root" stylesheets="@css/NuovaDieta-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.NuovaDieta">
+
     <children>
-        <VBox spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0"
-              AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <VBox spacing="20.0" styleClass="anchor-pane" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
             <children>
-                <Label text="Crea Nuovo Piano Alimentare"/>
-                <Separator/>
+                <Label styleClass="titolo-principale" text="Crea Nuovo Piano Alimentare" />
+                <Separator />
                 <HBox spacing="10.0">
                     <children>
-                        <Label text="Titolo del Piano:"/>
-                        <TextField fx:id="titoloPianoTextField"/>
+                        <Label text="Titolo del Piano:" />
+                        <TextField fx:id="titoloPianoTextField" />
                     </children>
                 </HBox>
                 <HBox spacing="10.0">
                     <children>
-                        <Label text="Data Inizio:"/>
-                        <DatePicker fx:id="dataInizioDatePicker"/>
+                        <Label text="Data Inizio:" />
+                        <DatePicker fx:id="dataInizioDatePicker" />
                     </children>
                 </HBox>
                 <HBox spacing="10.0">
                     <children>
-                        <Label text="Data Fine:"/>
-                        <DatePicker fx:id="dataFineDatePicker"/>
+                        <Label text="Data Fine:" />
+                        <DatePicker fx:id="dataFineDatePicker" />
                     </children>
                 </HBox>
-                <Button fx:id="avantiButton" text="Avanti >" onAction="#switchToAggiungiAlimenti"/>
-                <Label fx:id="messaggioLabel" text="" style="-fx-text-fill: red;"/>
+                <Button fx:id="avantiButton" onAction="#switchToAggiungiAlimenti" text="Avanti &gt;" />
             </children>
             <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
         </VBox>
     </children>

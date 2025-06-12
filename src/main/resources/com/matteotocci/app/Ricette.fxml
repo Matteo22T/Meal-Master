@@ -51,12 +51,12 @@
                         <VBox prefHeight="400.0" prefWidth="200.0" spacing="5.0" styleClass="nav-menu">
                             <children>
                                 <Button fx:id="BottoneHome" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoHome" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="🏠 Home Page" />
-                                <Button fx:id="BottoneRicette" maxWidth="1.7976931348623157E308" mnemonicParsing="false"  prefHeight="50.0" prefWidth="180.0" styleClass="nav-button,nav-button-active" text="📖 Ricette">
+                                <Button fx:id="BottoneRicette" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button,nav-button-active" text="📖 Ricette">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />
                                     </cursor>
                                 </Button>
-                                <Button mnemonicParsing="false" prefHeight="50.0" onAction="#AccessoPianoAlimentare" prefWidth="180.0" styleClass="nav-button" text="📋 Piano Alimentare" />
+                                <Button mnemonicParsing="false" onAction="#AccessoPianoAlimentare" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="📋 Piano Alimentare" />
                                 <Button fx:id="BottoneAlimenti" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="🥗 Alimenti">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />
@@ -68,23 +68,23 @@
                 </VBox>
 
                 <!-- CONTENUTO PRINCIPALE -->
-                <VBox maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="800.0" styleClass="main-content">
+                <VBox maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="800.0" styleClass="main-content" HBox.hgrow="ALWAYS">
                     <children>
                         <!-- SEZIONE RICERCA E FILTRI -->
                         <VBox prefHeight="120.0" prefWidth="800.0" styleClass="search-section">
                             <children>
                                 <!-- PRIMA RIGA CONTROLLI -->
-                                <HBox alignment="CENTER" prefHeight="45.0" prefWidth="800.0" spacing="10.0" styleClass="search-row">
+                                <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="800.0" spacing="10.0" styleClass="search-row" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <TextField fx:id="cercaRicetta" prefHeight="35.0" prefWidth="350.0" promptText="Cerca ricetta..." styleClass="search-field" />
-                                        <Button fx:id="bottoneCerca" onAction="#handleCercaRicetta" prefHeight="35.0" prefWidth="120.0" styleClass="search-button" text="🔍 Cerca" />
-                                        <ComboBox fx:id="categorieRicette" prefHeight="35.0" prefWidth="150.0" promptText="Categoria" styleClass="filter-combo" />
-                                        <Button fx:id="bottoneAggiungi" onAction="#handleApriAggiuntaRicetta" prefHeight="35.0" prefWidth="80.0" styleClass="add-button" text="➕" />
+                                        <TextField fx:id="cercaRicetta" prefHeight="35.0" prefWidth="350.0" promptText="Cerca ricetta..." styleClass="search-field" HBox.hgrow="ALWAYS" />
+                                        <Button fx:id="bottoneCerca" onAction="#handleCercaRicetta" prefHeight="35.0" prefWidth="120.0" styleClass="search-button" text="🔍 Cerca" HBox.hgrow="ALWAYS" />
+                                        <ComboBox fx:id="categorieRicette" prefHeight="35.0" prefWidth="150.0" promptText="Categoria" styleClass="filter-combo" HBox.hgrow="ALWAYS" />
+                                        <Button fx:id="bottoneAggiungi" onAction="#handleApriAggiuntaRicetta" prefHeight="35.0" prefWidth="80.0" styleClass="add-button" text="➕" HBox.hgrow="ALWAYS" />
                                     </children>
                                 </HBox>
 
                                 <!-- SECONDA RIGA CONTROLLI -->
-                                <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="800.0" spacing="10.0" styleClass="filter-row">
+                                <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="800.0" spacing="10.0" styleClass="filter-row" VBox.vgrow="NEVER">
                                     <children>
                                         <CheckBox fx:id="mieiAlimentiCheckBox" prefHeight="25.0" prefWidth="200.0" styleClass="filter-checkbox" text="📋 Solo le mie ricette">
                                             <padding>
@@ -99,14 +99,17 @@
                         </VBox>
 
                         <!-- SEZIONE TABELLA -->
-                        <VBox styleClass="table-section">
+                        <VBox styleClass="table-section" VBox.vgrow="ALWAYS">
                             <children>
-                                <TableView fx:id="tableViewRicette" editable="true" onMouseClicked="#apriDettaglioRicetta" prefHeight="390.0" prefWidth="720.0" styleClass="ricette-table">
+                                <TableView fx:id="tableViewRicette" editable="true" onMouseClicked="#apriDettaglioRicetta" prefHeight="390.0" prefWidth="720.0" styleClass="ricette-table" VBox.vgrow="ALWAYS">
                                     <columns>
                                         <TableColumn fx:id="nomeCol" prefWidth="200.0" styleClass="table-column" text="Nome" />
                                         <TableColumn fx:id="descrizioneCol" prefWidth="400.0" styleClass="table-column" text="Descrizione" />
                                         <TableColumn fx:id="categoriaCol" prefWidth="120.0" styleClass="table-column" text="Categoria" />
                                     </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                                 </TableView>
                             </children>
                         </VBox>

@@ -86,6 +86,10 @@ public class AggiungiAlimentoDieta implements Initializable { // AGGIUNTA: Imple
     private AggiungiGiornoDieta giornoDietaController; // Controller della schermata "Aggiungi Giorno Dieta"
     private String pastoCorrente; // Il tipo di pasto a cui aggiungere l'alimento/ricetta (es. "Colazione")
 
+    @FXML private Button btnRicette; // Bottone per passare alla visualizzazione Ricette
+    @FXML private Button btnAlimenti; // Bottone per passare alla visualizzazione Alimenti
+
+
     // --- Metodi di comunicazione tra controller ---
 
     /**
@@ -115,6 +119,8 @@ public class AggiungiAlimentoDieta implements Initializable { // AGGIUNTA: Imple
      */
     @FXML
     private void mostraTabellaAlimenti(ActionEvent event) {
+        highlightButton(btnAlimenti, btnRicette);
+
         tableViewAlimenti.setVisible(true);
         tableViewRicette.setVisible(false);
         confermaAlimentiButton.setVisible(true);
@@ -136,6 +142,9 @@ public class AggiungiAlimentoDieta implements Initializable { // AGGIUNTA: Imple
      */
     @FXML
     private void mostraTabellaRicette(ActionEvent event) {
+        highlightButton(btnRicette, btnAlimenti); // Evidenzia il bottone "Ricette"
+
+
         tableViewAlimenti.setVisible(false);
         tableViewRicette.setVisible(true);
         confermaAlimentiButton.setVisible(false);
@@ -279,6 +288,9 @@ public class AggiungiAlimentoDieta implements Initializable { // AGGIUNTA: Imple
         // Carica inizialmente le ricette (senza filtro di ricerca e senza append)
         // La condizione della checkbox "Solo le mie ricette" verrà applicata da cercaRicette()
         cercaRicette("", false);
+
+        highlightButton(btnAlimenti, btnRicette);
+
     }
 
     // --- Metodi di ricerca ---
@@ -489,11 +501,13 @@ public class AggiungiAlimentoDieta implements Initializable { // AGGIUNTA: Imple
 
                 DettaglioRicettaController controller = loader.getController(); // Ottiene il controller
                 controller.setRicetta(ricettaSelezionata); // Passa la ricetta selezionata
-                controller.setOrigineFXML("Ricette.fxml"); // Indica la schermata di origine
+                controller.setOrigineFXML("AggiungiAlimentoDieta.fxml"); // Indica la schermata di origine
 
                 Stage stage = new Stage(); // Crea un nuovo Stage
                 stage.setTitle("Dettaglio Ricetta"); // Imposta il titolo
                 stage.setScene(new Scene(root)); // Imposta la scena
+                stage.setFullScreen(false);
+                stage.setResizable(false);
                 stage.show(); // Mostra la finestra
             } catch (IOException e) {
                 e.printStackTrace(); // Stampa l'errore
@@ -520,6 +534,19 @@ public class AggiungiAlimentoDieta implements Initializable { // AGGIUNTA: Imple
         return null; // Nessuna scrollbar verticale trovata
     }
 
+    private void highlightButton(Button active, Button inactive) {
+        // Se il bottone attivo ha già lo stile "bottoneAttivo", non fare nulla per evitare refresh inutili
+        if(active.getStyleClass().contains("bottoneAttivo")) {
+            return;
+        }
+        // Rimuove gli stili "bottoneSpento" dal bottone attivo e "bottoneAttivo" dal bottone inattivo
+        active.getStyleClass().remove("bottoneSpento");
+        inactive.getStyleClass().remove("bottoneAttivo");
+
+        // Aggiunge gli stili "bottoneAttivo" al bottone attivo e "bottoneSpento" al bottone inattivo
+        active.getStyleClass().add("bottoneAttivo");
+        inactive.getStyleClass().add("bottoneSpento");
+    }
     /**
      * Apre la finestra di dettaglio per un alimento selezionato tramite double-click.
      * @param alimento L'oggetto Alimento da visualizzare in dettaglio.
@@ -532,10 +559,13 @@ public class AggiungiAlimentoDieta implements Initializable { // AGGIUNTA: Imple
 
             DettagliAlimentoController controller = loader.getController(); // Ottiene il controller
             controller.setAlimento(alimento); // Passa l'alimento selezionato
+            controller.setOrigineFXML("AggiungAlimentoDieta.fxml");
 
             Stage stage = new Stage(); // Crea un nuovo Stage
             stage.setTitle("Dettaglio Alimento"); // Imposta il titolo
             stage.setScene(new Scene(root)); // Imposta la scena
+            stage.setResizable(false);
+            stage.setFullScreen(false);
             stage.show(); // Mostra la finestra
         } catch (IOException e) {
             e.printStackTrace(); // Stampa l'errore

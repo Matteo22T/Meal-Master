@@ -10,7 +10,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label; // Manteniamo Label per 'messaggioLabel'
 import javafx.scene.control.TextField;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DateCell;
@@ -40,8 +39,7 @@ public class NuovaDieta implements Initializable {
     @FXML
     private Button avantiButton;
 
-    @FXML
-    private Label messaggioLabel; // Questo Label è ancora presente per i messaggi di errore (Alert)
+
 
     private String titoloPiano;
     private LocalDate dataInizio;
@@ -75,15 +73,13 @@ public class NuovaDieta implements Initializable {
 
         // Inizializza il numero di giorni a 0 all'avvio (internamente)
         numeroGiorni = 0;
-        messaggioLabel.setText(""); // Assicurati che il messaggio rosso sia vuoto all'inizio
     }
 
     private void calcolaNumeroGiorni() {
         LocalDate start = dataInizioDatePicker.getValue();
         LocalDate end = dataFineDatePicker.getValue();
 
-        // Pulisci il messaggio rosso esistente (se usato per altri scopi)
-        messaggioLabel.setText("");
+
 
         if (start != null && end != null) {
             if (end.isBefore(start)) {

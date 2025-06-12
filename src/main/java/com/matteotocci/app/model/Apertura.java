@@ -14,6 +14,7 @@ public class Apertura extends Application {
         Scene scene=new Scene(fxmlLoader.load());
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.setFullScreen(false);
         stage.show();
     }
 

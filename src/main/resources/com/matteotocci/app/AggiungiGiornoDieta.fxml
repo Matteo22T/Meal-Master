@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="800.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/AggiugniGiornoDieta-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiGiornoDieta">
+<BorderPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/AggiugniGiornoDieta-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiGiornoDieta">
     <top>
         <VBox alignment="CENTER" spacing="10.0" styleClass="header-section" BorderPane.alignment="CENTER">
             <padding>

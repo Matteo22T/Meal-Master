@@ -303,6 +303,8 @@ public class PaginaProfilo implements Initializable{
             Stage modificaPasswordStage = new Stage();
             modificaPasswordStage.setTitle("Modifica Password");
             modificaPasswordStage.setScene(new Scene(modificaPasswordRoot));
+            modificaPasswordStage.setResizable(false);
+            modificaPasswordStage.setFullScreen(false);
             modificaPasswordStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -342,6 +344,8 @@ public class PaginaProfilo implements Initializable{
                 Parent loginRoot = fxmlLoader.load();
                 Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Scene loginScene = new Scene(loginRoot);
+                currentStage.setResizable(false);
+                currentStage.setFullScreen(false);
                 currentStage.setScene(loginScene);
                 currentStage.show();
             } catch (IOException e) {
@@ -359,6 +363,8 @@ public class PaginaProfilo implements Initializable{
             Stage bmiStage = new Stage();
             bmiStage.setTitle("Calcolo BMI");
             bmiStage.setScene(new Scene(bmiRoot));
+            bmiStage.setResizable(false);
+            bmiStage.setFullScreen(false);
             bmiStage.show();
         } catch (IOException e) {
             e.printStackTrace();

@@ -472,6 +472,8 @@ public class DietaNutrizionista implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Nuova Dieta");
             stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.setFullScreen(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             Window owner = ((Node) event.getSource()).getScene().getWindow();
             stage.initOwner(owner);

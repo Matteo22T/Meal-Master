@@ -192,6 +192,9 @@ public class AggiungiGiornoDieta implements Initializable {
                     aggiungiAlimentoStage.setTitle("Aggiungi Alimento/Ricetta");
                     aggiungiAlimentoStage.setScene(new Scene(aggiungiAlimentoRoot));
 
+                    aggiungiAlimentoStage.setResizable(false);
+                    aggiungiAlimentoStage.setFullScreen(false);
+
                     // Chiude la finestra se viene chiusa la principale
                     ((Stage)((Node)event.getSource()).getScene().getWindow()).setOnCloseRequest(e -> {
                         if (aggiungiAlimentoStage != null) {

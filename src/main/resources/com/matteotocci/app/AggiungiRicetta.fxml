@@ -13,21 +13,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="640.0" maxWidth="1000.0" prefHeight="640.0" prefWidth="1000.0" stylesheets="@css/AggiungiRicetta-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiRicetteController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="640.0" prefWidth="1000.0" stylesheets="@css/AggiungiRicetta-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiRicetteController">
     <children>
         <HBox prefHeight="640.0" prefWidth="1000.0" spacing="15.0" styleClass="main-container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <VBox fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="610.0" prefWidth="580.0" spacing="15.0" styleClass="left-panel">
+                <VBox fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="610.0" prefWidth="580.0" spacing="15.0" styleClass="left-panel" HBox.hgrow="ALWAYS">
                     <children>
-                        <HBox prefHeight="40.0" prefWidth="540.0" spacing="10.0" styleClass="recipe-header">
+                        <HBox prefHeight="40.0" spacing="10.0" styleClass="recipe-header" VBox.vgrow="NEVER">
                             <children>
-                                <TextField fx:id="nomeRicetta" prefHeight="42.0" prefWidth="376.0" promptText="Nome nuova ricetta..." />
+                                <TextField fx:id="nomeRicetta" prefHeight="42.0" promptText="Nome nuova ricetta..." HBox.hgrow="ALWAYS" />
                                 <ComboBox fx:id="categoriaRicetta" prefHeight="50.0" prefWidth="225.0" promptText="Categoria ricetta" />
                             </children>
                         </HBox>
-                        <HBox prefHeight="40.0" prefWidth="540.0" spacing="10.0" styleClass="search-row">
+                        <HBox prefHeight="40.0" spacing="10.0" styleClass="search-row" VBox.vgrow="NEVER">
                             <children>
-                                <TextField fx:id="cercaAlimento" prefHeight="42.0" prefWidth="147.0" promptText="Cerca alimento.." />
+                                <TextField fx:id="cercaAlimento" prefHeight="42.0" promptText="Cerca alimento.." HBox.hgrow="ALWAYS" />
                                 <Button fx:id="bottoneCerca" onAction="#handleCercaAlimento" prefHeight="40.0" prefWidth="93.0" text="Cerca" />
                                 <ComboBox fx:id="categoriaComboBox" prefHeight="50.0" prefWidth="116.0" promptText="Categoria" />
                                 <CheckBox fx:id="mieiAlimentiCheckBox" prefHeight="40.0" prefWidth="166.0" text="Solo i miei alimenti">
@@ -37,7 +37,7 @@
                                 </CheckBox>
                             </children>
                         </HBox>
-                        <TableView fx:id="tableView" editable="true" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="320.0" prefWidth="540.0" styleClass="compact-table">
+                        <TableView fx:id="tableView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="compact-table" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="immagineCol" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" text="Img" />
                                 <TableColumn fx:id="nomeCol" prefWidth="120.0" text="Nome" />
@@ -51,8 +51,11 @@
                                 <TableColumn fx:id="fibreCol" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Fibre" />
                                 <TableColumn fx:id="zuccheriCol" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" text="Zucch" />
                             </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
                         </TableView>
-                        <HBox prefHeight="40.0" prefWidth="540.0" spacing="15.0" styleClass="action-row">
+                        <HBox prefHeight="40.0" spacing="15.0" styleClass="action-row" VBox.vgrow="NEVER">
                             <children>
                                 <Label prefHeight="36.0" prefWidth="93.0" styleClass="action-label" text="Quantità (g):" />
                                 <TextField fx:id="quantitaField" prefHeight="40.0" prefWidth="80.0" />
@@ -63,7 +66,7 @@
                         </HBox>
                     </children>
                 </VBox>
-                <VBox prefHeight="610.0" prefWidth="390.0" spacing="15.0" styleClass="right-panel">
+                <VBox prefHeight="610.0" prefWidth="390.0" spacing="15.0" styleClass="right-panel" HBox.hgrow="ALWAYS">
                     <children>
                         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="350.0" styleClass="nutrition-title" text="Valori Nutrizionali Totali" />
                         <VBox spacing="8.0">
@@ -71,46 +74,49 @@
                                 <HBox prefHeight="25.0" prefWidth="350.0" spacing="15.0" styleClass="nutrition-row">
                                     <children>
                                         <Label prefWidth="70.0" styleClass="nutrition-label" text="Calorie:" />
-                                        <Label fx:id="calorieTotaliLabel" prefWidth="60.0" styleClass="nutrition-value" />
+                                        <Label fx:id="calorieTotaliLabel" styleClass="nutrition-value" HBox.hgrow="ALWAYS" />
                                         <Label prefWidth="80.0" styleClass="nutrition-label" text="Carboidrati:" />
-                                        <Label fx:id="carboidratiTotaliLabel" prefWidth="60.0" styleClass="nutrition-value" />
+                                        <Label fx:id="carboidratiTotaliLabel" styleClass="nutrition-value" HBox.hgrow="ALWAYS" />
                                     </children>
                                 </HBox>
                                 <HBox prefHeight="25.0" prefWidth="350.0" spacing="15.0" styleClass="nutrition-row">
                                     <children>
                                         <Label prefWidth="70.0" styleClass="nutrition-label" text="Grassi:" />
-                                        <Label fx:id="grassiTotaliLabel" prefWidth="60.0" styleClass="nutrition-value" />
+                                        <Label fx:id="grassiTotaliLabel" styleClass="nutrition-value" HBox.hgrow="ALWAYS" />
                                         <Label prefWidth="80.0" styleClass="nutrition-label" text="Proteine:" />
-                                        <Label fx:id="proteineTotaliLabel" prefWidth="60.0" styleClass="nutrition-value" />
+                                        <Label fx:id="proteineTotaliLabel" styleClass="nutrition-value" HBox.hgrow="ALWAYS" />
                                     </children>
                                 </HBox>
                                 <HBox prefHeight="25.0" prefWidth="350.0" spacing="15.0" styleClass="nutrition-row">
                                     <children>
                                         <Label prefWidth="70.0" styleClass="nutrition-label" text="G.Saturi:" />
-                                        <Label fx:id="grassiSaturiTotaliLabel" prefWidth="60.0" styleClass="nutrition-value" />
+                                        <Label fx:id="grassiSaturiTotaliLabel" styleClass="nutrition-value" HBox.hgrow="ALWAYS" />
                                         <Label prefWidth="80.0" styleClass="nutrition-label" text="Sale:" />
-                                        <Label fx:id="saleTotaliLabel" prefWidth="60.0" styleClass="nutrition-value" />
+                                        <Label fx:id="saleTotaliLabel" styleClass="nutrition-value" HBox.hgrow="ALWAYS" />
                                     </children>
                                 </HBox>
                                 <HBox prefHeight="25.0" prefWidth="350.0" spacing="15.0" styleClass="nutrition-row">
                                     <children>
                                         <Label prefWidth="70.0" styleClass="nutrition-label" text="Fibre:" />
-                                        <Label fx:id="fibreTotaliLabel" prefWidth="60.0" styleClass="nutrition-value" />
+                                        <Label fx:id="fibreTotaliLabel" styleClass="nutrition-value" HBox.hgrow="ALWAYS" />
                                         <Label prefWidth="80.0" styleClass="nutrition-label" text="Zuccheri:" />
-                                        <Label fx:id="zuccheriTotaliLabel" prefWidth="60.0" styleClass="nutrition-value" />
+                                        <Label fx:id="zuccheriTotaliLabel" styleClass="nutrition-value" HBox.hgrow="ALWAYS" />
                                     </children>
                                 </HBox>
                             </children>
                         </VBox>
                         <Label prefHeight="20.0" prefWidth="350.0" styleClass="ingredients-title" text="Ingredienti aggiunti:" />
-                        <TableView fx:id="ingredientiTable" prefHeight="180.0" prefWidth="350.0">
+                        <TableView fx:id="ingredientiTable" prefHeight="180.0" prefWidth="350.0" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="ingredienteNomeCol" prefWidth="180.0" text="Nome" />
                                 <TableColumn fx:id="quantitaCol" prefWidth="100.0" text="Quantità (g)" />
                                 <TableColumn fx:id="azioniCol" prefWidth="70.0" text="Azioni" />
                             </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
                         </TableView>
-                        <TextArea fx:id="descrizioneRicetta" prefHeight="120.0" prefWidth="350.0" promptText="Descrizione ricetta.." wrapText="true" />
+                        <TextArea fx:id="descrizioneRicetta" prefHeight="120.0" prefWidth="350.0" promptText="Descrizione ricetta.." wrapText="true" VBox.vgrow="ALWAYS" />
                     </children>
                 </VBox>
             </children>

@@ -21,6 +21,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Currency;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -178,6 +179,8 @@ public class ProfiloNutrizionista implements Initializable {
             Stage modificaPasswordStage = new Stage();
             modificaPasswordStage.setTitle("Modifica Password");
             modificaPasswordStage.setScene(new Scene(modificaPasswordRoot));
+            modificaPasswordStage.setResizable(false);
+            modificaPasswordStage.setFullScreen(false);
             modificaPasswordStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -200,6 +203,8 @@ public class ProfiloNutrizionista implements Initializable {
                 Parent loginRoot = fxmlLoader.load();
                 Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Scene loginScene = new Scene(loginRoot);
+                currentStage.setResizable(false);
+                currentStage.setFullScreen(false);
                 currentStage.setScene(loginScene);
                 currentStage.show();
             } catch (IOException e) {

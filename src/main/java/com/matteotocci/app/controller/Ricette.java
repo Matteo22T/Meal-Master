@@ -261,6 +261,8 @@ public class Ricette implements Initializable {
                 Stage stage = new Stage();
                 stage.setTitle("Dettaglio Ricetta");
                 stage.setScene(new Scene(root));
+                stage.setResizable(false);
+                stage.setFullScreen(false);
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();

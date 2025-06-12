@@ -224,6 +224,8 @@ public class DatiCliente implements Initializable {
                 Parent root = fxmlLoader.load(); // Carica la gerarchia dei nodi dell'interfaccia utente
                 Stage stage = new Stage(); // Crea una nuova finestra
                 stage.setScene(new Scene(root)); // Imposta la scena nella nuova finestra
+                stage.setResizable(false);
+                stage.setFullScreen(false);
                 stage.setTitle("Benvenuto!"); // Imposta un titolo per la nuova finestra
                 stage.show(); // Mostra la nuova finestra
 

@@ -314,10 +314,13 @@ public class AggiungiRicetteController implements Initializable { // Implementa 
 
             DettagliAlimentoController controller = loader.getController(); // Ottiene il controller
             controller.setAlimento(alimento); // Passa l'alimento selezionato
+            controller.setOrigineFXML("AggiungiRicettaController.fxml");
 
             Stage stage = new Stage(); // Crea un nuovo Stage (finestra)
             stage.setTitle("Dettaglio Alimento"); // Imposta il titolo
             stage.setScene(new Scene(root)); // Imposta la scena
+            stage.setResizable(false);
+            stage.setFullScreen(false);
             stage.show(); // Mostra la finestra
         } catch (IOException e) {
             e.printStackTrace(); // Stampa l'errore
