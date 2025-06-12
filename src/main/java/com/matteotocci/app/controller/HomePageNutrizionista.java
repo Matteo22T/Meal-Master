@@ -59,12 +59,14 @@ public class HomePageNutrizionista implements Initializable {
         azioniColonna.setCellFactory(new Callback<TableColumn<Cliente, String>, TableCell<Cliente, String>>() {
             @Override
             public TableCell<Cliente, String> call(TableColumn<Cliente, String> param) {
-                return new TableCell<Cliente, String>() {
+                return new TableCell<>() {
                     final Button visualizzaButton = new Button("Visualizza Dieta");
-                    final Button modificaButton = new Button("Modifica Dieta");
-                    final HBox container = new HBox(visualizzaButton, modificaButton);
+                    final HBox container = new HBox(visualizzaButton);
                     {
                         container.setSpacing(5);
+
+                        visualizzaButton.getStyleClass().add("visualizza-dieta-button");
+                        container.getStyleClass().add("visualizza-dieta-container");
 
                         visualizzaButton.setOnAction(event -> {
                             Cliente cliente = getTableView().getItems().get(getIndex());
@@ -99,22 +101,6 @@ public class HomePageNutrizionista implements Initializable {
                                 System.out.println("DEBUG (HomePageNutrizionista): Nessuna dieta trovata per il cliente " + cliente.getNome() + " (ID: " + cliente.getId() + ").");
                                 showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata",
                                         "Il cliente selezionato non ha diete assegnate o non è stato possibile recuperarle.");
-                            }
-                        });
-
-                        modificaButton.setOnAction(event -> {
-                            Cliente cliente = getTableView().getItems().get(getIndex());
-                            System.out.println("DEBUG (HomePageNutrizionista): Modifica Dieta per: " + cliente.getNome());
-                            try {
-                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ModificaDieta.fxml"));
-                                Parent modificaDietaRoot = fxmlLoader.load();
-                                Stage modificaDietaStage = new Stage();
-                                modificaDietaStage.setScene(new Scene(modificaDietaRoot));
-                                modificaDietaStage.setTitle("Modifica Dieta di " + cliente.getNome());
-                                modificaDietaStage.show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata di modifica dieta.", "Verificare il percorso del file FXML.");
                             }
                         });
                     }

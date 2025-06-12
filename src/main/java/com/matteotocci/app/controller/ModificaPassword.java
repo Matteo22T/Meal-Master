@@ -20,6 +20,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 
@@ -55,7 +57,7 @@ public class ModificaPassword implements Initializable {
     private Button BottonePianoAlimentareLeft;
 
     private String utenteCorrenteId= Session.getUserId().toString();
-    private UtenteModel utenteModel;
+    private UtenteModel utenteModel=new UtenteModel();
 
 
 
@@ -83,6 +85,8 @@ public class ModificaPassword implements Initializable {
         vecchiaPasswordFieldVisible.setOnAction(this::handleInvio);
         nuovaPasswordFieldVisible.setOnAction(this::handleInvio);
         confermaPasswordFieldVisible.setOnAction(this::handleInvio);
+
+        setupFocusTraversal();
     }
 
     @FXML
@@ -90,32 +94,7 @@ public class ModificaPassword implements Initializable {
         salvaNuovaPassword((MouseEvent) null); // Indica che l'evento non è un MouseEvent
     }
 
-    @FXML
-    private void AccessoProfilo(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PaginaProfilo.fxml"));
-            Parent profileRoot = fxmlLoader.load();
-            Stage profileStage = (Stage) ImmagineOmino.getScene().getWindow();
-            profileStage.setScene(new Scene(profileRoot));
-            profileStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    @FXML
-    private void AccessoAlimenti(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
-            Parent loginRoot = fxmlLoader.load();
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(loginRoot));
-            loginStage.show();
-            ((Stage) BottoneAlimenti.getScene().getWindow()).close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     private void salvaNuovaPassword(MouseEvent event) {
@@ -150,6 +129,11 @@ public class ModificaPassword implements Initializable {
             return;
         }
 
+        if(vecchiaPassword.equals(nuovaPassword)) {
+            showAlert(Alert.AlertType.ERROR,"Errore","La nuova password corrisponde alla vecchia");
+            return;
+        }
+
         // Aggiorna la password nel database
         try {
             if (utenteModel.aggiornaPassword(utenteCorrenteId, nuovaPassword)) {
@@ -166,26 +150,58 @@ public class ModificaPassword implements Initializable {
         }
     }
 
-    @FXML
-    private void mostraNascondiVecchiaPassword(ActionEvent event) {
-        // La visibilità è gestita dai binding nell'initialize
+    public void setupFocusTraversal() {
+        // Crea una lista ordinata di tutti i campi di testo
+        List<TextField> textFields = Arrays.asList(vecchiaPasswordField, nuovaPasswordField, confermaPasswordField);
+
+        // Itera su ogni campo di testo per impostare il listener per la pressione dei tasti
+        for (int i = 0; i < textFields.size(); i++) {
+            final int index = i; // Rende l'indice effettivo finale per l'uso nella lambda expression
+            TextField tf = textFields.get(i);
+            tf.setFocusTraversable(true); // Assicura che il campo possa ricevere il focus
+            tf.setOnKeyPressed(event -> {
+                switch (event.getCode()) {
+                    case DOWN: // Se viene premuta la freccia giù
+                        if (index + 1 < textFields.size()) { // Controlla se c'è un campo successivo
+                            textFields.get(index + 1).requestFocus(); // Sposta il focus al campo successivo
+                        }
+                        break;
+                    case UP: // Se viene premuta la freccia su
+                        if (index - 1 >= 0) { // Controlla se c'è un campo precedente
+                            textFields.get(index - 1).requestFocus(); // Sposta il focus al campo precedente
+                        }
+                        break;
+                }
+            });
+        }
     }
 
-    @FXML
-    private void mostraNascondiNuovaPassword(ActionEvent event) {
-        // La visibilità è gestita dai binding nell'initialize
-    }
 
-    @FXML
-    private void mostraNascondiConfermaPassword(ActionEvent event) {
-        // La visibilità è gestita dai binding nell'initialize
-    }
+
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Apply the base style class
+            // Add specific style class based on AlertType for custom styling
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Corrected error message
+        }
+
         alert.showAndWait();
     }
 }

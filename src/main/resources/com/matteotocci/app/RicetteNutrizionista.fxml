@@ -50,7 +50,7 @@
                         <!-- MENU NAVIGAZIONE -->
                         <VBox prefHeight="400.0" prefWidth="200.0" spacing="5.0" styleClass="nav-menu">
                             <children>
-                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoHome" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="Clienti" />
+                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoHome" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="👥 Clienti" />
                                 <Button fx:id="BottoneAlimenti" mnemonicParsing="false" prefHeight="50.0" onAction="#AccessoAlimenti" prefWidth="180.0" styleClass="nav-button" text="🥗 Alimenti" />
                                 <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" onAction="#AccessoRicette" prefWidth="180.0" styleClass="nav-button,nav-button-active" text="📖 Ricette">
                                     <cursor>
@@ -58,7 +58,7 @@
                                     </cursor>
                                 </Button>
 
-                                <Button fx:id="BottoneDiete" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoDieta" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="Diete">
+                                <Button fx:id="BottoneDiete" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoDieta" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="📋 Diete">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />
                                     </cursor>

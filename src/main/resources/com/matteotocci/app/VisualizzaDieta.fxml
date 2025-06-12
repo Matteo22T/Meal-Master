@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.Separator?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.matteotocci.app.controller.VisualizzaDieta"
             prefHeight="650.0" prefWidth="850.0"
             styleClass="root"
@@ -55,6 +55,12 @@
                                        styleClass="date-label-value" />
                             </children>
                         </HBox>
+                        <!-- NUOVO BOTTONE PER SCARICARE IL PDF -->
+                        <Button text="Scarica PDF Dieta" onAction="#handleScaricaPdf" styleClass="button-primary">
+                            <HBox.margin>
+                                <Insets left="30.0" />
+                            </HBox.margin>
+                        </Button>
                     </children>
                     <VBox.margin>
                         <Insets bottom="10.0" />

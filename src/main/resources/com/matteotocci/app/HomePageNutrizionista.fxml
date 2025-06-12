@@ -51,12 +51,12 @@
                             <children>
                                 <Button maxWidth="Infinity" mnemonicParsing="false" prefHeight="50.0" styleClass="nav-button,nav-button-active" text="👥 Clienti" />
                                 <Button maxWidth="Infinity" mnemonicParsing="false" prefHeight="50.0" onAction="#AccessoAlimenti" styleClass="nav-button" text="🥗 Alimenti" />
-                                <Button fx:id="BottoneRicette" maxWidth="Infinity" mnemonicParsing="false" onAction="#AccessoRicetteNutrizionista" prefHeight="50.0" styleClass="nav-button" text="Ricette">
+                                <Button fx:id="BottoneRicette" maxWidth="Infinity" mnemonicParsing="false" onAction="#AccessoRicetteNutrizionista" prefHeight="50.0" styleClass="nav-button" text="📖 Ricette">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />
                                     </cursor>
                                 </Button>
-                        <Button layoutX="10.0" layoutY="76.0" maxWidth="Infinity" onAction="#AccessoDieta" mnemonicParsing="false" prefHeight="50.0" styleClass="nav-button" text="Diete" />
+                        <Button layoutX="10.0" layoutY="76.0" maxWidth="Infinity" onAction="#AccessoDieta" mnemonicParsing="false" prefHeight="50.0" styleClass="nav-button" text="📋 Diete" />
                             </children>
                         </VBox>
                     </children>

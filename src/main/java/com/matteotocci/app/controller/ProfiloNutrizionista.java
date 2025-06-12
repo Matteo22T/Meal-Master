@@ -1,5 +1,6 @@
 package com.matteotocci.app.controller;
 
+import com.matteotocci.app.model.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -66,18 +67,27 @@ public class ProfiloNutrizionista implements Initializable {
     }
 
     private void inizializzaProfilo() {
-        if (loggedInUserId != null) {
-            String nome = getDatoUtenteDalDatabase("Utente", loggedInUserId, "Nome");
-            String cognome = getDatoUtenteDalDatabase("Utente", loggedInUserId, "Cognome");
+        Integer userIdFromSession = Session.getUserId(); // Ottiene l'ID direttamente dalla Sessione
 
-            nomeUtenteCompleto = (nome != null ? nome : "") + " " + (cognome != null ? cognome : "");
-            nomeUtenteSidebarLabel.setText(nomeUtenteCompleto.trim());
-            benvenutoLabel.setText("Bentornato " + (nome != null ? nome : "Utente"));
-            nomeTextField.setText(nome);
-            cognomeTextField.setText(cognome);
+        if (userIdFromSession != null) {
 
-        } else {
-            System.out.println("[DEBUG] ID utente non valido (null) in inizializzaProfilo.");
+            // Recupera nome e cognome dell'utente dalla tabella Utente
+            String nome = getDatoUtenteDalDatabase("Utente", userIdFromSession.toString(), "Nome");
+            String cognome = getDatoUtenteDalDatabase("Utente", userIdFromSession.toString(), "Cognome");
+
+            // Imposta il nome completo nella sidebar
+            String nomeCompleto = (nome != null ? nome : "") + " " + (cognome != null ? cognome : "");
+            nomeUtenteSidebarLabel.setText(nomeCompleto.trim());
+
+            // Imposta i campi TextField del nome e cognome
+            nomeTextField.setText(nome != null ? nome : "");
+            cognomeTextField.setText(cognome != null ? cognome : "");
+        }
+        else {
+            System.err.println("[ERROR] ID utente non disponibile dalla Sessione. Impossibile recuperare i dati del profilo.");
+            nomeUtenteSidebarLabel.setText("Utente Sconosciuto");
+            nomeTextField.setText("");
+            cognomeTextField.setText("");
         }
     }
 
@@ -129,6 +139,7 @@ public class ProfiloNutrizionista implements Initializable {
             e.printStackTrace();
         }
     }
+
 
     @FXML
     private void AccessoRicette(ActionEvent event) {
@@ -195,10 +206,11 @@ public class ProfiloNutrizionista implements Initializable {
     }
 
 
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // L'inizializzazione statica del ruolo avviene qui
-        ruoloUtenteLabel.setText("Nutrizionista");
+        inizializzaProfilo();
     }
 }
 

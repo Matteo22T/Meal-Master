@@ -60,7 +60,7 @@
                     <children>
                         <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image">
                             <image>
-                                <Image url="@immagini/logo-removebg-preview.png" />
+                                <Image url="@immagini/logo.png" />
                             </image>
                         </ImageView>
                         <Label styleClass="welcome-title" text="Il tuo Profilo">
@@ -194,7 +194,7 @@
 
                                 <HBox alignment="BOTTOM_RIGHT" spacing="15.0" styleClass="action-buttons">
                                     <children>
-                                        <Label onMouseClicked="#mostraSchermataModificaPassword" prefHeight="28.0" prefWidth="268.0" styleClass="change-password-link" text="Clicca qui per modificare la password" />
+                                        <Label onMouseClicked="#mostraSchermataModificaPassword" prefHeight="28.0" prefWidth="367.0" styleClass="change-password-link" text="Clicca qui per modificare la password" />
                                         <Region prefHeight="42.0" prefWidth="146.0" HBox.hgrow="ALWAYS" />
                                         <Button fx:id="LogoutButton" mnemonicParsing="false" onAction="#eseguiLogout" prefHeight="42.0" prefWidth="168.0" styleClass="logout-button" text="🚪 Logout" />
                                         <Button mnemonicParsing="false" onAction="#salvaProfilo" prefHeight="42.0" prefWidth="227.0" styleClass="save-button" text="💾 Salva Modifiche" />

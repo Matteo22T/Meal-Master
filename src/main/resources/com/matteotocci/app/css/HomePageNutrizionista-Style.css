@@ -334,3 +334,44 @@
 .background-gradient-secondary {
     -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
 }
+
+/* ===== BUTTON VISUALIZZA DIETA ===== */
+.visualizza-dieta-button {
+    -fx-background-color: linear-gradient(to right, #4F7942, #5A8A4A);
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 15;
+    -fx-padding: 6 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.3), 5, 0, 0, 1);
+    -fx-min-width: 100;
+    -fx-pref-width: 150;
+    -fx-alignment: center;
+}
+
+.visualizza-dieta-button:hover {
+    -fx-background-color: linear-gradient(to right, #5A8A4A, #658F52);
+    -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.5), 8, 0, 0, 2);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.visualizza-dieta-button:pressed {
+    -fx-background-color: linear-gradient(to right, #4A7039, #4F7942);
+    -fx-effect: innershadow(gaussian, rgba(79,121,66,0.4), 3, 0, 0, 1);
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* ===== CONTAINER BUTTON ===== */
+.visualizza-dieta-container {
+    -fx-alignment: center;
+    -fx-spacing: 5;
+    -fx-padding: 5;
+}
+
+/* ===== ANIMAZIONI ===== */
+.visualizza-dieta-button {
+    -fx-transition: all 0.3s ease;
+}
