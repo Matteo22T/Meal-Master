@@ -5,12 +5,14 @@ import com.matteotocci.app.model.SQLiteConnessione;
 import com.matteotocci.app.model.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -77,7 +79,7 @@ public class DettagliAlimentoController {
         if (alimento.getUserId().equals(Session.getUserId())) {
             eliminaAlimento(alimento); // Elimina l'alimento
         } else {
-            mostraMessaggio("Puoi eliminare solo gli alimenti che hai aggiunto.");
+            showAlert(Alert.AlertType.ERROR,"Errore nell'eliminazione", "Puoi eliminare solo gli alimenti che hai aggiunto.");
         }
     }
 
@@ -108,10 +110,33 @@ public class DettagliAlimentoController {
     }
 
 
-    private void mostraMessaggio(String messaggio) {
-        // Logica per mostrare un messaggio (ad esempio usando un `Alert`)
-        System.out.println(messaggio);  // Qui puoi sostituire con un'alert di JavaFX
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Apply the base style class
+            // Add specific style class based on AlertType for custom styling
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Corrected error message
+        }
+
+        alert.showAndWait();
     }
+
 
 
 }

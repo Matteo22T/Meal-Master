@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 
 
@@ -272,10 +273,10 @@ public class AggiungiRicetteController {
                 aggiornaValoriNutrizionali(alimentoSelezionato,quantita);
             } catch (NumberFormatException e) {
                 // Gestire l'errore se la quantità non è valida
-                showAlert("Errore", "Inserisci una quantità valida.");
+                showAlert(Alert.AlertType.ERROR,"Errore nei dati", "Inserisci una quantità valida.");
             }
         } else {
-            showAlert("Errore", "Seleziona un alimento e inserisci una quantità.");
+            showAlert(Alert.AlertType.ERROR,"Errore nei dati", "Seleziona un alimento e inserisci una quantità.");
         }
     }
     private void aggiornaValoriNutrizionali(Alimento alimento, double quantita) {
@@ -354,13 +355,7 @@ public class AggiungiRicetteController {
     }
 
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
 
     @FXML
     void handleAnnulla(ActionEvent event) {
@@ -377,7 +372,7 @@ public class AggiungiRicetteController {
     private void handleSalvaRicetta(ActionEvent event) {
         // Validazione dei campi obbligatori
         if (isEmpty(nomeRicetta) || isEmpty(descrizioneRicetta) || categoriaRicetta.getValue() == null || ingredienti.isEmpty()) {
-            mostraErrore("Tutti i campi devono essere compilati e devi aggiungere almeno un ingrediente.");
+            showAlert(Alert.AlertType.ERROR,"Errore nei dati","Tutti i campi devono essere compilati e devi aggiungere almeno un ingrediente.");
             return;
         }
 
@@ -431,7 +426,7 @@ public class AggiungiRicetteController {
 
             insertIngredienteStmt.executeBatch();
 
-            mostraInfo("Ricetta salvata con successo!");
+            showAlert(Alert.AlertType.INFORMATION,"Salvataggio dati","Ricetta salvata con successo!");
             if (ricettaController != null) {
                 System.out.println("filtro: "+ricettaController.getFiltro());
                 ricettaController.resetRicerca();
@@ -443,25 +438,38 @@ public class AggiungiRicetteController {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            mostraErrore("Errore durante il salvataggio: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR,"Errore database","Errore durante il salvataggio: " + e.getMessage());
         }
     }
 
     private boolean isEmpty(TextInputControl campo) {
         return campo.getText() == null || campo.getText().trim().isEmpty();
     }
-    private void mostraErrore(String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Errore");
+
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(messaggio);
-        alert.showAndWait();
-    }
-    private void mostraInfo(String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Informazione");
-        alert.setHeaderText(null);
-        alert.setContentText(messaggio);
+        alert.setContentText(message);
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Apply the base style class
+            // Add specific style class based on AlertType for custom styling
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Corrected error message
+        }
+
         alert.showAndWait();
     }
 

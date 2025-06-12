@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
+
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -56,7 +58,7 @@ public class AggiungiAlimentoController {
 
 
     private Alimenti alimentiController;
-    public void setAlimentiController(Alimenti   controller) {
+    public void setAlimentiController(Alimenti controller) {
         this.alimentiController = controller;
     }
 
@@ -67,7 +69,7 @@ public class AggiungiAlimentoController {
                 isEmpty(carboidratiField) || isEmpty(grassiField) || isEmpty(grassiSatField) ||
                 isEmpty(saleField) || isEmpty(fibreField) || isEmpty(zuccheriField)) {
 
-            mostraErrore("Tutti i campi obbligatori devono essere compilati.");
+            showAlert(Alert.AlertType.ERROR, "Errore", "Tutti i campi obbligatori devono essere compilati.");
             return;
         }
 
@@ -108,7 +110,7 @@ public class AggiungiAlimentoController {
 
             stmt.executeUpdate();
 
-            mostraInfo("Alimento aggiunto con successo!");
+            showAlert(Alert.AlertType.INFORMATION, "Successo", "Alimento aggiunto con successo!");
             if (alimentiController != null) {
                 System.out.println("filtro: "+alimentiController.getFiltro());
                 alimentiController.resetRicerca();
@@ -118,10 +120,10 @@ public class AggiungiAlimentoController {
             stage.close();
 
         } catch (NumberFormatException e) {
-            mostraErrore("Assicurati che tutti i valori nutrizionali siano numeri validi.");
+            showAlert(Alert.AlertType.ERROR, "Errore", "Assicurati che tutti i valori nutrizionali siano numeri validi.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            mostraErrore("Errore durante il salvataggio nel database: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore", "Errore durante il salvataggio nel database: " + e.getMessage());
         }
     }
 
@@ -129,19 +131,29 @@ public class AggiungiAlimentoController {
         return field.getText() == null || field.getText().trim().isEmpty();
     }
 
-    private void mostraErrore(String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Errore");
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(messaggio);
-        alert.showAndWait();
-    }
+        alert.setContentText(message);
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Apply the base style class
+            // Add specific style class based on AlertType for custom styling
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Corrected error message
+        }
 
-    private void mostraInfo(String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Successo");
-        alert.setHeaderText(null);
-        alert.setContentText(messaggio);
         alert.showAndWait();
     }
 

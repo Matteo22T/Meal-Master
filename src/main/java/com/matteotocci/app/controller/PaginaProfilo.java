@@ -26,6 +26,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class PaginaProfilo {
@@ -42,7 +45,7 @@ public class PaginaProfilo {
     private TextField cognomeTextField;
 
     @FXML
-    private TextField sessoTextField;
+    private ComboBox<String> sessoComboBox;
 
     @FXML
     private TextField dataNascitaTextField;
@@ -82,6 +85,13 @@ public class PaginaProfilo {
                 "Estremamente Attivo"
         );
         livelloAttivitaComboBox.setItems(livelliAttivita);
+
+        ObservableList<String> sessi = FXCollections.observableArrayList(
+                "Maschio",
+                "Femmina",
+                "Altro" // Opzione aggiuntiva se desiderata
+        );
+        sessoComboBox.setItems(sessi);
 
         ObservableList<String> nutrizionisti = getNutrizionisti();
         nutrizionistaComboBox.setItems(nutrizionisti);
@@ -145,6 +155,9 @@ public class PaginaProfilo {
             String livelloAttivita = getDatoUtenteDalDatabase("Clienti", userIdFromSession.toString(), "livello_attivita");
             String dataNascita = getDatoUtenteDalDatabase("Clienti", userIdFromSession.toString(), "data_di_nascita");
             String sesso = getDatoUtenteDalDatabase("Clienti", userIdFromSession.toString(), "sesso");
+            if (sesso != null && !sesso.isEmpty()) {
+                sesso = sesso.substring(0, 1).toUpperCase() + sesso.substring(1).toLowerCase();
+            }
             String idNutrizionista = getDatoUtenteDalDatabase("Clienti", userIdFromSession.toString(), "id_nutrizionista");
 
             // Imposta i valori nei TextField
@@ -157,8 +170,13 @@ public class PaginaProfilo {
             if (dataNascitaTextField != null) {
                 dataNascitaTextField.setText(dataNascita != null ? dataNascita : "");
             }
-            if (sessoTextField != null) {
-                sessoTextField.setText(sesso != null ? sesso : "");
+            if (sessoComboBox != null) {
+                if (sesso != null && !sesso.isEmpty()) {
+                    sessoComboBox.getSelectionModel().select(sesso);
+                } else {
+                    sessoComboBox.getSelectionModel().clearSelection();
+                    System.out.println("[DEBUG] Nessun sesso trovato per l'utente.");
+                }
             }
 
             // --- Aggiornato per le ComboBox ---
@@ -195,7 +213,7 @@ public class PaginaProfilo {
             nomeUtenteSidebarLabel.setText("Utente Sconosciuto");
             nomeTextField.setText("");
             cognomeTextField.setText("");
-            if (sessoTextField != null) sessoTextField.setText("");
+            if (sessoComboBox != null) sessoComboBox.getSelectionModel().clearSelection();
             if (dataNascitaTextField != null) dataNascitaTextField.setText("");
             if (altezzaTextField != null) altezzaTextField.setText("");
             if (pesoAttualeTextField != null) pesoAttualeTextField.setText("");
@@ -288,7 +306,7 @@ public class PaginaProfilo {
             modificaPasswordStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata di modifica password.", "Verificare il percorso del file FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata di modifica password.");
         }
     }
 
@@ -304,13 +322,15 @@ public class PaginaProfilo {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la HomePage.", "Contattare l'amministratore.");
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la HomePage. Contattare l'amministratore.");
         }
     }
 
     @FXML
     private void eseguiLogout(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("alert-confirmation");
         alert.setTitle("Conferma Logout");
         alert.setHeaderText("Sei sicuro di voler uscire?");
         alert.setContentText("Clicca OK per confermare o Annulla per rimanere.");
@@ -326,7 +346,7 @@ public class PaginaProfilo {
                 currentStage.show();
             } catch (IOException e) {
                 e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Errore di Logout", "Impossibile effettuare il logout.", "Contattare l'amministratore.");
+                showAlert(Alert.AlertType.ERROR, "Errore di Logout", "Impossibile effettuare il logout. Contattare l'amministratore.");
             }
         }
     }
@@ -342,7 +362,7 @@ public class PaginaProfilo {
             bmiStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata di calcolo BMI.", "Verificare il percorso del file FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata di calcolo BMI.");
         }
     }
 
@@ -377,13 +397,32 @@ public class PaginaProfilo {
 
 
     // Metodo per visualizzare gli alert
-    private void showAlert(Alert.AlertType type, String title, String header, String content) {
-        Alert alert = new Alert(type);
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Apply the base style class
+            // Add specific style class based on AlertType for custom styling
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Corrected error message
+        }
+
         alert.showAndWait();
     }
+
 
     @FXML
     private void AccessoPianoAlimentare(ActionEvent event) {
@@ -405,15 +444,15 @@ public class PaginaProfilo {
             } catch (IOException e) {
                 System.err.println("ERRORE (PaginaProfilo): Errore caricamento FXML VisualizzaDieta: " + e.getMessage());
                 e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.", "Verificare il percorso del file FXML.");
+                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.");
             } catch (Exception e) {
                 System.err.println("ERRORE (PaginaProfilo): Errore generico durante l'apertura di VisualizzaDieta: " + e.getMessage());
                 e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.", "Dettagli: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.");
             }
         } else {
             System.out.println("DEBUG (PaginaProfilo): Nessuna dieta trovata per il cliente (ID: " + Session.getUserId() + ").");
-            showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata",
+            showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta",
                     "Il cliente non ha diete assegnate o non è stato possibile recuperarle.");
         }
     }
@@ -423,15 +462,33 @@ public class PaginaProfilo {
         Integer userIdFromSession = Session.getUserId();
 
         if (userIdFromSession == null) {
-            showAlert(Alert.AlertType.ERROR, "Errore di salvataggio", "ID utente non disponibile.", "Impossibile salvare il profilo senza un ID utente valido.");
+            showAlert(Alert.AlertType.ERROR, "Errore di salvataggio",  "Impossibile salvare il profilo senza un ID utente valido.");
             return;
         }
 
         String altezzaStr = altezzaTextField.getText().trim();
         String pesoStr = pesoAttualeTextField.getText().trim();
 
+
+        String sessoSelezionato = sessoComboBox.getSelectionModel().getSelectedItem();
         String livelloAttivita = livelloAttivitaComboBox.getSelectionModel().getSelectedItem();
         String nutrizionistaSelezionato = nutrizionistaComboBox.getSelectionModel().getSelectedItem();
+
+        String dataNascitaText = dataNascitaTextField.getText().trim();
+        String dataNascitaFormattedForDb = null;
+
+        if (!dataNascitaText.isEmpty()) {
+            try {
+                // Tenta di parsare la data nel formato dd-MM-yyyy
+                LocalDate parsedDate = LocalDate.parse(dataNascitaText, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                // Formatta per il database: YYYY-MM-DD
+                dataNascitaFormattedForDb = parsedDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+            } catch (DateTimeParseException e) {
+                // Errore di formato della data
+                showAlert(Alert.AlertType.ERROR, "Errore Data", "Formato data non valido o data inesistente. La data di nascita deve essere nel formato GG-MM-AAAA (es. 01-01-1990).");
+                return; // Ferma il salvataggio se la data non è valida
+            }
+        }
 
         // Determina se il nutrizionista è cambiato
         boolean nutrizionistaCambiato = false;
@@ -452,7 +509,7 @@ public class PaginaProfilo {
             try {
                 altezza = Double.parseDouble(altezzaStr);
             } catch (NumberFormatException e) {
-                showAlert(Alert.AlertType.ERROR, "Errore di formato", "Altezza non valida.", "Assicurati che l'altezza sia un numero.");
+                showAlert(Alert.AlertType.ERROR, "Errore di formato", "Altezza non valida.");
                 return;
             }
         }
@@ -461,7 +518,7 @@ public class PaginaProfilo {
             try {
                 peso = Double.parseDouble(pesoStr);
             } catch (NumberFormatException e) {
-                showAlert(Alert.AlertType.ERROR, "Errore di formato", "Peso non valido.", "Assicurati che il peso sia un numero.");
+                showAlert(Alert.AlertType.ERROR, "Errore di formato", "Peso non valido.");
                 return;
             }
         }
@@ -471,7 +528,7 @@ public class PaginaProfilo {
             idNutrizionista = mappaNutrizionisti.get(nutrizionistaSelezionato);
             if (idNutrizionista == null) {
                 System.err.println("[ERROR] ID nutrizionista non trovato per: " + nutrizionistaSelezionato);
-                showAlert(Alert.AlertType.ERROR, "Errore Nutrizionista", "Il nutrizionista selezionato non è valido.", "Si prega di selezionare un nutrizionista valido dall'elenco.");
+                showAlert(Alert.AlertType.ERROR, "Errore Nutrizionista",  "Si prega di selezionare un nutrizionista valido dall'elenco.");
                 return;
             }
         }
@@ -479,40 +536,91 @@ public class PaginaProfilo {
         try (Connection conn = SQLiteConnessione.connector()) {
             conn.setAutoCommit(false); // Inizia una transazione
 
-            // Aggiorna la tabella Clienti
-            String updateClientiQuery = "UPDATE Clienti SET altezza_cm = ?, peso_kg = ?, livello_attivita = ?, id_nutrizionista = ? WHERE id_cliente = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(updateClientiQuery)) {
-                if (altezza != null) {
-                    pstmt.setDouble(1, altezza);
-                } else {
-                    pstmt.setNull(1, java.sql.Types.DOUBLE);
+            // --- PASSO 1: Controlla se il cliente esiste già ---
+            boolean clienteEsiste = false;
+            String checkClientQuery = "SELECT COUNT(*) FROM Clienti WHERE id_cliente = ?";
+            try (PreparedStatement pstmtCheck = conn.prepareStatement(checkClientQuery)) {
+                pstmtCheck.setInt(1, userIdFromSession);
+                ResultSet rs = pstmtCheck.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    clienteEsiste = true;
                 }
+            } catch (SQLException e) {
+                System.err.println("[ERROR] Errore durante il controllo esistenza cliente: " + e.getMessage());
+                throw e; // Rilancia l'eccezione per far scattare il rollback
+            }
 
-                if (peso != null) {
-                    pstmt.setDouble(2, peso);
-                } else {
-                    pstmt.setNull(2, java.sql.Types.DOUBLE);
+            if (clienteEsiste) {
+                // --- PASSO 2a: Se il cliente esiste, esegui l'UPDATE ---
+                String updateClientiQuery = "UPDATE Clienti SET altezza_cm = ?, peso_kg = ?, livello_attivita = ?, id_nutrizionista = ?, sesso = ?, data_di_nascita = ? WHERE id_cliente = ?";
+                try (PreparedStatement pstmt = conn.prepareStatement(updateClientiQuery)) {
+                    if (altezza != null) {
+                        pstmt.setDouble(1, altezza);
+                    } else {
+                        pstmt.setNull(1, java.sql.Types.DOUBLE);
+                    }
+
+                    if (peso != null) {
+                        pstmt.setDouble(2, peso);
+                    } else {
+                        pstmt.setNull(2, java.sql.Types.DOUBLE);
+                    }
+
+                    pstmt.setString(3, livelloAttivita);
+
+                    if (idNutrizionista != null) {
+                        pstmt.setInt(4, idNutrizionista);
+                    } else {
+                        pstmt.setNull(4, java.sql.Types.INTEGER);
+                    }
+
+                    pstmt.setString(5, sessoSelezionato.toLowerCase());
+                    pstmt.setString(6, dataNascitaFormattedForDb);
+
+                    pstmt.setInt(7, userIdFromSession);
+                    pstmt.executeUpdate();
+                    System.out.println("[DEBUG] Profilo cliente aggiornato con successo.");
                 }
+            } else {
+                // --- PASSO 2b: Se il cliente NON esiste, esegui l'INSERT ---
+                String insertClientiQuery = "INSERT INTO Clienti (id_cliente, altezza_cm, peso_kg, livello_attivita, id_nutrizionista, sesso, data_di_nascita) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement pstmt = conn.prepareStatement(insertClientiQuery)) {
+                    pstmt.setInt(1, userIdFromSession); // id_cliente
+                    if (altezza != null) {
+                        pstmt.setDouble(2, altezza);
+                    } else {
+                        pstmt.setNull(2, java.sql.Types.DOUBLE);
+                    }
 
-                pstmt.setString(3, livelloAttivita);
+                    if (peso != null) {
+                        pstmt.setDouble(3, peso);
+                    } else {
+                        pstmt.setNull(3, java.sql.Types.DOUBLE);
+                    }
 
-                if (idNutrizionista != null) {
-                    pstmt.setInt(4, idNutrizionista);
-                } else {
-                    pstmt.setNull(4, java.sql.Types.INTEGER);
+                    pstmt.setString(4, livelloAttivita);
+
+                    if (idNutrizionista != null) {
+                        pstmt.setInt(5, idNutrizionista);
+                    } else {
+                        pstmt.setNull(5, java.sql.Types.INTEGER);
+                    }
+
+                    pstmt.setString(6, sessoSelezionato.toLowerCase());
+                    pstmt.setString(7, dataNascitaFormattedForDb);
+
+                    pstmt.executeUpdate();
+                    System.out.println("[DEBUG] Nuovo profilo cliente creato con successo.");
                 }
-                pstmt.setInt(5, userIdFromSession);
-                pstmt.executeUpdate();
             }
 
             // --- Logica aggiunta per la gestione della dieta ---
-            // Se il nutrizionista è cambiato E il cliente ha una dieta assegnata
+            // ... (Questa parte rimane invariata, si applica sia dopo un UPDATE che un INSERT)
             System.out.println(dietaAssegnata);
             if (nutrizionistaCambiato && dietaAssegnata != null) {
                 System.out.println("[DEBUG] Nutrizionista cambiato e dieta assegnata. Eseguo pulizia pasti giornalieri e dissociazione dieta.");
 
                 // 1. Recupera tutti gli id_giorno_dieta associati alla dieta del cliente
-                //    Questi id_giorno_dieta sono i "genitori" dei PastiGiornalieri che vogliamo eliminare.
                 String selectGiornoDietaIdsQuery = "SELECT id_giorno_dieta FROM Giorno_dieta WHERE id_dieta = ?";
                 List<Integer> giornoDietaIds = new ArrayList<>();
                 try (PreparedStatement pstmtSelectGiorno = conn.prepareStatement(selectGiornoDietaIdsQuery)) {
@@ -525,12 +633,10 @@ public class PaginaProfilo {
 
                 // 2. Se ci sono id_giorno_dieta validi, elimina i pasti giornalieri associati
                 if (!giornoDietaIds.isEmpty()) {
-                    // Costruisci la stringa per la clausola IN (?, ?, ...) dinamicamente
                     String placeholders = String.join(",", Collections.nCopies(giornoDietaIds.size(), "?"));
                     String deletePastiQuery = "DELETE FROM PastiGiornalieri WHERE id_giorno_dieta IN (" + placeholders + ")";
                     try (PreparedStatement pstmtPasti = conn.prepareStatement(deletePastiQuery)) {
                         for (int i = 0; i < giornoDietaIds.size(); i++) {
-                            // Imposta i valori nella query, partendo dall'indice 1 per i PreparedStatement
                             pstmtPasti.setInt(i + 1, giornoDietaIds.get(i));
                         }
                         int affectedRows = pstmtPasti.executeUpdate();
@@ -541,35 +647,34 @@ public class PaginaProfilo {
                 }
 
                 // 3. Setta id_cliente a NULL nella tabella Diete
-                //    Questa operazione disassocia la dieta dal cliente.
                 String updateDietaQuery = "UPDATE Diete SET id_cliente = NULL WHERE id = ?";
                 try (PreparedStatement pstmtDieta = conn.prepareStatement(updateDietaQuery)) {
-                    pstmtDieta.setInt(1, dietaAssegnata.getId()); // Usa l'ID della dieta recuperata all'inizio
+                    pstmtDieta.setInt(1, dietaAssegnata.getId());
                     pstmtDieta.executeUpdate();
                     System.out.println("[DEBUG] id_cliente settato a NULL per la dieta ID: " + dietaAssegnata.getId());
                 }
-                // Resetta dietaAssegnata a null dopo averla dissociata con successo
-                dietaAssegnata = null;
+                dietaAssegnata = null; // Resetta dietaAssegnata a null dopo averla dissociata con successo
             }
 
             conn.commit(); // Conferma la transazione
-            showAlert(Alert.AlertType.INFORMATION, "Salvataggio completato", "Profilo aggiornato con successo!", null);
-            // Re-inizializza i dati per assicurarsi che l'interfaccia rifletta eventuali cambiamenti
-            inizializzaDatiUtente();
-            // Aggiorna nutrizionistaPrecedente dopo un salvataggio riuscito
-            nutrizionistaPrecedente = nutrizionistaComboBox.getSelectionModel().getSelectedItem();
-            // Aggiorna la variabile dietaAssegnata dopo il salvataggio
-            dietaAssegnata = recuperaDietaAssegnataACliente(Session.getUserId());
-
+            showAlert(Alert.AlertType.INFORMATION, "Salvataggio completato", "Profilo aggiornato con successo!");
+            inizializzaDatiUtente(); // Re-inizializza i dati per riflettere i cambiamenti
+            if (nutrizionistaComboBox.getSelectionModel().getSelectedItem() != null) {
+                nutrizionistaPrecedente = nutrizionistaComboBox.getSelectionModel().getSelectedItem();
+            } else {
+                nutrizionistaPrecedente = null;
+            }
+            dietaAssegnata = recuperaDietaAssegnataACliente(userIdFromSession); // Aggiorna la variabile dietaAssegnata
         } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Errore di database", "Impossibile salvare il profilo.", "Dettagli: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore di database", "Impossibile salvare il profilo.");
             e.printStackTrace();
-            try (Connection conn = SQLiteConnessione.connector()) { // Riapri la connessione per il rollback se è chiusa
+            try (Connection conn = SQLiteConnessione.connector()) {
                 if (conn != null) {
                     conn.rollback(); // Annulla la transazione in caso di errore
                 }
             } catch (SQLException rollbackEx) {
                 System.err.println("Errore durante il rollback: " + rollbackEx.getMessage());
+                showAlert(Alert.AlertType.ERROR, "Errore Database", "Errore durante il rollback della transazione.");
             }
         }
     }

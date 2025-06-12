@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 import java.util.Optional; // Necessario per showAlert
 
@@ -228,7 +229,7 @@ public class Alimenti {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare gli alimenti", "Dettagli: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare gli alimenti. ");
         }
     }
 
@@ -251,7 +252,7 @@ public class Alimenti {
 
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Caricamento", "Impossibile aprire il dettaglio alimento", "Verificare il file FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Caricamento", "Impossibile aprire il dettaglio alimento.");
         }
     }
 
@@ -271,7 +272,7 @@ public class Alimenti {
 
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Caricamento", "Impossibile aprire la schermata di aggiunta alimento", "Verificare il file FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Caricamento", "Impossibile aprire la schermata di aggiunta alimento. ");
         }
     }
 
@@ -291,18 +292,36 @@ public class Alimenti {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile popolare le categorie", "Dettagli: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore Database",  "Errore nel caricamento delle categorie");
         }
     }
 
-    // Metodo per visualizzare gli alert
-    private void showAlert(Alert.AlertType type, String title, String header, String content) {
-        Alert alert = new Alert(type);
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
+        if (cssUrl != null) {
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Apply the base style class
+            // Add specific style class based on AlertType for custom styling
+            if (alertType == Alert.AlertType.INFORMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-information");
+            } else if (alertType == Alert.AlertType.WARNING) {
+                alert.getDialogPane().getStyleClass().add("alert-warning");
+            } else if (alertType == Alert.AlertType.ERROR) {
+                alert.getDialogPane().getStyleClass().add("alert-error");
+            } else if (alertType == Alert.AlertType.CONFIRMATION) {
+                alert.getDialogPane().getStyleClass().add("alert-confirmation");
+            }
+        } else {
+            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Corrected error message
+        }
+
         alert.showAndWait();
     }
+
 
     // Metodo per recuperare la dieta assegnata al cliente (copiato da PaginaProfilo/Ricette)
     private Dieta recuperaDietaAssegnataACliente(int idCliente) {
@@ -359,7 +378,7 @@ public class Alimenti {
         } else if (ruolo.equalsIgnoreCase("cliente")) {
             fxmlPath = "/com/matteotocci/app/Alimenti.fxml";
         } else {
-            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido");
             return;
         }
         try {
@@ -371,7 +390,7 @@ public class Alimenti {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la pagina Alimenti", "Verificare il percorso FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la pagina Alimenti.");
         }
     }
 
@@ -383,7 +402,7 @@ public class Alimenti {
         } else if (ruolo.equalsIgnoreCase("cliente")) {
             fxmlPath = "/com/matteotocci/app/Ricette.fxml";
         } else {
-            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido");
             return;
         }
         try {
@@ -395,7 +414,7 @@ public class Alimenti {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la pagina Ricette", "Verificare il percorso FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la pagina Ricette");
         }
     }
 
@@ -410,7 +429,7 @@ public class Alimenti {
         } else if (ruolo.equalsIgnoreCase("cliente")) {
             fxmlPath = "/com/matteotocci/app/HomePage.fxml";
         } else {
-            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido");
             return;
         }
         try {
@@ -421,7 +440,7 @@ public class Alimenti {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la HomePage", "Verificare il percorso FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la HomePage");
         }
     }
 
@@ -433,7 +452,7 @@ public class Alimenti {
         } else if (ruolo.equalsIgnoreCase("cliente")) {
             fxmlPath = "/com/matteotocci/app/PaginaProfilo.fxml";
         } else {
-            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.","verificare database");
+            showAlert(Alert.AlertType.ERROR, "Errore", "Ruolo utente non valido.");
             return;
         }
         try {
@@ -445,7 +464,7 @@ public class Alimenti {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la Pagina Profilo", "Verificare il percorso FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore Navigazione", "Impossibile caricare la Pagina Profilo");
         }
     }
 
@@ -478,15 +497,15 @@ public class Alimenti {
             } catch (IOException e) {
                 System.err.println("ERRORE (HomePage): Errore caricamento FXML VisualizzaDieta: " + e.getMessage());
                 e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.", "Verificare il percorso del file FXML.");
+                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata della dieta.");
             } catch (Exception e) {
                 System.err.println("ERRORE (HomePage): Errore generico durante l'apertura di VisualizzaDieta: " + e.getMessage());
                 e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.", "Dettagli: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore inatteso.");
             }
         } else {
             System.out.println("DEBUG (HomePage): Nessuna dieta trovata per il cliente  (ID: " + Session.getUserId() + ").");
-            showAlert(Alert.AlertType.INFORMATION, "Nessuna Dieta", "Nessuna dieta assegnata",
+            showAlert(Alert.AlertType.INFORMATION, "Nessuna dieta assegnata",
                     "Il cliente non ha diete assegnate o non è stato possibile recuperarle.");
         }
     }
@@ -502,7 +521,7 @@ public class Alimenti {
             dietaStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.", "Verificare il percorso del file FXML.");
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.");
         }
     }
 }

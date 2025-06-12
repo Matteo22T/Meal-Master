@@ -71,7 +71,7 @@
                         <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="calories-container">
                            <children>
                               <Circle fill="TRANSPARENT" radius="60.0" stroke="#E0E0E0" strokeType="INSIDE" strokeWidth="13.0" />
-                              <Circle fill="TRANSPARENT" radius="60.0" stroke="#4F7942" strokeDashArray="376.990" strokeDashOffset="376.990" strokeType="INSIDE" strokeWidth="13.0" styleClass="progress-circle">
+                              <Circle fx:id="kcalProgressCircle" fill="TRANSPARENT" radius="60.0" stroke="#4F7942" strokeDashArray="376.990" strokeDashOffset="376.990" strokeType="INSIDE" strokeWidth="13.0" styleClass="progress-circle">
                                     <rotationAxis>
                                        <Point3D x="0.0" y="0.0" z="1.0" />
                                     </rotationAxis>

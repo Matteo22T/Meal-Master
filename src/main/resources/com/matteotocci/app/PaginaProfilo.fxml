@@ -111,17 +111,12 @@
                                     </columnConstraints>
                                     <rowConstraints>
                                         <RowConstraints minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
                                         <Label styleClass="form-label" text="Nome:" />
                                         <TextField fx:id="nomeTextField" editable="false" styleClass="form-field" GridPane.columnIndex="1" />
                                         <Label styleClass="form-label" text="Cognome:" GridPane.columnIndex="2" />
                                         <TextField fx:id="cognomeTextField" editable="false" styleClass="form-field" GridPane.columnIndex="3" />
-                                        <Label styleClass="form-label" text="Data di Nascita:" GridPane.rowIndex="1" />
-                                        <TextField fx:id="dataNascitaTextField" editable="false" promptText="dd/mm/yyyy" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                        <Label styleClass="form-label" text="Sesso:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                        <TextField fx:id="sessoTextField" editable="false" promptText="M/F/Altro" styleClass="form-field" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                     </children>
                                     <VBox.margin>
                                         <Insets bottom="20.0" />
@@ -144,40 +139,55 @@
                                     <rowConstraints>
                                         <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
                                         <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <Label styleClass="form-label" text="Altezza (cm):" />
-                                        <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1">
+                                        <Label styleClass="form-label" text="Data di Nascita:" />
+                                        <TextField fx:id="dataNascitaTextField" promptText="dd-mm-yyyy" styleClass="form-field" GridPane.columnIndex="1">
+                                            <styleClass>
+                                                <String fx:value="form-field" />
+                                                <String fx:value="editable-field" />
+                                            </styleClass>
+                                        </TextField>
+                                        <Label styleClass="form-label" text="Sesso:" GridPane.columnIndex="2" />
+                                        <Label styleClass="form-label" text="Altezza (cm):" GridPane.rowIndex="1" />
+                                        <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                             <children>
                                                 <TextField fx:id="altezzaTextField" prefWidth="100.0" promptText="es. 175">
-                                       <styleClass>
-                                          <String fx:value="form-field" />
-                                          <String fx:value="editable-field" />
-                                       </styleClass></TextField>
+                                                    <styleClass>
+                                                        <String fx:value="form-field" />
+                                                        <String fx:value="editable-field" />
+                                                    </styleClass></TextField>
                                             </children>
                                         </HBox>
-                                        <Label styleClass="form-label" text="Peso (kg):" GridPane.columnIndex="2" />
-                                        <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="3">
+                                        <Label styleClass="form-label" text="Peso (kg):" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                        <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                             <children>
                                                 <TextField fx:id="pesoAttualeTextField" prefWidth="100.0" promptText="es. 70.5">
-                                       <styleClass>
-                                          <String fx:value="form-field" />
-                                          <String fx:value="editable-field" />
-                                       </styleClass></TextField>
+                                                    <styleClass>
+                                                        <String fx:value="form-field" />
+                                                        <String fx:value="editable-field" />
+                                                    </styleClass></TextField>
                                             </children>
                                         </HBox>
-                                        <Label styleClass="form-label" text="Livello Attività:" GridPane.rowIndex="1" />
-                                        <ComboBox fx:id="livelloAttivitaComboBox" prefWidth="200.0" promptText="Seleziona livello" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <styleClass>
-                                    <String fx:value="editable-field" />
-                                    <String fx:value="form-field" />
-                                 </styleClass></ComboBox>
-                                        <Label styleClass="form-label" text="Nutrizionista:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                        <ComboBox fx:id="nutrizionistaComboBox" prefWidth="200.0" promptText="" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                        <Label styleClass="form-label" text="Livello Attività:" GridPane.rowIndex="2" />
+                                        <ComboBox fx:id="livelloAttivitaComboBox" prefWidth="200.0" promptText="Seleziona livello" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                             <styleClass>
                                                 <String fx:value="editable-field" />
                                                 <String fx:value="form-field" />
-                                            </styleClass></ComboBox>                                    </children>
+                                            </styleClass></ComboBox>
+                                        <Label styleClass="form-label" text="Nutrizionista:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                        <ComboBox fx:id="nutrizionistaComboBox" prefWidth="200.0" promptText="" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                            <styleClass>
+                                                <String fx:value="editable-field" />
+                                                <String fx:value="form-field" />
+                                            </styleClass></ComboBox>
+                              <ComboBox fx:id="sessoComboBox" prefWidth="200.0" promptText="Seleziona sesso" GridPane.columnIndex="3">
+                                 <styleClass>
+                                    <String fx:value="editable-field" />
+                                    <String fx:value="form-field" />
+                                 </styleClass>
+                              </ComboBox>                                    </children>
                                 </GridPane>
 
                                 <Region prefHeight="30.0" prefWidth="728.0" VBox.vgrow="ALWAYS" />
