@@ -2,9 +2,10 @@ package com.matteotocci.app.controller;
 
 import com.matteotocci.app.model.Dieta;
 import com.matteotocci.app.model.Alimento;
-import com.matteotocci.app.model.Ricetta; // Importa la classe Ricetta
+import com.matteotocci.app.model.Ricetta;
 import com.matteotocci.app.model.SQLiteConnessione;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -12,16 +13,36 @@ import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+// Importazioni per OpenPDF per uno stile migliore
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.Font; // Importa Font
+import com.lowagie.text.Element; // Per allineamento
+import com.lowagie.text.Phrase; // Per combinare testo con stili diversi
+import com.lowagie.text.Chunk; // Per piccoli frammenti di testo con stili diversi
+import com.lowagie.text.pdf.PdfPTable; // Per tabelle
+import com.lowagie.text.pdf.PdfPCell; // Per celle della tabella
+
+import java.awt.Color; // Ora useremo solo java.awt.Color
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Comparator; // Import per ordinamento
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class VisualizzaDieta {
 
@@ -36,18 +57,12 @@ public class VisualizzaDieta {
 
     private Dieta dietaCorrente;
 
-    /**
-     * Interfaccia comune per AlimentoQuantita e RicettaQuantita per la visualizzazione.
-     */
     public interface DietaItem {
         String getDisplayName();
         String getDisplayQuantity();
-        ImageView getDisplayImage(); // Può restituire null se non c'è immagine o un placeholder
+        ImageView getDisplayImage();
     }
 
-    /**
-     * Classe interna per rappresentare un Alimento con la sua quantità, implementa DietaItem.
-     */
     private static class AlimentoQuantita implements DietaItem {
         private Alimento alimento;
         private double quantita;
@@ -67,7 +82,6 @@ public class VisualizzaDieta {
 
         @Override
         public String getDisplayQuantity() {
-            // Formatta la quantità in grammi, senza decimali se è un intero
             if (quantita == (long) quantita) {
                 return "(" + (long) quantita + "g)";
             }
@@ -78,20 +92,16 @@ public class VisualizzaDieta {
         public ImageView getDisplayImage() {
             ImageView originalImageView = alimento.getImmagine();
             if (originalImageView != null && originalImageView.getImage() != null) {
-                // Clona l'ImageView per evitare "javafx.scene.image.ImageView is not a child of..."
                 ImageView clonedImageView = new ImageView(originalImageView.getImage());
                 clonedImageView.setFitWidth(35);
                 clonedImageView.setFitHeight(35);
                 clonedImageView.setPreserveRatio(true);
                 return clonedImageView;
             }
-            return null; // O un placeholder generico se l'immagine non è disponibile
+            return null;
         }
     }
 
-    /**
-     * Classe interna per rappresentare una Ricetta con la sua quantità, implementa DietaItem.
-     */
     private static class RicettaQuantita implements DietaItem {
         private Ricetta ricetta;
         private double quantita;
@@ -111,7 +121,6 @@ public class VisualizzaDieta {
 
         @Override
         public String getDisplayQuantity() {
-            // Formatta la quantità in grammi, senza decimali se è un intero
             if (quantita == (long) quantita) {
                 return "(Ricetta - " + (long) quantita + "g)";
             }
@@ -120,23 +129,15 @@ public class VisualizzaDieta {
 
         @Override
         public ImageView getDisplayImage() {
-            // Le ricette nel tuo modello non hanno un'immagine diretta.
-            // Restituisci null, il metodo popolaContenitoreGiorni aggiungerà un placeholder.
             return null;
         }
     }
 
 
-    /**
-     * Metodo chiamato dal controller precedente per passare l'oggetto Dieta da visualizzare.
-     * Questo è il punto d'ingresso per popolare la finestra.
-     * @param dieta L'oggetto Dieta da mostrare.
-     */
     public void impostaDietaDaVisualizzare(Dieta dieta) {
         this.dietaCorrente = dieta;
         if (dieta == null) {
             System.err.println("ERRORE (VisualizzaDieta): impostaDietaDaVisualizzare - Dieta ricevuta è NULL. Impossibile caricare i dettagli.");
-            // Potresti mostrare un messaggio all'utente qui
         }
         caricaEVisualizzaDettagliDieta();
     }
@@ -153,32 +154,29 @@ public class VisualizzaDieta {
             return;
         }
 
-        // Popola le Label dell'intestazione della dieta
         labelNomeDieta.setText(dietaCorrente.getNome());
         labelDataInizio.setText("Data Inizio: " + (dietaCorrente.getDataInizio() != null ? dietaCorrente.getDataInizio() : "N/D"));
         labelDataFine.setText("Data Fine: " + (dietaCorrente.getDataFine() != null ? dietaCorrente.getDataFine() : "N/D"));
 
-        // Recupera i dettagli di tutti i giorni, pasti, alimenti e ricette dal database
-        // Questo metodo ora è rinominato e restituisce una mappa di DietaItem
-        Map<Integer, Map<String, List<DietaItem>>> giorniDieta = recuperaDettagliCompletiDieta(dietaCorrente.getId());
+        Map<Integer, Map<String, Object>> giorniDietaConNomi = recuperaDettagliCompletiDieta(dietaCorrente.getId());
 
-        if (giorniDieta.isEmpty()) {
+        if (giorniDietaConNomi.isEmpty()) {
             System.out.println("Nessun alimento o ricetta trovata per questa dieta. Potrebbe essere vuota.");
-            // Potresti aggiungere un messaggio visibile all'utente.
         }
 
-        // Popola il contenitoreGiorni (VBox) dinamicamente con gli elementi UI
-        popolaContenitoreGiorni(giorniDieta);
+        popolaContenitoreGiorni(giorniDietaConNomi);
     }
 
     /**
      * Recupera tutti i dettagli completi di una dieta dal database: giorni, pasti, alimenti e ricette correlate.
-     * Questo metodo sostituisce il precedente 'recuperaDettagliGiorniAlimenti'.
+     * Ora include il 'nome_giorno' dalla tabella Giorno_dieta e lo memorizza nella mappa.
      * @param idDieta L'ID della dieta per cui recuperare i dettagli.
-     * @return Una mappa complessa contenente tutti i dettagli strutturati della dieta (alimenti e ricette).
+     * @return Una mappa complessa in cui la chiave è id_giorno_dieta, e il valore è un'altra mappa contenente:
+     * - "nomeGiorno": Stringa con il nome del giorno
+     * - "pasti": Map<String, List<DietaItem>> con i pasti e gli items
      */
-    private Map<Integer, Map<String, List<DietaItem>>> recuperaDettagliCompletiDieta(int idDieta) {
-        Map<Integer, Map<String, List<DietaItem>>> giorniDieta = new HashMap<>();
+    private Map<Integer, Map<String, Object>> recuperaDettagliCompletiDieta(int idDieta) {
+        Map<Integer, Map<String, Object>> giorniDietaMap = new TreeMap<>();
         Connection conn = null;
 
         try {
@@ -187,6 +185,7 @@ public class VisualizzaDieta {
             // Query per gli ALIMENTI
             String sqlAlimenti = "SELECT " +
                     "  gd.id_giorno_dieta, " +
+                    "  gd.nome_giorno, " +
                     "  da.pasto, " +
                     "  f.id AS alimento_id, " +
                     "  f.nome AS alimento_nome, " +
@@ -215,7 +214,7 @@ public class VisualizzaDieta {
                     "         WHEN 'spuntinoPomeriggio' THEN 4 " +
                     "         WHEN 'cena' THEN 5 " +
                     "         ELSE 6 " +
-                    "       END"; // Ordina i pasti per la visualizzazione
+                    "       END";
 
             try (PreparedStatement pstmtAlimenti = conn.prepareStatement(sqlAlimenti)) {
                 pstmtAlimenti.setInt(1, idDieta);
@@ -223,6 +222,7 @@ public class VisualizzaDieta {
 
                 while (rsAlimenti.next()) {
                     int idGiornoDieta = rsAlimenti.getInt("id_giorno_dieta");
+                    String nomeGiorno = rsAlimenti.getString("nome_giorno");
                     String nomePasto = rsAlimenti.getString("pasto");
                     double quantita = rsAlimenti.getDouble("quantita_grammi");
 
@@ -243,18 +243,25 @@ public class VisualizzaDieta {
                             rsAlimenti.getInt("alimento_id")
                     );
 
-                    giorniDieta.putIfAbsent(idGiornoDieta, new HashMap<>());
-                    Map<String, List<DietaItem>> pastiDelGiorno = giorniDieta.get(idGiornoDieta);
+                    giorniDietaMap.putIfAbsent(idGiornoDieta, new HashMap<>());
+                    Map<String, Object> giornoData = giorniDietaMap.get(idGiornoDieta);
+
+                    giornoData.putIfAbsent("nomeGiorno", nomeGiorno);
+                    giornoData.putIfAbsent("pasti", new HashMap<String, List<DietaItem>>());
+
+                    @SuppressWarnings("unchecked")
+                    Map<String, List<DietaItem>> pastiDelGiorno = (Map<String, List<DietaItem>>) giornoData.get("pasti");
 
                     pastiDelGiorno.putIfAbsent(nomePasto, new ArrayList<>());
                     pastiDelGiorno.get(nomePasto).add(new AlimentoQuantita(alimento, quantita));
                 }
             }
 
-            // Query per le RICETTE (include la colonna 'pasto' dalla tabella DietaRicette)
+            // Query per le RICETTE
             String sqlRicette = "SELECT " +
                     "  gd.id_giorno_dieta, " +
-                    "  dr.pasto, " + // Recupera la colonna 'pasto'
+                    "  gd.nome_giorno, " +
+                    "  dr.pasto, " +
                     "  r.id AS ricetta_id, " +
                     "  r.nome AS ricetta_nome, " +
                     "  r.descrizione, " +
@@ -274,7 +281,7 @@ public class VisualizzaDieta {
                     "JOIN Ricette r ON dr.id_ricetta = r.id " +
                     "WHERE gd.id_dieta = ? " +
                     "ORDER BY gd.id_giorno_dieta, " +
-                    "       CASE dr.pasto " + // Ordina anche le ricette per pasto
+                    "       CASE dr.pasto " +
                     "         WHEN 'colazione' THEN 1 " +
                     "         WHEN 'spuntinoMattina' THEN 2 " +
                     "         WHEN 'pranzo' THEN 3 " +
@@ -289,7 +296,8 @@ public class VisualizzaDieta {
 
                 while (rsRicette.next()) {
                     int idGiornoDieta = rsRicette.getInt("id_giorno_dieta");
-                    String nomePasto = rsRicette.getString("pasto"); // Recupera il pasto dalla ricetta
+                    String nomeGiorno = rsRicette.getString("nome_giorno");
+                    String nomePasto = rsRicette.getString("pasto");
                     double quantita = rsRicette.getDouble("quantita_grammi");
 
                     Ricetta ricetta = new Ricetta(
@@ -308,8 +316,15 @@ public class VisualizzaDieta {
                             rsRicette.getDouble("sale")
                     );
 
-                    giorniDieta.putIfAbsent(idGiornoDieta, new HashMap<>());
-                    Map<String, List<DietaItem>> pastiDelGiorno = giorniDieta.get(idGiornoDieta);
+                    giorniDietaMap.putIfAbsent(idGiornoDieta, new HashMap<>());
+                    Map<String, Object> giornoData = giorniDietaMap.get(idGiornoDieta);
+
+                    giornoData.putIfAbsent("nomeGiorno", nomeGiorno);
+                    giornoData.putIfAbsent("pasti", new HashMap<String, List<DietaItem>>());
+
+
+                    @SuppressWarnings("unchecked")
+                    Map<String, List<DietaItem>> pastiDelGiorno = (Map<String, List<DietaItem>>) giornoData.get("pasti");
 
                     pastiDelGiorno.putIfAbsent(nomePasto, new ArrayList<>());
                     pastiDelGiorno.get(nomePasto).add(new RicettaQuantita(ricetta, quantita));
@@ -329,44 +344,47 @@ public class VisualizzaDieta {
                 e.printStackTrace();
             }
         }
-        return giorniDieta;
+        return giorniDietaMap;
     }
 
 
     /**
      * Popola il VBox 'contenitoreGiorni' dinamicamente con i blocchi UI per ogni giorno e pasto.
-     * I giorni sono ordinati per il loro 'id_giorno_dieta' e visualizzati come "Giorno 1", "Giorno 2", ecc.
-     * @param giorniDieta La mappa dei dati recuperati dal database, contenente sia alimenti che ricette.
+     * Ora usa il 'nome_giorno' effettivo recuperato dal database, memorizzato nella mappa.
+     * @param giorniDietaMap La mappa dei dati recuperati dal database, contenente sia alimenti che ricette,
+     * con l'aggiunta dell'informazione del nome del giorno.
      */
-    private void popolaContenitoreGiorni(Map<Integer, Map<String, List<DietaItem>>> giorniDieta) {
+    private void popolaContenitoreGiorni(Map<Integer, Map<String, Object>> giorniDietaMap) {
         contenitoreGiorni.getChildren().clear();
 
-        if (giorniDieta.isEmpty()) {
+        if (giorniDietaMap.isEmpty()) {
             Label noDataLabel = new Label("Nessun piano alimentare dettagliato trovato per questa dieta.");
             noDataLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #888; -fx-padding: 20px;");
             contenitoreGiorni.getChildren().add(noDataLabel);
             return;
         }
 
-        List<Integer> idGiorniOrdinati = new ArrayList<>(giorniDieta.keySet());
-        idGiorniOrdinati.sort(Integer::compareTo); // Ordina gli ID dei giorni
-
-        int contatoreGiorno = 1;
+        List<Integer> idGiorniOrdinati = new ArrayList<>(giorniDietaMap.keySet());
+        idGiorniOrdinati.sort(Integer::compareTo);
 
         for (Integer idGiorno : idGiorniOrdinati) {
-            Map<String, List<DietaItem>> pastiDelGiorno = giorniDieta.get(idGiorno);
+            Map<String, Object> giornoData = giorniDietaMap.get(idGiorno);
+            String nomeGiorno = (String) giornoData.get("nomeGiorno");
+
+            @SuppressWarnings("unchecked")
+            Map<String, List<DietaItem>> pastiDelGiorno = (Map<String, List<DietaItem>>) giornoData.get("pasti");
+
 
             VBox giornoBox = new VBox(10);
             giornoBox.setStyle("-fx-border-color: #e0e0e0; -fx-border-width: 1px; -fx-border-radius: 8px; -fx-padding: 15px; -fx-background-color: #ffffff; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);");
             VBox.setMargin(giornoBox, new Insets(0, 0, 20, 0));
 
-            Label giornoLabel = new Label("Giorno " + contatoreGiorno);
+            Label giornoLabel = new Label(nomeGiorno);
             giornoLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
             giornoBox.getChildren().add(giornoLabel);
 
             giornoBox.getChildren().add(new Separator());
 
-            // Ordine desiderato per la visualizzazione dei pasti
             List<String> ordinePasti = List.of(
                     "colazione",
                     "spuntinoMattina",
@@ -379,7 +397,6 @@ public class VisualizzaDieta {
                 if (pastiDelGiorno.containsKey(nomePastoDalDB)) {
                     List<DietaItem> itemsDelPasto = pastiDelGiorno.get(nomePastoDalDB);
 
-                    // Ordina gli elementi all'interno di ogni pasto per nome
                     itemsDelPasto.sort(Comparator.comparing(DietaItem::getDisplayName));
 
                     VBox pastoBox = new VBox(5);
@@ -394,7 +411,6 @@ public class VisualizzaDieta {
                             nomePastoVisualizzato = "Spuntino Pomeriggio";
                             break;
                         default:
-                            // Capitalizza la prima lettera per gli altri pasti (colazione, pranzo, cena)
                             nomePastoVisualizzato = nomePastoDalDB.substring(0, 1).toUpperCase() + nomePastoDalDB.substring(1);
                             break;
                     }
@@ -411,15 +427,14 @@ public class VisualizzaDieta {
                         if (displayImage != null) {
                             itemHBox.getChildren().add(displayImage);
                         } else {
-                            // Se l'immagine non è disponibile (es. per le ricette), puoi aggiungere un placeholder testuale o un'icona generica
-                            Label placeholder = new Label("🍽️"); // Esempio di placeholder con emoji
+                            Label placeholder = new Label("🍽️");
                             placeholder.setStyle("-fx-font-size: 20px; -fx-alignment: center; -fx-pref-width: 35px; -fx-pref-height: 35px;");
                             itemHBox.getChildren().add(placeholder);
                         }
 
                         Label itemLabel = new Label("- " + item.getDisplayName() + " " + item.getDisplayQuantity());
                         itemLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #555;");
-                        itemHBox.getChildren().add(itemLabel);
+                        itemHBox.getChildren().add(itemLabel); // <-- CORREZIONELOGICA QUI
 
                         pastoBox.getChildren().add(itemHBox);
                     }
@@ -427,7 +442,145 @@ public class VisualizzaDieta {
                 }
             }
             contenitoreGiorni.getChildren().add(giornoBox);
-            contatoreGiorno++;
         }
     }
+
+    // --- NUOVO METODO PER SCARICARE IL PDF ---
+    @FXML
+    private void handleScaricaPdf(ActionEvent event) {
+        if (dietaCorrente == null) {
+            showAlert("Errore", "Nessuna dieta caricata da scaricare.");
+            return;
+        }
+
+        Map<Integer, Map<String, Object>> giorniDietaConNomi = recuperaDettagliCompletiDieta(dietaCorrente.getId());
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Salva Dieta PDF");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files (*.pdf)", "*.pdf"));
+        fileChooser.setInitialFileName("Dieta_" + dietaCorrente.getNome().replaceAll("\\s+", "_") + ".pdf");
+
+        File file = fileChooser.showSaveDialog(((javafx.scene.Node) event.getSource()).getScene().getWindow());
+
+        if (file != null) {
+            try {
+                // Definizioni di font e colori
+                Font fontTitle = new Font(Font.HELVETICA, 24, Font.BOLD, new Color(44, 62, 80)); // Grigio scuro per i titoli
+                Font fontSubtitle = new Font(Font.HELVETICA, 16, Font.BOLD, new Color(52, 73, 94)); // Blu scuro
+                Font fontSection = new Font(Font.HELVETICA, 14, Font.BOLD, new Color(192, 57, 43)); // Rosso per sezioni
+                Font fontNormal = new Font(Font.HELVETICA, 12, Font.NORMAL, Color.BLACK);
+                Font fontItem = new Font(Font.HELVETICA, 11, Font.NORMAL, new Color(85, 85, 85));
+                Font fontPasto = new Font(Font.HELVETICA, 13, Font.BOLD, new Color(70, 96, 117)); // Verde scuro per i pasti
+
+                Document document = new Document();
+                PdfWriter.getInstance(document, new FileOutputStream(file));
+                document.open();
+
+                // Intestazione generale della dieta
+                Paragraph pTitle = new Paragraph(dietaCorrente.getNome(), fontTitle);
+                pTitle.setAlignment(Element.ALIGN_CENTER);
+                document.add(pTitle);
+                document.add(new Paragraph("\n"));
+
+                // Date
+                Paragraph pDates = new Paragraph();
+                pDates.setAlignment(Element.ALIGN_CENTER);
+                pDates.add(new Chunk("Data Inizio: ", fontSubtitle));
+                pDates.add(new Chunk(dietaCorrente.getDataInizio() != null ? dietaCorrente.getDataInizio() : "N/D", fontNormal));
+                pDates.add(new Chunk("    Data Fine: ", fontSubtitle));
+                pDates.add(new Chunk(dietaCorrente.getDataFine() != null ? dietaCorrente.getDataFine() : "N/D", fontNormal));
+                document.add(pDates);
+                document.add(new Paragraph("\n\n")); // Spazio extra
+
+                // Sezione "Piani Giornalieri"
+                Paragraph pSectionTitle = new Paragraph("Piani Giornalieri", fontSection);
+                pSectionTitle.setAlignment(Element.ALIGN_CENTER);
+                document.add(pSectionTitle);
+                document.add(new Paragraph("\n"));
+
+                List<Integer> idGiorniOrdinati = new ArrayList<>(giorniDietaConNomi.keySet());
+                idGiorniOrdinati.sort(Integer::compareTo);
+
+                for (Integer idGiorno : idGiorniOrdinati) {
+                    Map<String, Object> giornoData = giorniDietaConNomi.get(idGiorno);
+                    String nomeGiorno = (String) giornoData.get("nomeGiorno");
+
+
+                    Map<String, List<DietaItem>> pastiDelGiorno = (Map<String, List<DietaItem>>) giornoData.get("pasti");
+
+                    // Titolo del giorno
+                    Paragraph pGiorno = new Paragraph(nomeGiorno.toUpperCase(), fontSubtitle);
+                    pGiorno.setAlignment(Element.ALIGN_LEFT);
+                    pGiorno.setSpacingAfter(5);
+                    document.add(pGiorno);
+                    document.add(new Paragraph("--------------------------------------------------------------------------------------------------------------------", fontNormal)); // Separatore
+                    document.add(new Paragraph("\n"));
+
+
+                    List<String> ordinePasti = List.of(
+                            "colazione", "spuntinoMattina", "pranzo", "spuntinoPomeriggio", "cena"
+                    );
+
+
+                    PdfPTable tableGiorno = new PdfPTable(1);
+                    tableGiorno.setWidthPercentage(100);
+                    tableGiorno.setSpacingAfter(15);
+
+
+                    for (String nomePastoDalDB : ordinePasti) {
+                        if (pastiDelGiorno.containsKey(nomePastoDalDB)) {
+                            List<DietaItem> itemsDelPasto = pastiDelGiorno.get(nomePastoDalDB);
+                            itemsDelPasto.sort(Comparator.comparing(DietaItem::getDisplayName));
+
+                            String nomePastoVisualizzato;
+                            switch (nomePastoDalDB) {
+                                case "spuntinoMattina":
+                                    nomePastoVisualizzato = "Spuntino Mattina";
+                                    break;
+                                case "spuntinoPomeriggio":
+                                    nomePastoVisualizzato = "Spuntino Pomeriggio";
+                                    break;
+                                default:
+                                    nomePastoVisualizzato = nomePastoDalDB.substring(0, 1).toUpperCase() + nomePastoDalDB.substring(1);
+                                    break;
+                            }
+
+                            // Cella per il nome del pasto
+                            PdfPCell cellPastoTitle = new PdfPCell(new Phrase(nomePastoVisualizzato + ":", fontPasto));
+                            cellPastoTitle.setBorder(0);
+                            cellPastoTitle.setPaddingBottom(5);
+                            tableGiorno.addCell(cellPastoTitle);
+
+                            for (DietaItem item : itemsDelPasto) {
+                                PdfPCell cellItem = new PdfPCell(new Phrase("  - " + item.getDisplayName() + " " + item.getDisplayQuantity(), fontItem));
+                                cellItem.setBorder(0);
+                                cellItem.setPaddingLeft(20); // Indenta gli item
+                                tableGiorno.addCell(cellItem);
+                            }
+                            // Aggiungi un po' di spazio dopo ogni pasto
+                            PdfPCell spacerCell = new PdfPCell(new Phrase("\n"));
+                            spacerCell.setBorder(0);
+                            spacerCell.setPaddingBottom(5);
+                            tableGiorno.addCell(spacerCell);
+                        }
+                    }
+                    document.add(tableGiorno);
+                }
+                document.close();
+                showAlert("Successo", "Dieta salvata come PDF con successo!");
+            } catch (DocumentException | IOException e) {
+                e.printStackTrace();
+                showAlert("Errore", "Errore durante la generazione o il salvataggio del PDF: " + e.getMessage());
+            }
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }
+

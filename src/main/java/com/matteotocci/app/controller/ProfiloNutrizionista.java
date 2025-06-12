@@ -3,14 +3,14 @@ package com.matteotocci.app.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
+import javafx.fxml.Initializable; // Importa Initializable
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.VBox; // Non usato, si può rimuovere se non serve
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,7 +23,10 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class ProfiloNutrizionista implements Initializable {
+import com.matteotocci.app.model.Session; // Importa la classe Session
+import com.matteotocci.app.model.SQLiteConnessione; // Aggiungi questo import se SQLiteConnessione.connector() è usato
+
+public class ProfiloNutrizionista implements Initializable { // Implementa Initializable
 
     @FXML
     private ImageView profileImage;
@@ -52,43 +55,63 @@ public class ProfiloNutrizionista implements Initializable {
     @FXML
     private Label ruoloUtenteLabel;
 
-    private String loggedInUserId;
-    private String nomeUtenteCompleto;
+    // Rimuovi loggedInUserId e nomeUtenteCompleto se non strettamente necessari al di fuori del metodo initialize
+    // private String loggedInUserId;
+    // private String nomeUtenteCompleto;
 
-    public void setLoggedInUserId(String userId) {
-        this.loggedInUserId = userId;
-        inizializzaProfilo();
-    }
+    // Rimuovi setLoggedInUserId, non è più necessario in questo approccio
+    // public void setLoggedInUserId(String userId) {
+    //     this.loggedInUserId = userId;
+    //     inizializzaProfilo();
+    // }
 
-    @FXML
-    public void initialize() {
-        ruoloUtenteLabel.setText("Nutrizionista");
+    // Rimuovi l'initialize() senza parametri, causa problemi con Initializable
+    // @FXML
+    // public void initialize() {
+    //     ruoloUtenteLabel.setText("Nutrizionista");
+    // }
+
+    @Override // Questo è il metodo initialize corretto dell'interfaccia Initializable
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        ruoloUtenteLabel.setText("Nutrizionista"); // Inizializzazione del ruolo
+        inizializzaProfilo(); // Chiama il metodo per caricare i dati del profilo
     }
 
     private void inizializzaProfilo() {
-        if (loggedInUserId != null) {
-            String nome = getDatoUtenteDalDatabase("Utente", loggedInUserId, "Nome");
-            String cognome = getDatoUtenteDalDatabase("Utente", loggedInUserId, "Cognome");
+        Integer userIdFromSession = Session.getUserId(); // Recupera l'ID utente dalla Sessione
 
-            nomeUtenteCompleto = (nome != null ? nome : "") + " " + (cognome != null ? cognome : "");
-            nomeUtenteSidebarLabel.setText(nomeUtenteCompleto.trim());
+        if (userIdFromSession != null) {
+            String nome = getDatoUtenteDalDatabase("Utente", userIdFromSession, "Nome"); // Passa Integer
+            String cognome = getDatoUtenteDalDatabase("Utente", userIdFromSession, "Cognome");
+            String sesso = getDatoUtenteDalDatabase("Utente", userIdFromSession, "Sesso"); // Assumi che ci sia un campo Sesso
+            String dataNascita = getDatoUtenteDalDatabase("Utente", userIdFromSession, "DataNascita"); // Assumi che ci sia un campo DataNascita
+
+            String nomeCompleto = (nome != null ? nome : "") + " " + (cognome != null ? cognome : "");
+
+            nomeUtenteSidebarLabel.setText(nomeCompleto.trim());
             benvenutoLabel.setText("Bentornato " + (nome != null ? nome : "Utente"));
             nomeTextField.setText(nome);
             cognomeTextField.setText(cognome);
+            sessoTextField.setText(sesso); // Imposta il valore del sesso
+            dataNascitaTextField.setText(dataNascita); // Imposta il valore della data di nascita
 
         } else {
-            System.out.println("[DEBUG] ID utente non valido (null) in inizializzaProfilo.");
+            System.err.println("[ERROR - ProfiloNutrizionista] ID utente non disponibile dalla Sessione. Impossibile caricare il profilo.");
+            showAlert(Alert.AlertType.ERROR, "Errore Utente", "Impossibile caricare i dati del profilo.", "L'ID utente non è disponibile. Riprovare il login.");
+            // Potresti voler disabilitare i campi o reindirizzare l'utente
         }
     }
 
-    private String getDatoUtenteDalDatabase(String tabella, String userId, String campo) {
+    // Modifica il tipo del parametro userId da String a Integer
+    private String getDatoUtenteDalDatabase(String tabella, Integer userId, String campo) {
         String valore = null;
-        String url = "jdbc:sqlite:database.db";
+        // String url = "jdbc:sqlite:database.db"; // Usa SQLiteConnessione.connector()
         String query = "SELECT " + campo + " FROM " + tabella + " WHERE id = ?";
 
-        try (Connection conn = DriverManager.getConnection(url);
+        // Utilizza SQLiteConnessione.connector() per ottenere la connessione
+        try (Connection conn = SQLiteConnessione.connector(); // Assicurati che SQLiteConnessione.connector() sia accessibile e corretto
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, userId);
+            pstmt.setInt(1, userId); // Usa setInt per un parametro Integer
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -97,9 +120,12 @@ public class ProfiloNutrizionista implements Initializable {
 
         } catch (SQLException e) {
             System.err.println("[ERROR] Errore durante la lettura del " + campo + " dalla tabella " + tabella + ": " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile recuperare il dato " + campo + ".", "Dettagli: " + e.getMessage());
         }
         return valore;
     }
+
+    // --- Metodi di Navigazione (lasciati invariati, ma rivedi i close() dei vecchi stage) ---
 
     @FXML
     private void vaiAiClienti(ActionEvent event) {
@@ -112,21 +138,25 @@ public class ProfiloNutrizionista implements Initializable {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Home Page Nutrizionista'.", "Verificare il percorso del file FXML.");
         }
     }
+
     @FXML
     private void AccessoDieta(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DietaNutrizionista.fxml"));
             Parent dietaRoot = fxmlLoader.load();
 
-            Stage dietaStage = new Stage();
+            Stage dietaStage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // Ottieni lo stage corrente
             dietaStage.setScene(new Scene(dietaRoot));
-            dietaStage.setTitle("Diete");
+            dietaStage.setTitle("Diete Nutrizionista");
             dietaStage.show();
-            ((Stage) BottoneDieta.getScene().getWindow()).close();
+            // Rimuovi il close() se vuoi riutilizzare lo stesso stage, altrimenti chiudilo solo dopo aver mostrato il nuovo.
+            // ((Stage) BottoneDieta.getScene().getWindow()).close(); // Questo chiude lo stage corrente
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.", "Verificare il percorso del file FXML.");
         }
     }
 
@@ -138,9 +168,9 @@ public class ProfiloNutrizionista implements Initializable {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Ricette Nutrizionista'.", "Verificare il percorso del file FXML.");
         }
     }
 
@@ -148,13 +178,16 @@ public class ProfiloNutrizionista implements Initializable {
     private void AccessoAlimenti(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/AlimentiNutrizionista.fxml"));
-            Parent loginRoot = fxmlLoader.load();
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(loginRoot));
-            loginStage.show();
-            ((Stage) BottoneAlimenti.getScene().getWindow()).close();
+            Parent alimentiRoot = fxmlLoader.load();
+            Stage alimentiStage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // Ottieni lo stage corrente
+            alimentiStage.setScene(new Scene(alimentiRoot));
+            alimentiStage.setTitle("Alimenti Nutrizionista");
+            alimentiStage.show();
+            // Rimuovi il close() se vuoi riutilizzare lo stesso stage, altrimenti chiudilo solo dopo aver mostrato il nuovo.
+            // ((Stage) BottoneAlimenti.getScene().getWindow()).close(); // Questo chiude lo stage corrente
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Alimenti Nutrizionista'.", "Verificare il percorso del file FXML.");
         }
     }
 
@@ -170,6 +203,7 @@ public class ProfiloNutrizionista implements Initializable {
             modificaPasswordStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata di modifica password.", "Verificare il percorso del file FXML.");
         }
     }
 
@@ -182,6 +216,7 @@ public class ProfiloNutrizionista implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
+
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PrimaPagina.fxml"));
                 Parent loginRoot = fxmlLoader.load();
                 Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -190,15 +225,16 @@ public class ProfiloNutrizionista implements Initializable {
                 currentStage.show();
             } catch (IOException e) {
                 e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile effettuare il logout.", "Verificare il percorso del file FXML.");
             }
         }
     }
 
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        // L'inizializzazione statica del ruolo avviene qui
-        ruoloUtenteLabel.setText("Nutrizionista");
+    private void showAlert(Alert.AlertType type, String title, String header, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }
-

@@ -61,8 +61,8 @@ public class HomePageNutrizionista implements Initializable {
             public TableCell<Cliente, String> call(TableColumn<Cliente, String> param) {
                 return new TableCell<Cliente, String>() {
                     final Button visualizzaButton = new Button("Visualizza Dieta");
-                    final Button modificaButton = new Button("Modifica Dieta");
-                    final HBox container = new HBox(visualizzaButton, modificaButton);
+                    //final Button modificaButton = new Button("Modifica Dieta");
+                    final HBox container = new HBox(visualizzaButton);
                     {
                         container.setSpacing(5);
 
@@ -102,21 +102,8 @@ public class HomePageNutrizionista implements Initializable {
                             }
                         });
 
-                        modificaButton.setOnAction(event -> {
-                            Cliente cliente = getTableView().getItems().get(getIndex());
-                            System.out.println("DEBUG (HomePageNutrizionista): Modifica Dieta per: " + cliente.getNome());
-                            try {
-                                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ModificaDieta.fxml"));
-                                Parent modificaDietaRoot = fxmlLoader.load();
-                                Stage modificaDietaStage = new Stage();
-                                modificaDietaStage.setScene(new Scene(modificaDietaRoot));
-                                modificaDietaStage.setTitle("Modifica Dieta di " + cliente.getNome());
-                                modificaDietaStage.show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata di modifica dieta.", "Verificare il percorso del file FXML.");
-                            }
-                        });
+
+
                     }
 
                     @Override
