@@ -2,6 +2,7 @@ package com.matteotocci.app.controller;
 
 import com.matteotocci.app.model.SQLiteConnessione;
 import com.matteotocci.app.model.Session;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,9 +11,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DateCell;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -34,21 +38,29 @@ public class NuovaDieta implements Initializable {
     private DatePicker dataInizioDatePicker;
     @FXML
     private DatePicker dataFineDatePicker;
-    // RIMOSSO: @FXML private Label numeroGiorniCalcolatoLabel; // Questo Label non esiste più nel FXML
+
+    @FXML
+    private Spinner<Integer> numeroGiorniSpinner;
+    @FXML
+    private Label erroreNumeroGiorniLabel;
 
     @FXML
     private Button avantiButton;
 
-
+    @FXML
+    private Label messaggioLabel;
 
     private String titoloPiano;
     private LocalDate dataInizio;
     private LocalDate dataFine;
-    private int numeroGiorni; // Questa variabile continuerà a conservare il numero di giorni calcolato
+    private int numeroGiorniCalcolato; // Maximum days allowed by date range
+    private int numeroGiorniEffettivo; // Actual days from spinner, used for DB insertion
 
     @FXML
     public void initialize(URL url, ResourceBundle resources) {
-        // Imposta un CellFactory per DatePicker per disabilitare le date passate
+        messaggioLabel.setText("");
+        erroreNumeroGiorniLabel.setText("");
+
         dataInizioDatePicker.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -66,34 +78,93 @@ public class NuovaDieta implements Initializable {
             }
         });
 
-        // Aggiungi listener ai DatePicker per calcolare il numero di giorni internamente
-        // Non aggiorneranno più un Label visibile
-        dataInizioDatePicker.valueProperty().addListener((obs, oldDate, newDate) -> calcolaNumeroGiorni());
-        dataFineDatePicker.valueProperty().addListener((obs, oldDate, newDate) -> calcolaNumeroGiorni());
+        SpinnerValueFactory<Integer> valueFactory =
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1, 1);
+        numeroGiorniSpinner.setValueFactory(valueFactory);
+        numeroGiorniSpinner.setEditable(true);
 
-        // Inizializza il numero di giorni a 0 all'avvio (internamente)
-        numeroGiorni = 0;
+        numeroGiorniSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null) {
+                numeroGiorniEffettivo = newValue;
+                validateNumeroGiorniInput();
+            }
+        });
+
+        numeroGiorniSpinner.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                Platform.runLater(() -> numeroGiorniSpinner.getEditor().setText(oldValue));
+            }
+        });
+
+        dataInizioDatePicker.valueProperty().addListener((obs, oldDate, newDate) -> {
+            calcolaEImpostaNumeroGiorni();
+        });
+        dataFineDatePicker.valueProperty().addListener((obs, oldDate, newDate) -> {
+            calcolaEImpostaNumeroGiorni();
+        });
+
+        calcolaEImpostaNumeroGiorni();
+
+        numeroGiorniCalcolato = 0;
+        numeroGiorniEffettivo = 0;
     }
 
-    private void calcolaNumeroGiorni() {
+    private void calcolaEImpostaNumeroGiorni() {
         LocalDate start = dataInizioDatePicker.getValue();
         LocalDate end = dataFineDatePicker.getValue();
 
-
-
-        if (start != null && end != null) {
-            if (end.isBefore(start)) {
-                // Il messaggio di errore verrà gestito dall'Alert al click su Avanti
-                numeroGiorni = 0; // Imposta a 0 se le date non sono valide
-                return;
-            }
+        if (start != null && end != null && !end.isBefore(start)) {
             long days = ChronoUnit.DAYS.between(start, end) + 1;
-            numeroGiorni = (int) days; // Aggiorna la variabile interna
+            numeroGiorniCalcolato = (int) days;
+
+            SpinnerValueFactory<Integer> valueFactory = numeroGiorniSpinner.getValueFactory();
+            if (valueFactory instanceof SpinnerValueFactory.IntegerSpinnerValueFactory) {
+                SpinnerValueFactory.IntegerSpinnerValueFactory intValueFactory =
+                        (SpinnerValueFactory.IntegerSpinnerValueFactory) valueFactory;
+
+                intValueFactory.setMax(numeroGiorniCalcolato);
+
+                if (numeroGiorniSpinner.getValue() == null || numeroGiorniSpinner.getValue() <= 0 || numeroGiorniSpinner.getValue() > numeroGiorniCalcolato) {
+                    intValueFactory.setValue(Math.max(1, numeroGiorniCalcolato));
+                }
+            }
+            erroreNumeroGiorniLabel.setText("");
         } else {
-            numeroGiorni = 0; // Azzera se le date non sono complete
+            numeroGiorniCalcolato = 0;
+            if (numeroGiorniSpinner.getValueFactory() instanceof SpinnerValueFactory.IntegerSpinnerValueFactory) {
+                SpinnerValueFactory.IntegerSpinnerValueFactory intValueFactory =
+                        (SpinnerValueFactory.IntegerSpinnerValueFactory) numeroGiorniSpinner.getValueFactory();
+                intValueFactory.setMax(1);
+            }
+            numeroGiorniSpinner.getValueFactory().setValue(1);
+            erroreNumeroGiorniLabel.setText("");
         }
-        // NON c'è più una chiamata a numeroGiorniCalcolatoLabel.setText() qui
+        numeroGiorniEffettivo = numeroGiorniSpinner.getValue();
     }
+
+    private boolean validateNumeroGiorniInput() {
+        erroreNumeroGiorniLabel.setText("");
+
+        Integer inputGiorni = numeroGiorniSpinner.getValue();
+
+        if (inputGiorni == null) {
+            erroreNumeroGiorniLabel.setText("Inserisci un numero di giorni valido.");
+            return false;
+        }
+
+        if (inputGiorni <= 0) {
+            erroreNumeroGiorniLabel.setText("Il numero di giorni deve essere maggiore di 0.");
+            return false;
+        }
+        if (numeroGiorniCalcolato > 0 && inputGiorni > numeroGiorniCalcolato) {
+            erroreNumeroGiorniLabel.setText("Non puoi inserire più giorni del range di date selezionato (" + numeroGiorniCalcolato + ").");
+            return false;
+        }
+
+        numeroGiorniEffettivo = inputGiorni;
+        return true;
+    }
+
 
     @FXML
     private void switchToAggiungiAlimenti(ActionEvent event) {
@@ -103,37 +174,28 @@ public class NuovaDieta implements Initializable {
 
         String errorMessage = null;
 
-        // Validazione Input
         if (titoloPiano == null || titoloPiano.trim().isEmpty()) {
             errorMessage = "Il titolo del piano non può essere vuoto.";
         } else if (dataInizio == null || dataFine == null) {
             errorMessage = "Devi selezionare sia la Data Inizio che la Data Fine.";
         } else {
-            // Ricalcola numeroGiorni qui per essere sicuro che sia aggiornato al momento del click
-            // (Anche se i listener lo fanno, è una buona pratica per le validazioni finali)
             LocalDate start = dataInizioDatePicker.getValue();
             LocalDate end = dataFineDatePicker.getValue();
-            if (start != null && end != null) {
-                if (end.isBefore(start)) {
-                    errorMessage = "La Data Fine non può essere precedente alla Data Inizio.";
-                } else {
-                    numeroGiorni = (int) (ChronoUnit.DAYS.between(start, end) + 1);
-                    if (numeroGiorni <= 0) { // Questo dovrebbe essere già coperto da isBefore, ma è un check di sicurezza
-                        errorMessage = "L'intervallo di date non genera un numero di giorni valido. Controlla le date.";
-                    }
+            if (start != null && end != null && !end.isBefore(start)) {
+                numeroGiorniCalcolato = (int) (ChronoUnit.DAYS.between(start, end) + 1);
+                if (!validateNumeroGiorniInput()) {
+                    errorMessage = erroreNumeroGiorniLabel.getText();
                 }
-            } else { // Questo caso dovrebbe essere già coperto da "dataInizio == null || dataFine == null"
-                errorMessage = "Errore interno: date non valide per il calcolo dei giorni.";
+            } else {
+                errorMessage = "La Data Fine non può essere precedente alla Data Inizio o le date non sono valide.";
             }
         }
 
-
         if (errorMessage != null) {
-            showAlert(AlertType.WARNING,"Attenzione!",errorMessage);
+            showAlert(AlertType.WARNING, "Attenzione!", errorMessage);
             return;
         }
 
-        // Se non ci sono errori di input, procedi con il salvataggio e la transizione
         System.out.println("---- Inizio salvataggio piano nel DB ----");
         Connection conn = null;
         PreparedStatement psDieta = null;
@@ -163,10 +225,13 @@ public class NuovaDieta implements Initializable {
                 throw new SQLException("Errore nella creazione della dieta: nessun ID ottenuto.");
             }
 
-            String insertGiornoSql = "INSERT INTO Giorno_dieta (id_dieta, calorie_giorno, proteine_giorno, carboidrati_giorno, grassi_giorno) VALUES (?,0,0,0,0)";
+            // Use numeroGiorniEffettivo for database insertion
+            String insertGiornoSql = "INSERT INTO Giorno_dieta (id_dieta, nome_giorno, calorie_giorno, proteine_giorno, carboidrati_giorno, grassi_giorno) VALUES (?, ?,0,0,0,0)";
             psGiorno = conn.prepareStatement(insertGiornoSql);
-            for (int i = 1; i <= numeroGiorni; i++) {
+
+            for (int i = 0; i < numeroGiorniEffettivo; i++) {
                 psGiorno.setInt(1, idDieta);
+                psGiorno.setString(2, "Giorno " + (i + 1));
                 psGiorno.addBatch();
             }
 
@@ -180,7 +245,7 @@ public class NuovaDieta implements Initializable {
 
             AggiungiGiornoDieta aggiungiAlimentiController = loader.getController();
             aggiungiAlimentiController.setTitoloPiano(titoloPiano);
-            aggiungiAlimentiController.setNumeroGiorni(numeroGiorni);
+            aggiungiAlimentiController.setNumeroGiorni(numeroGiorniEffettivo); // Pass the actual days from spinner
             aggiungiAlimentiController.setIdDieta(idDieta);
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -218,18 +283,15 @@ public class NuovaDieta implements Initializable {
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType); // Crea una nuova istanza di Alert
-        alert.setTitle(title); // Imposta il titolo
-        alert.setHeaderText(null); // Non mostra un header text
-        alert.setContentText(message); // Imposta il contenuto
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
 
-        // Cerca il file CSS per lo stile personalizzato degli alert
         URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
         if (cssUrl != null) {
-            // Se il CSS viene trovato, lo aggiunge al DialogPane dell'alert
             alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
-            alert.getDialogPane().getStyleClass().add("dialog-pane"); // Applica la classe di stile base
-            // Aggiunge una classe di stile specifica in base al tipo di alert per una maggiore personalizzazione
+            alert.getDialogPane().getStyleClass().add("dialog-pane");
             if (alertType == Alert.AlertType.INFORMATION) {
                 alert.getDialogPane().getStyleClass().add("alert-information");
             } else if (alertType == Alert.AlertType.WARNING) {
@@ -240,9 +302,9 @@ public class NuovaDieta implements Initializable {
                 alert.getDialogPane().getStyleClass().add("alert-confirmation");
             }
         } else {
-            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Messaggio di errore se il CSS non è trovato
+            System.err.println("CSS file not found: Alert-Dialog-Style.css");
         }
 
-        alert.showAndWait(); // Mostra l'avviso e attende che l'utente lo chiuda
+        alert.showAndWait();
     }
 }

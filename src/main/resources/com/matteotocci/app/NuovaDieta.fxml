@@ -5,36 +5,47 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="root" stylesheets="@css/NuovaDieta-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.NuovaDieta">
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="anchor-pane" stylesheets="@css/NuovaDieta-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.NuovaDieta">
     <children>
-        <VBox spacing="20.0" styleClass="anchor-pane" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <VBox spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
             <children>
-                <Label styleClass="titolo-principale" text="Crea Nuovo Piano Alimentare" />
+                <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Crea Nuovo Piano Alimentare" />
                 <Separator />
-                <HBox spacing="10.0">
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
                     <children>
-                        <Label text="Titolo del Piano:" />
-                        <TextField fx:id="titoloPianoTextField" />
+                        <Label prefWidth="120.0" text="Titolo del Piano:" />
+                        <TextField fx:id="titoloPianoTextField" HBox.hgrow="ALWAYS" />
                     </children>
                 </HBox>
-                <HBox spacing="10.0">
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
                     <children>
-                        <Label text="Data Inizio:" />
-                        <DatePicker fx:id="dataInizioDatePicker" />
+                        <Label prefWidth="120.0" text="Data Inizio:" />
+                        <DatePicker fx:id="dataInizioDatePicker" HBox.hgrow="ALWAYS" />
                     </children>
                 </HBox>
-                <HBox spacing="10.0">
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
                     <children>
-                        <Label text="Data Fine:" />
-                        <DatePicker fx:id="dataFineDatePicker" />
+                        <Label prefWidth="120.0" text="Data Fine:" />
+                        <DatePicker fx:id="dataFineDatePicker" HBox.hgrow="ALWAYS" />
                     </children>
                 </HBox>
+
+                <!-- NUOVO BLOCCO PER IL NUMERO DEI GIORNI CON SPINNER -->
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <children>
+                        <Label prefWidth="120.0" text="Numero Giorni:" />
+                        <Spinner fx:id="numeroGiorniSpinner" editable="true" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+                <Label fx:id="erroreNumeroGiorniLabel" style="-fx-font-size: 11px;" text="" />
+                <!-- FINE NUOVO BLOCCO -->
+
                 <Button fx:id="avantiButton" onAction="#switchToAggiungiAlimenti" text="Avanti &gt;" />
             </children>
             <padding>
