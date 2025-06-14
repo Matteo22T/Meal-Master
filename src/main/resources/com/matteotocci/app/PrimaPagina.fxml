@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="600.0" prefWidth="580.0" stylesheets="@css/PrimaPagina-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.login">
+<AnchorPane prefHeight="600.0" prefWidth="580.0" stylesheets="@css/PrimaPagina-Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.login">
    <styleClass>
       <String fx:value="root" />
    </styleClass>

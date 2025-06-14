@@ -625,7 +625,7 @@ public class DietaNutrizionista implements Initializable {
     @FXML
     private void AccessoAlimenti(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/Alimenti.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/AlimentiNutrizionista.fxml"));
             Parent alimentiRoot = fxmlLoader.load();
             Stage alimentiStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             alimentiStage.setScene(new Scene(alimentiRoot));

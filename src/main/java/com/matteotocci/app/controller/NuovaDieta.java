@@ -47,8 +47,7 @@ public class NuovaDieta implements Initializable {
     @FXML
     private Button avantiButton;
 
-    @FXML
-    private Label messaggioLabel;
+
 
     private String titoloPiano;
     private LocalDate dataInizio;
@@ -58,7 +57,6 @@ public class NuovaDieta implements Initializable {
 
     @FXML
     public void initialize(URL url, ResourceBundle resources) {
-        messaggioLabel.setText("");
         erroreNumeroGiorniLabel.setText("");
 
         dataInizioDatePicker.setDayCellFactory(picker -> new DateCell() {

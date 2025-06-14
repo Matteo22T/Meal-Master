@@ -98,7 +98,7 @@ public class AggiungiRicetteController implements Initializable { // Implementa 
         calorieCol.setCellValueFactory(new PropertyValueFactory<>("kcal"));
         proteineCol.setCellValueFactory(new PropertyValueFactory<>("proteine"));
         carboidratiCol.setCellValueFactory(new PropertyValueFactory<>("carboidrati"));
-        grassiCol.setCellValueFactory(new PropertyValueFactory<>("grasi")); // ATTENZIONE: C'è un typo qui, dovrebbe essere "grassi"
+        grassiCol.setCellValueFactory(new PropertyValueFactory<>("grassi"));
         grassiSatCol.setCellValueFactory(new PropertyValueFactory<>("grassiSaturi"));
         saleCol.setCellValueFactory(new PropertyValueFactory<>("sale"));
         fibreCol.setCellValueFactory(new PropertyValueFactory<>("fibre"));

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox stylesheets="@css/AggiungiAlimento-Style.css" alignment="CENTER" prefHeight="500.0" prefWidth="900.0" styleClass="form-container" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiAlimentoController">
+<VBox stylesheets="@css/AggiungiAlimento-Style.css" alignment="CENTER" prefHeight="500.0" prefWidth="900.0" styleClass="form-container" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.AggiungiAlimentoController">
 
     <VBox styleClass="form-section" maxWidth="850" spacing="20">
 

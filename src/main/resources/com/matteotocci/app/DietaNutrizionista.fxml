@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/DietaNutrizionista-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.DietaNutrizionista">
+<AnchorPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/DietaNutrizionista-Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.DietaNutrizionista">
     <children>
         <BorderPane prefHeight="531.0" prefWidth="922.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <left>

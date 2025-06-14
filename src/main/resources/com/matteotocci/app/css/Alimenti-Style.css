@@ -36,8 +36,9 @@
 
 .profile-name {
     -fx-text-fill: white;
-    -fx-font-size: 14px;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
+    -fx-wrap-text: true;
 }
 
 .profile-subtitle {

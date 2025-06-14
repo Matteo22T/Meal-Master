@@ -31,14 +31,14 @@
                               <Circle fill="#ffffff" radius="25.0" styleClass="profile-circle" />
                               <ImageView fitHeight="45.0" fitWidth="45.0" onMouseClicked="#AccessoProfilo" pickOnBounds="true" preserveRatio="true" styleClass="profile-image">
                                  <image>
-                                    <Image url="@immagini/logo-removebg-preview.png" />
+                                    <Image url="@immagini/logo.png" />
                                  </image>
                               </ImageView>
                            </children>
                         </StackPane>
                         <VBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="130.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Label fx:id="nomeUtenteLabelHomePage" styleClass="profile-name" text="Nome e Cognome" />
+                              <Label fx:id="nomeUtenteLabelHomePage" styleClass="profile-name" text="Nome" textOverrun="ELLIPSIS" />
                               <Label styleClass="profile-subtitle" text="Benvenuto!" />
                            </children>
                         </VBox>
@@ -50,7 +50,7 @@
                      <children>
                         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button,nav-button-active" text="🏠 Home Page" />
                         <Button fx:id="BottoneRicette" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoRicette" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="📖 Ricette" />
-                        <Button fx:id="BottonePiano" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoPianoAlimentare" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="📋 Piano Alimentare" />
+                        <Button fx:id="BottonePiano" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoPianoAlimentare" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="📋 Dieta" />
                         <Button fx:id="BottoneAlimenti" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="50.0" prefWidth="180.0" styleClass="nav-button" text="🥗 Alimenti">
                            <cursor>
                               <Cursor fx:constant="HAND" />
@@ -62,7 +62,7 @@
             </VBox>
 
             <!-- CONTENUTO PRINCIPALE -->
-            <VBox maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="800.0" styleClass="main-content" HBox.hgrow="ALWAYS">
+            <VBox maxWidth="1.7976931348623157E308" prefHeight="640.0" prefWidth="800.0" styleClass="main-content" HBox.hgrow="ALWAYS">
                <children>
 
                   <!-- SEZIONE CALORIE E MACRONUTRIENTI -->
@@ -80,14 +80,14 @@
                               </Circle>
                                  <VBox alignment="CENTER" prefHeight="120.0" prefWidth="120.0">
                                  <children>
-                                    <Label fx:id="labelKcalCorrenti" alignment="CENTER" contentDisplay="CENTER" maxWidth="70.0" prefHeight="33.0" styleClass="calories-number" text="0/">
+                                    <Label fx:id="labelKcalCorrenti" alignment="CENTER" contentDisplay="CENTER" maxWidth="78.0" prefHeight="27.0" styleClass="calories-number" text="0/" VBox.vgrow="NEVER">
                                        <font>
-                                          <Font name="Segoe UI" size="24.0" />
+                                          <Font name="Segoe UI" size="16.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="labelKcal" alignment="CENTER" maxWidth="70.0" styleClass="calories-number" text="0 kcal">
+                                    <Label fx:id="labelKcal" alignment="CENTER" maxWidth="78.0" prefHeight="23.0" styleClass="calories-number" text="0 kcal" textOverrun="CLIP" VBox.vgrow="NEVER">
                                        <font>
-                                          <Font name="Segoe UI" size="24.0" />
+                                          <Font name="Segoe UI" size="16.0" />
                                        </font>
                                     </Label>
                                  </children>
@@ -124,14 +124,14 @@
                                                 </Circle>
                                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                                                    <children>
-                                                      <Label fx:id="labelProteineCorrenti" styleClass="macro-value" text="0/">
+                                                      <Label fx:id="labelProteineCorrenti" alignment="CENTER" prefHeight="15.0" prefWidth="27.0" styleClass="macro-value" text="0/">
                                                          <font>
-                                                            <Font name="Segoe UI Bold" size="11.0" />
+                                                            <Font name="Segoe UI Bold" />
                                                          </font>
                                                       </Label>
-                                                      <Label fx:id="labelProteine" styleClass="macro-value" text="0 g">
+                                                      <Label fx:id="labelProteine" alignment="CENTER" prefHeight="15.0" styleClass="macro-value" text="0 g">
                                                          <font>
-                                                            <Font name="Segoe UI Bold" size="11.0" />
+                                                            <Font name="Segoe UI Bold" />
                                                          </font>
                                                       </Label>
                                                    </children>
@@ -164,12 +164,12 @@
                                                    <children>
                                                       <Label fx:id="labelCarboidratiCorrenti" styleClass="macro-value" text="0/">
                                                          <font>
-                                                            <Font name="Segoe UI Bold" size="11.0" />
+                                                            <Font name="Segoe UI Bold" />
                                                          </font>
                                                       </Label>
                                                       <Label fx:id="labelCarboidrati" styleClass="macro-value" text="0 g">
                                                          <font>
-                                                            <Font name="Segoe UI Bold" size="11.0" />
+                                                            <Font name="Segoe UI Bold" />
                                                          </font>
                                                       </Label>
                                                    </children>
@@ -178,7 +178,7 @@
                                           </StackPane>
                                           <Label styleClass="macro-label" text="Carboidrati">
                                              <font>
-                                                <Font name="Segoe UI" size="13.0" />
+                                                <Font name="Segoe UI" />
                                              </font>
                                           </Label>
                                        </children>
@@ -202,12 +202,12 @@
                                                    <children>
                                                       <Label fx:id="labelGrassiCorrenti" styleClass="macro-value" text="0/">
                                                          <font>
-                                                            <Font name="Segoe UI Bold" size="11.0" />
+                                                            <Font name="Segoe UI Bold" />
                                                          </font>
                                                       </Label>
                                                       <Label fx:id="labelGrassi" styleClass="macro-value" text="0 g">
                                                          <font>
-                                                            <Font name="Segoe UI Bold" size="11.0" />
+                                                            <Font name="Segoe UI Bold" />
                                                          </font>
                                                       </Label>
                                                    </children>

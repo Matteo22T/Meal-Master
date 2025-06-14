@@ -70,11 +70,29 @@ public class LoginModel {
             e.printStackTrace();
         }
         return null;
+    }
 
-
+    public boolean emailExists(String email) {
+        String query = "SELECT COUNT(*) FROM Utente WHERE Email = ?";
+        try (Connection conn = SQLiteConnessione.connector();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                // Se il conteggio è maggiore di 0, l'email esiste
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Errore durante la verifica dell'email: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false; // In caso di errore o se non trovato
     }
 
     public boolean registraUtente(String nome, String cognome, String email, String password, String ruolo) {
+        if (emailExists(email)) {
+            return false;
+        }
         String query = "INSERT INTO Utente (nome, cognome, email, password, ruolo) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement ps = null;
         try {

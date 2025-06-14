@@ -11,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,7 +20,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Currency;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -54,16 +52,11 @@ public class ProfiloNutrizionista implements Initializable {
     @FXML
     private Label ruoloUtenteLabel;
 
-    private String loggedInUserId;
-    private String nomeUtenteCompleto;
 
-    public void setLoggedInUserId(String userId) {
-        this.loggedInUserId = userId;
-        inizializzaProfilo();
-    }
 
     @FXML
     public void initialize() {
+        inizializzaProfilo();
         ruoloUtenteLabel.setText("Nutrizionista");
     }
 
@@ -187,29 +180,39 @@ public class ProfiloNutrizionista implements Initializable {
         }
     }
 
-    public void eseguiLogout(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Conferma Logout");
-        alert.setHeaderText("Sei sicuro di voler uscire?");
-        alert.setContentText("Clicca OK per confermare o Annulla per rimanere.");
+    public void eseguiLogout(ActionEvent event) { // Metodo pubblico per gestire l'azione di logout.
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION); // Crea un Alert di tipo CONFIRMATION.
+        alert.setTitle("Conferma Logout"); // Imposta il titolo dell'alert.
+        alert.setHeaderText("Sei sicuro di voler uscire?"); // Imposta il testo dell'intestazione.
+        alert.setContentText("Clicca OK per confermare o Annulla per rimanere."); // Imposta il testo del contenuto.
+        // Aggiunge il foglio di stile CSS personalizzato all'alert.
         alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css").toExternalForm());
-        alert.getDialogPane().getStyleClass().add("dialog-pane");
-        alert.getDialogPane().getStyleClass().add("alert-confirmation");
+        alert.getDialogPane().getStyleClass().add("dialog-pane"); // Applica la classe di stile base.
+        alert.getDialogPane().getStyleClass().add("alert-confirmation"); // Applica la classe di stile specifica per la conferma.
 
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
+        Optional<ButtonType> result = alert.showAndWait(); // Mostra l'alert e attende la risposta dell'utente.
+        if (result.isPresent() && result.get() == ButtonType.OK) { // Se l'utente ha cliccato OK.
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PrimaPagina.fxml"));
-                Parent loginRoot = fxmlLoader.load();
-                Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Scene loginScene = new Scene(loginRoot);
-                currentStage.setResizable(false);
-                currentStage.setFullScreen(false);
-                currentStage.setScene(loginScene);
-                currentStage.show();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/PrimaPagina.fxml")); // Carica il file FXML della PrimaPagina.
+                Parent loginRoot = fxmlLoader.load(); // Ottiene il nodo radice.
+
+                // Crea un nuovo Stage (nuova finestra)
+                Stage newStage = new Stage();
+                Scene loginScene = new Scene(loginRoot); // Crea una nuova scena con la PrimaPagina.
+
+                newStage.setScene(loginScene); // Imposta la scena sul nuovo stage.
+                newStage.setTitle("Benvenuto"); // Imposta un titolo a piacere.
+                newStage.setResizable(false); // Finestra non ridimensionabile.
+                newStage.setFullScreen(false); // Non a schermo intero.
+                newStage.show(); // Mostra la nuova finestra.
+
+                // (Facoltativo) Chiudi la finestra corrente, se vuoi
+                ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
     }
 

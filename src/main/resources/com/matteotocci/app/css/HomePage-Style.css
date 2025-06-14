@@ -36,8 +36,9 @@
 
 .profile-name {
     -fx-text-fill: white;
-    -fx-font-size: 14px;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
+    -fx-wrap-text: true;
 }
 
 .profile-subtitle {
@@ -298,23 +299,6 @@
     -fx-background-color: #B8928E;
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 1200px) {
-    .day-selection-section {
-        -fx-padding: 10 15;
-        -fx-spacing: 10;
-    }
-
-    .day-combo-box {
-        -fx-pref-width: 180;
-        -fx-font-size: 12px;
-    }
-
-    .day-selection-label {
-        -fx-font-size: 13px;
-    }
-}
-
 /* ===== VARIANTI DI COLORE AGGIUNTIVE ===== */
 .day-combo-box.success {
     -fx-border-color: #4F7942;
@@ -343,7 +327,7 @@
     -fx-background-color: white;
     -fx-background-radius: 15;
     -fx-padding: 20;
-    -fx-spacing: 10;
+    -fx-spacing: 5;
     -fx-effect: dropshadow(gaussian, rgba(139,58,58,0.1), 15, 0, 0, 5);
 }
 
@@ -461,26 +445,6 @@
     -fx-effect: dropshadow(gaussian, rgba(79,121,66,0.5), 20, 0, 0, 5);
 }
 
-/* ===== COLORI AGGIUNTIVI PER ELEMENTI SPECIALI ===== */
-.accent-red {
-    -fx-text-fill: #8B3A3A;
-}
-
-.accent-green {
-    -fx-text-fill: #4F7942;
-}
-
-.accent-light-red {
-    -fx-text-fill: #B8928E;
-}
-
-.background-light-red {
-    -fx-background-color: #FDF8F7;
-}
-
-.border-red {
-    -fx-border-color: #E8C5C1;
-}
 
 /* Stili base per i cerchi di progresso */
 .progress-circle {

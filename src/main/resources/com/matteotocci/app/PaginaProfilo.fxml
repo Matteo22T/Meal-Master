@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<BorderPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/PaginaProfilo-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.PaginaProfilo">
+<BorderPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/PaginaProfilo-Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.PaginaProfilo">
     <left>
         <VBox prefWidth="200.0" styleClass="sidebar" BorderPane.alignment="CENTER">
             <children>
@@ -29,7 +29,7 @@
                                 <Circle fill="#ffffff" radius="25.0" styleClass="profile-circle" />
                                 <ImageView fitHeight="45.0" fitWidth="45.0" onMouseClicked="#AccessoProfilo" pickOnBounds="true" preserveRatio="true" styleClass="profile-image">
                                     <image>
-                                        <Image url="@immagini/logo-removebg-preview.png" />
+                                        <Image url="@immagini/logo.png" />
                                     </image>
                                 </ImageView>
                             </children>
@@ -46,7 +46,7 @@
                     <children>
                         <Button fx:id="homePageButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#vaiAllaHomePage" prefHeight="50.0" styleClass="nav-button" text="🏠 Home Page" />
                         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoRicette" prefHeight="50.0" styleClass="nav-button" text="📖 Ricette" />
-                        <Button fx:id="BottonePianoAlimentare" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoPianoAlimentare" prefHeight="50.0" styleClass="nav-button" text="📋 Piano alimentare" />
+                        <Button fx:id="BottonePianoAlimentare" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoPianoAlimentare" prefHeight="50.0" styleClass="nav-button" text="📋 Dieta" />
                         <Button fx:id="BottoneAlimenti" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#AccessoAlimenti" prefHeight="50.0" styleClass="nav-button" text="🥗 Alimenti" />
                     </children>
                 </VBox>

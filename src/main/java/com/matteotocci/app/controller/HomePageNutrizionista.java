@@ -6,12 +6,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.scene.layout.HBox;
@@ -140,23 +142,24 @@ public class HomePageNutrizionista implements Initializable {
 
     private String getNomeUtenteDalDatabase(String userId) {
         String nomeUtente = null;
-        // Assicurati che "database.db" sia nel percorso corretto rispetto all'esecuzione dell'applicazione
-        String url = "jdbc:sqlite:database.db";
-        String query = "SELECT Nome, Cognome FROM Utente WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                nomeUtente = rs.getString("Nome") + " " + rs.getString("Cognome");
+        String url = "jdbc:sqlite:database.db"; // Percorso del database SQLite
+        String query = "SELECT Nome, Cognome FROM Utente WHERE id = ?"; // Query SQL per selezionare nome e cognome
+
+        // Utilizza un blocco try-with-resources per gestire la connessione e lo statement
+        try (Connection conn = DriverManager.getConnection(url); // Ottiene una connessione al database
+             PreparedStatement pstmt = conn.prepareStatement(query)) { // Prepara lo statement
+            pstmt.setString(1, userId); // Imposta l'ID utente come parametro della query
+            ResultSet rs = pstmt.executeQuery(); // Esegue la query
+
+            if (rs.next()) { // Se c'è un risultato
+                nomeUtente = rs.getString("Nome") + " " + rs.getString("Cognome"); // Concatena nome e cognome
             }
         } catch (SQLException e) {
-            System.err.println("Errore DB (nome utente): " + e.getMessage());
-            showAlert(Alert.AlertType.ERROR, "Errore Database", "Impossibile caricare il nome utente.");
+            System.err.println("Errore durante la lettura del nome utente dal database: " + e.getMessage());
+            e.printStackTrace(); // Stampa la traccia dell'errore
         }
         return nomeUtente;
     }
-
     private Dieta recuperaDietaAssegnataACliente(int idCliente) {
         Dieta dieta = null;
         String query = "SELECT id, nome_dieta, data_inizio, data_fine, id_nutrizionista, id_cliente " +
@@ -256,67 +259,98 @@ public class HomePageNutrizionista implements Initializable {
 
     // --- Metodi di Navigazione ---
 
-    @FXML
-    private void AccessoDieta(ActionEvent event) {
+    @FXML // Annotazione FXML per collegare questo metodo all'azione di un elemento FXML (es. onAction di BottoneDieta).
+    private void AccessoDieta(ActionEvent event) { // Metodo per navigare alla vista DietaNutrizionista.
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DietaNutrizionista.fxml"));
-            Parent dietaRoot = fxmlLoader.load();
-            Stage dietaStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            dietaStage.setScene(new Scene(dietaRoot));
-            dietaStage.setTitle("Diete Nutrizionista"); // Titolo più specifico
-            dietaStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'.");
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DietaNutrizionista.fxml")); // Carica l'FXML DietaNutrizionista.
+            Parent dietaRoot = fxmlLoader.load(); // Ottiene il nodo radice.
+            Stage dietaStage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // Ottiene la finestra corrente (stage).
+            boolean isMaximized = dietaStage.isMaximized();
+            dietaStage.setScene(new Scene(dietaRoot)); // Imposta la nuova scena.
+            dietaStage.setTitle("Diete Nutrizionista"); // Imposta il titolo della finestra
+            if (isMaximized){
+                Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+                dietaStage.setX(screenBounds.getMinX());
+                dietaStage.setY(screenBounds.getMinY());
+                dietaStage.setWidth(screenBounds.getWidth());
+                dietaStage.setHeight(screenBounds.getHeight());}
+            dietaStage.show(); // Visualizza la nuova finestra.
+        } catch (IOException e) { // Cattura IOException.
+            e.printStackTrace(); // Stampa lo stack trace.
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Diete Nutrizionista'."); // Mostra un avviso di errore.
         }
     }
 
-    @FXML
-    private void AccessoAlimenti(ActionEvent event) {
+    @FXML // Annotazione FXML.
+    private void AccessoAlimenti(ActionEvent event) { // Metodo per navigare alla vista AlimentiNutrizionista.
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/AlimentiNutrizionista.fxml"));
-            Parent alimentiRoot = fxmlLoader.load();
-            Stage alimentiStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            alimentiStage.setScene(new Scene(alimentiRoot));
-            alimentiStage.setTitle("Alimenti"); // Titolo
-            alimentiStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Alimenti'.");
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/AlimentiNutrizionista.fxml")); // Carica l'FXML AlimentiNutrizionista.
+            Parent alimentiRoot = fxmlLoader.load(); // Ottiene il nodo radice.
+            Stage alimentiStage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // Ottiene la finestra corrente.
+            boolean isMaximized = alimentiStage.isMaximized();
+            alimentiStage.setScene(new Scene(alimentiRoot)); // Imposta la nuova scena.
+            alimentiStage.setTitle("Alimenti"); // Imposta il titolo della finestra.
+            if (isMaximized){
+                Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+                alimentiStage.setX(screenBounds.getMinX());
+                alimentiStage.setY(screenBounds.getMinY());
+                alimentiStage.setWidth(screenBounds.getWidth());
+                alimentiStage.setHeight(screenBounds.getHeight());
+            }
+            alimentiStage.show(); // Visualizza la nuova finestra.
+        } catch (IOException e) { // Cattura IOException.
+            e.printStackTrace(); // Stampa lo stack trace.
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Alimenti'."); // Mostra un avviso di errore.
         }
     }
 
 
 
 
-    @FXML
-    private void AccessoRicetteNutrizionista(ActionEvent event) {
+    @FXML // Annotazione FXML.
+    private void AccessoRicetteNutrizionista(ActionEvent event) { // Metodo per navigare alla vista RicetteNutrizionista.
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/RicetteNutrizionista.fxml"));
-            Parent ricetteNutrizionistaRoot = fxmlLoader.load();
-            Stage ricetteNutrizionistaStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            ricetteNutrizionistaStage.setScene(new Scene(ricetteNutrizionistaRoot));
-            ricetteNutrizionistaStage.setTitle("Le Mie Ricette (Nutrizionista)"); // Titolo specifico
-            ricetteNutrizionistaStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Le Mie Ricette (Nutrizionista)'.");
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/RicetteNutrizionista.fxml")); // Carica l'FXML RicetteNutrizionista.
+            Parent ricetteNutrizionistaRoot = fxmlLoader.load(); // Ottiene il nodo radice.
+            Stage ricetteNutrizionistaStage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // Ottiene la finestra corrente.
+            boolean isMaximized = ricetteNutrizionistaStage.isMaximized();
+            ricetteNutrizionistaStage.setScene(new Scene(ricetteNutrizionistaRoot)); // Imposta la nuova scena.
+            ricetteNutrizionistaStage.setTitle("Le Mie Ricette (Nutrizionista)"); // Imposta il titolo della finestra.
+            if (isMaximized){
+                Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+                ricetteNutrizionistaStage.setX(screenBounds.getMinX());
+                ricetteNutrizionistaStage.setY(screenBounds.getMinY());
+                ricetteNutrizionistaStage.setWidth(screenBounds.getWidth());
+                ricetteNutrizionistaStage.setHeight(screenBounds.getHeight());
+            }
+            ricetteNutrizionistaStage.show(); // Visualizza la nuova finestra.
+        } catch (IOException e) { // Cattura IOException.
+            e.printStackTrace(); // Stampa lo stack trace.
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Le Mie Ricette (Nutrizionista)'."); // Mostra un avviso di errore.
         }
     }
 
 
-    @FXML
-    private void openProfiloNutrizionista(MouseEvent event) {
+    @FXML // Annotazione FXML.
+    private void openProfiloNutrizionista(MouseEvent event) { // Metodo per navigare alla vista ProfiloNutrizionista (attivato da un click del mouse).
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ProfiloNutrizionista.fxml"));
-            Parent profileRoot = fxmlLoader.load();
-            Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            profileStage.setScene(new Scene(profileRoot));
-            profileStage.setTitle("Profilo Nutrizionista"); // Titolo
-            profileStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Profilo Nutrizionista'.");
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/ProfiloNutrizionista.fxml")); // Carica l'FXML ProfiloNutrizionista.
+            Parent profileRoot = fxmlLoader.load(); // Ottiene il nodo radice.
+            Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // Ottiene la finestra corrente.
+            boolean isMaximized = profileStage.isMaximized();
+            profileStage.setScene(new Scene(profileRoot)); // Imposta la nuova scena.
+            profileStage.setTitle("Profilo Nutrizionista"); // Imposta il titolo della finestra.
+            if (isMaximized){
+                Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+                profileStage.setX(screenBounds.getMinX());
+                profileStage.setY(screenBounds.getMinY());
+                profileStage.setWidth(screenBounds.getWidth());
+                profileStage.setHeight(screenBounds.getHeight());
+            }
+            profileStage.show(); // Visualizza la nuova finestra.
+        } catch (IOException e) { // Cattura IOException.
+            e.printStackTrace(); // Stampa lo stack trace.
+            showAlert(Alert.AlertType.ERROR, "Errore di Navigazione", "Impossibile caricare la pagina 'Profilo Nutrizionista'."); // Mostra un avviso di errore.
         }
     }
 

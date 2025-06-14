@@ -2,7 +2,6 @@ package com.matteotocci.app.controller;
 
 // import com.matteotocci.app.model.UtenteModel; // Rimosso se non usato direttamente
 
-import com.matteotocci.app.model.Session;
 import javafx.event.ActionEvent; // Importa ActionEvent per il metodo del bottone
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,7 +23,7 @@ import java.time.Period;
 import java.util.ResourceBundle;
 
 public class BMI implements Initializable {
-    private String utenteCorrenteId= Session.getUserId().toString();
+    private String utenteCorrenteId;
     // private UtenteModel utenteModel; // Rimosso se non usato direttamente
 
     @FXML private TextField altezzaTextField;
@@ -42,8 +41,10 @@ public class BMI implements Initializable {
     // @FXML private ToggleButton maleToggle;
     // @FXML private ToggleButton femaleToggle;
 
-    @FXML
-    public void initialize(){
+
+    public void setUtenteCorrenteId(String userId) {
+        this.utenteCorrenteId = userId;
+        // Ora che abbiamo l'ID, possiamo inizializzare i dati
         inizializzaDatiUtente();
     }
 
@@ -239,9 +240,5 @@ public class BMI implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(messaggio);
         alert.showAndWait();
-    }
-
-    public void tornaAlprofilo(ActionEvent actionEvent) {
-        
     }
 }

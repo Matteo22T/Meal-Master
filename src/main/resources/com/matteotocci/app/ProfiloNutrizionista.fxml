@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.control.ComboBox?>
 <?import java.lang.String?>
-<BorderPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/PaginaProfilo-Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.ProfiloNutrizionista">
+<BorderPane prefHeight="640.0" prefWidth="1000.0" styleClass="main-container" stylesheets="@css/PaginaProfilo-Style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.matteotocci.app.controller.ProfiloNutrizionista">
     <left>
         <VBox prefWidth="200.0" styleClass="sidebar" BorderPane.alignment="CENTER">
             <children>
@@ -29,7 +29,7 @@
                                 <Circle fill="#ffffff" radius="25.0" styleClass="profile-circle" />
                                 <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" styleClass="profile-image">
                                     <image>
-                                        <Image url="@immagini/logo-removebg-preview.png" />
+                                        <Image url="@immagini/logo.png" />
                                     </image>
                                 </ImageView>
                             </children>

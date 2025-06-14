@@ -16,6 +16,7 @@ import javafx.event.ActionEvent; // Tipo di evento generato dalle azioni dell'ut
 import javafx.fxml.FXML; // Annotazione per collegare elementi dell'interfaccia utente definiti in FXML al codice Java
 import javafx.fxml.FXMLLoader; // Carica file FXML (layout dell'interfaccia utente)
 import javafx.fxml.Initializable; // AGGIUNTA: Interfaccia per i controller che devono essere inizializzati dopo il caricamento dell'FXML
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node; // Classe base per tutti i nodi nel grafo della scena (elementi UI)
 import javafx.scene.Parent; // Nodo base per la gerarchia della scena (container di tutti gli elementi UI)
 import javafx.scene.Scene; // Contenitore per tutti i contenuti di una scena
@@ -23,7 +24,9 @@ import javafx.scene.control.*; // Controlli UI standard di JavaFX (Button, Label
 import javafx.scene.input.MouseEvent; // Tipo di evento generato da interazioni del mouse
 import javafx.scene.shape.Circle; // Elemento grafico circolare (usato per i cerchi di progresso)
 import javafx.scene.text.Font; // Per la gestione dei font
+import javafx.scene.text.Text;
 import javafx.stage.Modality; // Per definire la modalità di una finestra (es. modale)
+import javafx.stage.Screen;
 import javafx.stage.Stage; // La finestra principale dell'applicazione
 import javafx.util.Duration; // Per specificare la durata delle animazioni
 
@@ -140,7 +143,6 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
                             // Aggiorna le etichette con i valori target
                             String kcalText= targetKcal+" kcal";
                             labelKcal.setText(kcalText);
-                            AggiustaFontSize(labelKcal, kcalText); // Adatta la dimensione del font
                             labelProteine.setText(targetProteine + " g");
                             labelCarboidrati.setText(targetCarboidrati + " g");
                             labelGrassi.setText(targetGrassi + " g");
@@ -164,7 +166,6 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
                     // Resetta le etichette dei target a 0
                     String kcalText = "0 kcal";
                     labelKcal.setText(kcalText);
-                    AggiustaFontSize(labelKcal, kcalText);
                     labelProteine.setText("0 g");
                     labelCarboidrati.setText("0 g");
                     labelGrassi.setText("0 g");
@@ -183,7 +184,6 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
             // Resetta le etichette dei target a 0
             String kcalText = "0 kcal";
             labelKcal.setText(kcalText);
-            AggiustaFontSize(labelKcal, kcalText);
             labelProteine.setText("0 g");
             labelCarboidrati.setText("0 g");
             labelGrassi.setText("0 g");
@@ -211,7 +211,6 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
 
                         String kcalText = targetKcal + " kcal";
                         labelKcal.setText(kcalText);
-                        AggiustaFontSize(labelKcal, kcalText);
                         labelProteine.setText(targetProteine + " g");
                         labelCarboidrati.setText(targetCarboidrati + " g");
                         labelGrassi.setText(targetGrassi + " g");
@@ -222,7 +221,6 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
                         // Se la nuova selezione è null, resetta tutto
                         String kcalText = "0 kcal";
                         labelKcal.setText(kcalText);
-                        AggiustaFontSize(labelKcal, kcalText);
                         labelProteine.setText("0 g");
                         labelCarboidrati.setText("0 g");
                         labelGrassi.setText("0 g");
@@ -260,7 +258,6 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
 
                         String kcalText = targetKcal + " kcal";
                         labelKcal.setText(kcalText);
-                        AggiustaFontSize(labelKcal, kcalText);
                         labelProteine.setText(targetProteine + " g");
                         labelCarboidrati.setText(targetCarboidrati + " g");
                         labelGrassi.setText(targetGrassi + " g");
@@ -271,7 +268,6 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
                         // Se il nuovo valore è null, resetta tutto
                         String kcalText = "0 kcal";
                         labelKcal.setText(kcalText);
-                        AggiustaFontSize(labelKcal, kcalText);
                         labelProteine.setText("0 g");
                         labelCarboidrati.setText("0 g");
                         labelGrassi.setText("0 g");
@@ -297,6 +293,7 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
         String nomeUtente = getNomeUtenteDalDatabase(Session.getUserId().toString());
         if (nomeUtente != null && !nomeUtente.isEmpty()) {
             nomeUtenteLabelHomePage.setText(nomeUtente);
+
         } else {
             nomeUtenteLabelHomePage.setText("Nome e Cognome"); // Testo di fallback se il nome non è disponibile
         }
@@ -305,7 +302,7 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
     /**
      * Recupera il nome e cognome di un utente dal database dato il suo ID.
      * @param userId L'ID dell'utente.
-     * @return Il nome completo dell'utente (Nome Cognome) o null se non trovato.
+     * @return Il nome dell'utente (Nome) o null se non trovato.
      */
     private String getNomeUtenteDalDatabase(String userId) {
         String nomeUtente = null;
@@ -327,7 +324,6 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
         }
         return nomeUtente;
     }
-
     /**
      * Metodo per la navigazione alla schermata "Alimenti".
      * @param event L'evento di azione (click sul bottone).
@@ -341,7 +337,15 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
 
             // Ottiene lo Stage corrente (la finestra attuale) e imposta la nuova scena
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            boolean isMaximized = stage.isMaximized();
             stage.setScene(new Scene(root));
+            if (isMaximized){
+                Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+                stage.setX(screenBounds.getMinX());
+                stage.setY(screenBounds.getMinY());
+                stage.setWidth(screenBounds.getWidth());
+                stage.setHeight(screenBounds.getHeight());
+            }
             stage.show(); // Mostra la nuova finestra
         } catch (IOException e) {
             e.printStackTrace(); // Stampa l'errore se il caricamento fallisce
@@ -361,13 +365,20 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
 
             // Ottiene lo Stage corrente e imposta la nuova scena
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            boolean isMaximized = stage.isMaximized();
             stage.setScene(new Scene(root));
+            if (isMaximized){
+                Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+                stage.setX(screenBounds.getMinX());
+                stage.setY(screenBounds.getMinY());
+                stage.setWidth(screenBounds.getWidth());
+                stage.setHeight(screenBounds.getHeight());
+            }
             stage.show(); // Mostra la nuova finestra
         } catch (IOException e) {
             e.printStackTrace(); // Stampa l'errore se il caricamento fallisce
         }
     }
-
     /**
      * Metodo per la navigazione alla schermata "PaginaProfilo".
      * @param event L'evento del mouse (click).
@@ -381,7 +392,16 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
 
             // Ottiene lo Stage corrente e imposta la nuova scena
             Stage profileStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            boolean isMaximized = profileStage.isMaximized();
             profileStage.setScene(new Scene(profileRoot));
+            if (isMaximized){
+                Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+                profileStage.setX(screenBounds.getMinX());
+                profileStage.setY(screenBounds.getMinY());
+                profileStage.setWidth(screenBounds.getWidth());
+                profileStage.setHeight(screenBounds.getHeight());
+            }
+
             profileStage.show(); // Mostra la nuova finestra
         } catch (IOException e) {
             e.printStackTrace(); // Stampa l'errore se il caricamento fallisce
@@ -455,7 +475,7 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
 
                 // Carica il file FXML per la visualizzazione della dieta
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/VisualizzaDieta.fxml"));
-                Parent visualizzaDietaRoot = fxmlLoader.load();
+                Parent root = fxmlLoader.load();
 
                 // PASSO 2: Ottieni il controller della nuova finestra
                 VisualizzaDieta visualizzaDietaController = fxmlLoader.getController();
@@ -464,9 +484,16 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
                 visualizzaDietaController.impostaDietaDaVisualizzare(dietaAssegnata);
                 System.out.println("DEBUG (HomePage): Passato Dieta ID " + dietaAssegnata.getId() + " al controller VisualizzaDieta.");
 
+
                 // Crea e mostra il nuovo Stage per la visualizzazione della dieta
                 dietaStage = new Stage();
-                dietaStage.setScene(new Scene(visualizzaDietaRoot));
+
+
+
+                dietaStage.setScene(new Scene(root));
+
+
+
                 dietaStage.show();
 
             } catch (IOException e) {
@@ -787,7 +814,6 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
             // Aggiorna le etichette dei totali correnti
             String kcalCorrentiText = totaleKcal + " /";
             labelKcalCorrenti.setText(kcalCorrentiText);
-            AggiustaFontSize(labelKcalCorrenti, kcalCorrentiText); // Adatta la dimensione del font
             labelProteineCorrenti.setText(totaleProteine + " /");
             labelCarboidratiCorrenti.setText(totaleCarboidrati + " /");
             labelGrassiCorrenti.setText(totaleGrassi + " /");
@@ -817,7 +843,6 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
         cenaKcalLabel.setText("0 kcal");
 
         labelKcalCorrenti.setText("0 /");
-        AggiustaFontSize(labelKcalCorrenti, "0 /");
         labelProteineCorrenti.setText("0 /");
         labelCarboidratiCorrenti.setText("0 /");
         labelGrassiCorrenti.setText("0 /");
@@ -973,27 +998,5 @@ public class HomePage implements Initializable { // MODIFICA: Ora implementa Ini
         System.out.println("DEBUG: Nessun giorno da ripristinare dalla sessione o non trovato nella ComboBox.");
     }
 
-    /**
-     * Adatta la dimensione del font di una Label in base alla lunghezza del testo,
-     * per evitare che il testo vada a capo o fuoriesca dai bordi.
-     * Questo è un esempio semplificato e potrebbe richiedere un calcolo più preciso
-     * basato sulla larghezza effettiva della label e sul font utilizzato.
-     * @param label La Label su cui adattare il font.
-     * @param text Il testo da visualizzare.
-     */
-    private void AggiustaFontSize(Label label, String text) {
-        // Implementazione semplificata: riduce la dimensione del font se il testo è lungo
-        // Per una soluzione più robusta, si dovrebbe calcolare la larghezza del testo con il font corrente
-        // e confrontarla con la larghezza disponibile della label.
 
-        if (text.length() > 6 && text.length() <= 8) { // Esempio: se il testo è tra 7 e 8 caratteri
-            label.setFont(new Font(20)); // Dimensione font più piccola
-        } else if (text.length() > 8) { // Se il testo è molto lungo
-            label.setFont(new Font(18)); // Dimensione font ancora più piccola
-        } else {
-            label.setFont(new Font(24)); // Dimensione font predefinita
-        }
-        // Nota: Un'implementazione reale dovrebbe considerare la larghezza della label
-        // e l'oggetto FontMetrics per un calcolo accurato.
-    }
 }
