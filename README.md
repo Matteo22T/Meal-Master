@@ -42,6 +42,4 @@ Meal-Master è un assistente digitale progettato per semplificare la gestione de
 - Interfaccia **semplice, chiara e user-friendly**, sviluppata con *JavaFX* e *Scene Builder*.
 - Supporto per **esportazione dei piani alimentari in PDF**.
 
-## Ecco a te qualche immagine
-
 
