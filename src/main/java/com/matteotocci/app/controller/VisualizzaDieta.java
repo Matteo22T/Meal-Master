@@ -173,14 +173,6 @@ public class VisualizzaDieta {
         popolaContenitoreGiorni(giorniDietaConNomi); // Popola il contenitore UI con i dati recuperati.
     }
 
-    /**
-     * Recupera tutti i dettagli completi di una dieta dal database: giorni, pasti, alimenti e ricette correlate.
-     * Ora include il 'nome_giorno' dalla tabella Giorno_dieta e lo memorizza nella mappa.
-     * @param idDieta L'ID della dieta per cui recuperare i dettagli.
-     * @return Una mappa complessa in cui la chiave è id_giorno_dieta, e il valore è un'altra mappa contenente:
-     * - "nomeGiorno": Stringa con il nome del giorno
-     * - "pasti": Map<String, List<DietaItem>> con i pasti e gli items
-     */
     private Map<Integer, Map<String, Object>> recuperaDettagliCompletiDieta(int idDieta) {
         Map<Integer, Map<String, Object>> giorniDietaMap = new TreeMap<>(); // Usa TreeMap per mantenere i giorni ordinati per ID.
         Connection conn = null;
@@ -335,7 +327,7 @@ public class VisualizzaDieta {
                     giornoData.putIfAbsent("nomeGiorno", nomeGiorno);
                     giornoData.putIfAbsent("pasti", new HashMap<String, List<DietaItem>>());
 
-                    @SuppressWarnings("unchecked")
+
                     Map<String, List<DietaItem>> pastiDelGiorno = (Map<String, List<DietaItem>>) giornoData.get("pasti");
 
                     pastiDelGiorno.putIfAbsent(nomePasto, new ArrayList<>());
@@ -359,12 +351,6 @@ public class VisualizzaDieta {
         return giorniDietaMap; // Restituisce la mappa completa dei dettagli della dieta.
     }
 
-    /**
-     * Popola il VBox 'contenitoreGiorni' dinamicamente con i blocchi UI per ogni giorno e pasto.
-     * Ora usa il 'nome_giorno' effettivo recuperato dal database, memorizzato nella mappa.
-     * @param giorniDietaMap La mappa dei dati recuperati dal database, contenente sia alimenti che ricette,
-     * con l'aggiunta dell'informazione del nome del giorno.
-     */
     private void popolaContenitoreGiorni(Map<Integer, Map<String, Object>> giorniDietaMap) {
         contenitoreGiorni.getChildren().clear(); // Pulisce i contenuti precedenti del VBox.
 
@@ -465,79 +451,77 @@ public class VisualizzaDieta {
 
     // --- NUOVO METODO PER SCARICARE IL PDF ---
     @FXML
-    private void handleScaricaPdf(ActionEvent event) {
+    private void handleScaricaPdf(ActionEvent event) { // Metodo FXML per generare un PDF della dieta.
         if (dietaCorrente == null) { // Controlla se una dieta è stata caricata.
-            showAlert(Alert.AlertType.ERROR ,"Errore", "Nessuna dieta caricata da scaricare.");
-            return;
+            showAlert(Alert.AlertType.ERROR ,"Errore", "Nessuna dieta caricata da scaricare."); // Mostra un avviso di errore.
+            return; // Esce dal metodo.
         }
 
         // Recupera di nuovo i dettagli completi della dieta per il PDF.
         Map<Integer, Map<String, Object>> giorniDietaConNomi = recuperaDettagliCompletiDieta(dietaCorrente.getId());
 
         // Configura il FileChooser per il salvataggio del file PDF.
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Salva Dieta PDF");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files (.pdf)", ".pdf"));
-        fileChooser.setInitialFileName("Dieta_" + dietaCorrente.getNome().replaceAll("\\s+", "_") + ".pdf"); // Nome file suggerito.
+        FileChooser fileChooser = new FileChooser(); // Crea un oggetto FileChooser.
+        fileChooser.setTitle("Salva Dieta PDF"); // Imposta il titolo della finestra di dialogo.
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files (.pdf)", "*.pdf")); // Aggiunge un filtro per i file PDF.
+        fileChooser.setInitialFileName("Dieta_" + dietaCorrente.getNome().replaceAll("\\s+", "_") + ".pdf"); // Nome file suggerito basato sul nome della dieta.
 
         // Mostra la finestra di dialogo per il salvataggio.
-        File file = fileChooser.showSaveDialog(((javafx.scene.Node) event.getSource()).getScene().getWindow());
+        File file = fileChooser.showSaveDialog(((javafx.scene.Node) event.getSource()).getScene().getWindow()); // Ottiene il file selezionato dall'utente.
 
-        if (file != null) { // Se l'utente ha scelto un file.
+        if (file != null) { // Se l'utente ha scelto un file (non ha annullato).
             try {
                 // Definizioni di font e colori per il PDF utilizzando OpenPDF.
-                Font fontTitle = new Font(Font.HELVETICA, 24, Font.BOLD, new Color(44, 62, 80)); // Titolo dieta.
-                Font fontSubtitle = new Font(Font.HELVETICA, 16, Font.BOLD, new Color(52, 73, 94)); // Sottotitoli (es. date).
-                Font fontSection = new Font(Font.HELVETICA, 14, Font.BOLD, new Color(192, 57, 43)); // Titolo sezioni (es. Piani Giornalieri).
-                Font fontNormal = new Font(Font.HELVETICA, 12, Font.NORMAL, Color.BLACK); // Testo normale.
-                Font fontItem = new Font(Font.HELVETICA, 11, Font.NORMAL, new Color(85, 85, 85)); // Dettagli item.
-                Font fontPasto = new Font(Font.HELVETICA, 13, Font.BOLD, new Color(70, 96, 117)); // Nomi pasti.
+                Font fontTitle = new Font(Font.HELVETICA, 24, Font.BOLD, new Color(44, 62, 80)); // Font per il titolo principale.
+                Font fontSubtitle = new Font(Font.HELVETICA, 16, Font.BOLD, new Color(52, 73, 94)); // Font per sottotitoli (es. date).
+                Font fontSection = new Font(Font.HELVETICA, 14, Font.BOLD, new Color(192, 57, 43)); // Font per i titoli delle sezioni (es. Piani Giornalieri).
+                Font fontNormal = new Font(Font.HELVETICA, 12, Font.NORMAL, Color.BLACK); // Font per il testo normale.
+                Font fontItem = new Font(Font.HELVETICA, 11, Font.NORMAL, new Color(85, 85, 85)); // Font per i dettagli degli alimenti/ricette.
+                Font fontPasto = new Font(Font.HELVETICA, 13, Font.BOLD, new Color(70, 96, 117)); // Font per i nomi dei pasti.
 
                 Document document = new Document(); // Crea un nuovo documento PDF.
-                PdfWriter.getInstance(document, new FileOutputStream(file)); // Collega il writer al file di output.
+                PdfWriter.getInstance(document, new FileOutputStream(file)); // Collega il writer al file di output specificato.
                 document.open(); // Apre il documento per la scrittura.
 
                 // Aggiunge l'intestazione generale della dieta al PDF.
-                Paragraph pTitle = new Paragraph(dietaCorrente.getNome(), fontTitle);
-                pTitle.setAlignment(Element.ALIGN_CENTER);
-                document.add(pTitle);
-                document.add(new Paragraph("\n"));
+                Paragraph pTitle = new Paragraph(dietaCorrente.getNome(), fontTitle); // Crea un paragrafo con il nome della dieta.
+                pTitle.setAlignment(Element.ALIGN_CENTER); // Allinea il paragrafo al centro.
+                document.add(pTitle); // Aggiunge il paragrafo al documento.
+                document.add(new Paragraph("\n")); // Aggiunge una riga vuota per spaziatura.
 
                 // Aggiunge le date di inizio e fine dieta.
-                Paragraph pDates = new Paragraph();
-                pDates.setAlignment(Element.ALIGN_CENTER);
-                pDates.add(new Chunk("Data Inizio: ", fontSubtitle));
-                pDates.add(new Chunk(dietaCorrente.getDataInizio() != null ? dietaCorrente.getDataInizio() : "N/D", fontNormal));
-                pDates.add(new Chunk("    Data Fine: ", fontSubtitle));
-                pDates.add(new Chunk(dietaCorrente.getDataFine() != null ? dietaCorrente.getDataFine() : "N/D", fontNormal));
-                document.add(pDates);
-                document.add(new Paragraph("\n\n")); // Spazio extra.
+                Paragraph pDates = new Paragraph(); // Crea un nuovo paragrafo per le date.
+                pDates.setAlignment(Element.ALIGN_CENTER); // Allinea il paragrafo al centro.
+                pDates.add(new Chunk("Data Inizio: ", fontSubtitle)); // Aggiunge il testo "Data Inizio:" con stile sottotitolo.
+                pDates.add(new Chunk(dietaCorrente.getDataInizio() != null ? dietaCorrente.getDataInizio() : "N/D", fontNormal)); // Aggiunge la data di inizio o "N/D".
+                pDates.add(new Chunk("    Data Fine: ", fontSubtitle)); // Aggiunge il testo "Data Fine:" con stile sottotitolo.
+                pDates.add(new Chunk(dietaCorrente.getDataFine() != null ? dietaCorrente.getDataFine() : "N/D", fontNormal)); // Aggiunge la data di fine o "N/D".
+                document.add(pDates); // Aggiunge il paragrafo delle date al documento.
+                document.add(new Paragraph("\n\n")); // Aggiunge due righe vuote per spaziatura.
 
                 // Aggiunge la sezione "Piani Giornalieri".
-                Paragraph pSectionTitle = new Paragraph("Piani Giornalieri", fontSection);
-                pSectionTitle.setAlignment(Element.ALIGN_CENTER);
-                document.add(pSectionTitle);
-                document.add(new Paragraph("\n"));
+                Paragraph pSectionTitle = new Paragraph("Piani Giornalieri", fontSection); // Crea un paragrafo per il titolo della sezione.
+                pSectionTitle.setAlignment(Element.ALIGN_CENTER); // Allinea il titolo della sezione al centro.
+                document.add(pSectionTitle); // Aggiunge il titolo della sezione al documento.
+                document.add(new Paragraph("\n")); // Aggiunge una riga vuota per spaziatura.
 
                 // Ordina gli ID dei giorni per la visualizzazione nel PDF.
-                List<Integer> idGiorniOrdinati = new ArrayList<>(giorniDietaConNomi.keySet());
-                idGiorniOrdinati.sort(Integer::compareTo);
+                List<Integer> idGiorniOrdinati = new ArrayList<>(giorniDietaConNomi.keySet()); // Ottiene una lista degli ID dei giorni.
+                idGiorniOrdinati.sort(Integer::compareTo); // Ordina gli ID in ordine crescente.
 
-                for (Integer idGiorno : idGiorniOrdinati) { // Itera su ogni giorno.
-                    Map<String, Object> giornoData = giorniDietaConNomi.get(idGiorno);
-                    String nomeGiorno = (String) giornoData.get("nomeGiorno");
-
-                    @SuppressWarnings("unchecked")
-                    Map<String, List<DietaItem>> pastiDelGiorno = (Map<String, List<DietaItem>>) giornoData.get("pasti");
+                for (Integer idGiorno : idGiorniOrdinati) { // Itera su ogni ID di giorno ordinato.
+                    Map<String, Object> giornoData = giorniDietaConNomi.get(idGiorno); // Ottiene i dati del giorno corrente.
+                    String nomeGiorno = (String) giornoData.get("nomeGiorno"); // Recupera il nome del giorno.
+                    Map<String, List<DietaItem>> pastiDelGiorno = (Map<String, List<DietaItem>>) giornoData.get("pasti"); // Recupera la mappa dei pasti del giorno.
 
                     // Titolo del giorno nel PDF.
-                    Paragraph pGiorno = new Paragraph(nomeGiorno.toUpperCase(), fontSubtitle);
-                    pGiorno.setAlignment(Element.ALIGN_LEFT);
-                    pGiorno.setSpacingAfter(5);
-                    document.add(pGiorno);
+                    Paragraph pGiorno = new Paragraph(nomeGiorno.toUpperCase(), fontSubtitle); // Crea un paragrafo con il nome del giorno in maiuscolo.
+                    pGiorno.setAlignment(Element.ALIGN_LEFT); // Allinea il nome del giorno a sinistra.
+                    pGiorno.setSpacingAfter(5); // Aggiunge spazio dopo il paragrafo.
+                    document.add(pGiorno); // Aggiunge il paragrafo al documento.
                     // Separatore sotto il titolo del giorno.
-                    document.add(new Paragraph("--------------------------------------------------------------------------------------------------------------------", fontNormal));
-                    document.add(new Paragraph("\n"));
+                    document.add(new Paragraph("--------------------------------------------------------------------------------------------------------------------", fontNormal)); // Aggiunge una riga di separazione.
+                    document.add(new Paragraph("\n")); // Aggiunge una riga vuota.
 
                     // Definisce l'ordine dei pasti anche per il PDF.
                     List<String> ordinePasti = List.of(
@@ -545,56 +529,65 @@ public class VisualizzaDieta {
                     );
 
                     // Crea una tabella per contenere i pasti e i loro item.
-                    PdfPTable tableGiorno = new PdfPTable(1); // Una colonna.
-                    tableGiorno.setWidthPercentage(100); // Occupa il 100% della larghezza.
-                    tableGiorno.setSpacingAfter(15); // Spazio dopo la tabella.
+                    PdfPTable tableGiorno = new PdfPTable(1); // Crea una tabella PDF con una sola colonna.
+                    tableGiorno.setWidthPercentage(100); // Imposta la larghezza della tabella al 100%.
+                    tableGiorno.setSpacingAfter(15); // Aggiunge spazio dopo la tabella.
 
-                    for (String nomePastoDalDB : ordinePasti) { // Itera sui pasti.
-                        if (pastiDelGiorno.containsKey(nomePastoDalDB)) {
-                            List<DietaItem> itemsDelPasto = pastiDelGiorno.get(nomePastoDalDB);
-                            itemsDelPasto.sort(Comparator.comparing(DietaItem::getDisplayName)); // Ordina gli item.
+                    for (String nomePastoDalDB : ordinePasti) { // Itera sui nomi dei pasti predefiniti.
+                        if (pastiDelGiorno.containsKey(nomePastoDalDB)) { // Se il pasto esiste per il giorno corrente.
+                            List<DietaItem> itemsDelPasto = pastiDelGiorno.get(nomePastoDalDB); // Ottiene la lista di alimenti/ricette per il pasto.
+                            itemsDelPasto.sort(Comparator.comparing(DietaItem::getDisplayName)); // Ordina gli item alfabeticamente per nome.
 
                             // Traduce il nome del pasto per la visualizzazione nel PDF.
                             String nomePastoVisualizzato;
                             switch (nomePastoDalDB) {
+                                case "colazione":
+                                    nomePastoVisualizzato = "Colazione";
+                                    break;
                                 case "spuntinoMattina":
                                     nomePastoVisualizzato = "Spuntino Mattina";
+                                    break;
+                                case "pranzo":
+                                    nomePastoVisualizzato = "Pranzo";
                                     break;
                                 case "spuntinoPomeriggio":
                                     nomePastoVisualizzato = "Spuntino Pomeriggio";
                                     break;
+                                case "cena":
+                                    nomePastoVisualizzato = "Cena";
+                                    break;
                                 default:
-                                    nomePastoVisualizzato = nomePastoDalDB.substring(0, 1).toUpperCase() + nomePastoDalDB.substring(1);
+                                    nomePastoVisualizzato = nomePastoDalDB.substring(0, 1).toUpperCase() + nomePastoDalDB.substring(1); // Capitalizza la prima lettera.
                                     break;
                             }
 
                             // Cella per il nome del pasto nella tabella.
-                            PdfPCell cellPastoTitle = new PdfPCell(new Phrase(nomePastoVisualizzato + ":", fontPasto));
-                            cellPastoTitle.setBorder(0); // Nessun bordo.
-                            cellPastoTitle.setPaddingBottom(5);
-                            tableGiorno.addCell(cellPastoTitle);
+                            PdfPCell cellPastoTitle = new PdfPCell(new Phrase(nomePastoVisualizzato + ":", fontPasto)); // Crea una cella con il nome del pasto.
+                            cellPastoTitle.setBorder(0); // Rimuove il bordo della cella.
+                            cellPastoTitle.setPaddingBottom(5); // Aggiunge padding inferiore.
+                            tableGiorno.addCell(cellPastoTitle); // Aggiunge la cella alla tabella.
 
-                            for (DietaItem item : itemsDelPasto) { // Itera sugli item del pasto.
+                            for (DietaItem item : itemsDelPasto) { // Itera sugli item (alimenti o ricette) di quel pasto.
                                 // Cella per l'item (alimento o ricetta).
-                                PdfPCell cellItem = new PdfPCell(new Phrase("  - " + item.getDisplayName() + " " + item.getDisplayQuantity(), fontItem));
-                                cellItem.setBorder(0); // Nessun bordo.
-                                cellItem.setPaddingLeft(20); // Indentazione.
-                                tableGiorno.addCell(cellItem);
+                                PdfPCell cellItem = new PdfPCell(new Phrase("  - " + item.getDisplayName() + " " + item.getDisplayQuantity(), fontItem)); // Crea una cella con il nome e la quantità dell'item.
+                                cellItem.setBorder(0); // Rimuove il bordo.
+                                cellItem.setPaddingLeft(20); // Aggiunge indentazione.
+                                tableGiorno.addCell(cellItem); // Aggiunge la cella alla tabella.
                             }
                             // Aggiunge un po' di spazio dopo ogni pasto.
-                            PdfPCell spacerCell = new PdfPCell(new Phrase("\n"));
-                            spacerCell.setBorder(0);
-                            spacerCell.setPaddingBottom(5);
-                            tableGiorno.addCell(spacerCell);
+                            PdfPCell spacerCell = new PdfPCell(new Phrase("\n")); // Crea una cella vuota per spaziatura.
+                            spacerCell.setBorder(0); // Rimuove il bordo.
+                            spacerCell.setPaddingBottom(5); // Aggiunge padding inferiore.
+                            tableGiorno.addCell(spacerCell); // Aggiunge la cella spaziatrice.
                         }
                     }
                     document.add(tableGiorno); // Aggiunge la tabella del giorno al documento.
                 }
                 document.close(); // Chiude il documento PDF.
-                showAlert(Alert.AlertType.INFORMATION,"Successo", "Dieta salvata come PDF con successo!");
-            } catch (DocumentException | IOException e) {
-                e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR,"Errore", "Errore durante la generazione o il salvataggio del PDF: " + e.getMessage());
+                showAlert(Alert.AlertType.INFORMATION,"Successo", "Dieta salvata come PDF con successo!"); // Mostra un alert di successo.
+            } catch (DocumentException | IOException e) { // Cattura eccezioni relative al documento PDF o I/O.
+                e.printStackTrace(); // Stampa lo stack trace per debug.
+                showAlert(Alert.AlertType.ERROR,"Errore", "Errore durante la generazione o il salvataggio del PDF: " + e.getMessage()); // Mostra un alert di errore.
             }
         }
     }
@@ -628,5 +621,4 @@ public class VisualizzaDieta {
 
         alert.showAndWait(); // Mostra l'avviso e attende che l'utente lo chiuda.
     }
-
 }
