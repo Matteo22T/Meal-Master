@@ -1,24 +1,24 @@
 package com.matteotocci.app.controller;
 
-// Importa le classi necessarie per l'applicazione JavaFX e le operazioni del database
-import com.matteotocci.app.model.Alimento; // Modello per l'oggetto Alimento
-import com.matteotocci.app.model.SQLiteConnessione; // Classe per gestire la connessione al database SQLite
-import com.matteotocci.app.model.Session; // Classe per la gestione della sessione utente (es. ID utente loggato)
-import javafx.event.ActionEvent; // Tipo di evento generato dalle azioni dell'utente (es. click su un bottone)
-import javafx.fxml.FXML; // Annotazione per collegare elementi dell'interfaccia utente definiti in FXML al codice Java
+import com.matteotocci.app.model.Alimento;
+import com.matteotocci.app.model.SQLiteConnessione;
+import com.matteotocci.app.model.Session;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert; // Finestra di dialogo per avvisi o errori
-import javafx.scene.control.Button; // Elemento bottone della UI
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label; // Elemento etichetta della UI
-import javafx.scene.image.Image; // Per caricare immagini
-import javafx.scene.image.ImageView; // Per visualizzare immagini nella UI
-import javafx.stage.Stage; // La finestra dell'applicazione
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
-import java.net.URL; // Necessario per caricare risorse (es. file CSS)
-import java.sql.Connection; // Interfaccia per la connessione al database
-import java.sql.PreparedStatement; // Per eseguire query SQL precompilate
-import java.sql.SQLException; // Eccezione per errori di database
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 
 /**
  * Controller per la schermata "Dettagli Alimento".

@@ -367,7 +367,6 @@
     -fx-font-weight: bold;
 }
 
-/* ===== RESPONSIVE DESIGN PER BOTTONI PICCOLI ===== */
 .button-primary.compact,
 .button-danger.compact {
     -fx-font-size: 11px;

@@ -1,23 +1,23 @@
-package com.matteotocci.app.controller; // Dichiarazione del package in cui si trova la classe del controller.
+package com.matteotocci.app.controller;
 
-import com.matteotocci.app.model.Session; // Importa la classe Session per gestire l'ID dell'utente loggato.
-import com.matteotocci.app.model.UtenteModel; // Importa la classe UtenteModel per le operazioni sul database relative agli utenti.
-import javafx.event.ActionEvent; // Classe per la gestione degli eventi di azione (es. click su un bottone, pressione di Invio).
-import javafx.fxml.FXML; // Annotazione per iniettare componenti FXML nel controller.
-import javafx.scene.control.Alert; // Classe per la creazione di finestre di dialogo di avviso.
-import javafx.scene.control.CheckBox; // Classe per il controllo CheckBox (usato per mostrare/nascondere la password).
-import javafx.scene.control.PasswordField; // Classe per il campo di testo per la password (nasconde i caratteri).
-import javafx.scene.control.TextField; // Classe per il campo di testo generico (usato per mostrare la password visibile).
-import javafx.scene.image.ImageView; // Classe per visualizzare immagini (non usato esplicitamente in questo controller ma in altri simili).
-import javafx.scene.input.MouseEvent; // Classe per la gestione degli eventi del mouse (es. click del mouse).
-import javafx.stage.Stage; // Classe per la finestra principale dell'applicazione.
+import com.matteotocci.app.model.Session;
+import com.matteotocci.app.model.UtenteModel;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
-import java.sql.SQLException; // Classe per la gestione delle eccezioni SQL.
-import java.net.URL; // Classe per rappresentare un URL (usata per caricare risorse come i CSS).
-import java.util.Arrays; // Utility per manipolare array, usata qui per creare una lista da array.
-import java.util.List; // Interfaccia per le liste, usata qui per gestire i campi di testo.
-import java.util.ResourceBundle; // Classe per la gestione delle risorse localizzate (non usata esplicitamente qui).
-import javafx.fxml.Initializable; // Interfaccia che i controller devono implementare per l'inizializzazione dopo il caricamento FXML.
+import java.sql.SQLException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
 
 // Dichiarazione della classe ModificaPassword, che implementa Initializable per l'inizializzazione dei componenti.
 public class ModificaPassword implements Initializable {

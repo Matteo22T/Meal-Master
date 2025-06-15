@@ -371,7 +371,6 @@
     -fx-transition: all 0.3s ease;
 }
 
-/* ===== FOCUS OUTLINE REMOVAL ===== */
 .button:focused,
 .combo-box:focused,
 .text-field:focused,

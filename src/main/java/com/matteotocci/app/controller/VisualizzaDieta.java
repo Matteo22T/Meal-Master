@@ -76,8 +76,6 @@ public class VisualizzaDieta {
             this.quantita = quantita;
         }
 
-        public Alimento getAlimento() { return alimento; } // Getter per l'alimento.
-        public double getQuantita() { return quantita; } // Getter per la quantità.
 
         @Override
         public String getDisplayName() {

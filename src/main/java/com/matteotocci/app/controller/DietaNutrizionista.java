@@ -1,27 +1,28 @@
-package com.matteotocci.app.controller; // Dichiara il package della classe.
+package com.matteotocci.app.controller;
 
-import com.matteotocci.app.model.Dieta; // Importa la classe Dieta dal modello.
-import com.matteotocci.app.model.Session; // Importa la classe Session per gestire l'ID utente loggato.
-import com.matteotocci.app.model.SQLiteConnessione; // Importa la classe per la connessione al database SQLite.
+import com.matteotocci.app.model.Dieta;
+import com.matteotocci.app.model.Session;
+import com.matteotocci.app.model.SQLiteConnessione;
 
-import javafx.collections.FXCollections; // Importa le utility per creare ObservableList.
-import javafx.collections.ObservableList; // Importa l'interfaccia ObservableList.
-import javafx.event.ActionEvent; // Importa ActionEvent per la gestione degli eventi.
-import javafx.fxml.FXML; // Importa l'annotazione FXML.
-import javafx.fxml.FXMLLoader; // Importa FXMLLoader per caricare file FXML.
-import javafx.fxml.Initializable; // Importa l'interfaccia Initializable per l'inizializzazione del controller.
-import javafx.geometry.Insets; // Importa Insets per la gestione delle spaziature.
-import javafx.scene.Node; // Importa Node, la classe base per gli elementi del grafo della scena.
-import javafx.scene.Parent; // Importa Parent, la classe base per i nodi contenitori.
-import javafx.scene.Scene; // Importa Scene per la gestione della scena.
-import javafx.scene.control.*; // Importa tutti i controlli UI standard (Button, Label, ListView, TextField, Alert, etc.).
-import javafx.scene.image.ImageView; // Importa ImageView (sebbene non usata direttamente in questo frammento).
-import javafx.scene.input.MouseEvent; // Importa MouseEvent (sebbene non usata direttamente in questo frammento).
-import javafx.scene.layout.HBox; // Importa HBox per layout orizzontali.
-import javafx.scene.layout.VBox; // Importa VBox per layout verticali.
-import javafx.stage.Modality; // Importa Modality per impostare la modalità delle finestre.
-import javafx.stage.Stage; // Importa Stage per la gestione delle finestre.
-import javafx.stage.Window; // Importa Window per ottenere la finestra proprietaria.
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+
 
 import java.io.IOException; // Importa IOException per la gestione degli errori I/O.
 import java.net.URL; // Importa URL (necessario per Initializable).
@@ -502,7 +503,7 @@ public class DietaNutrizionista implements Initializable { // Dichiara la classe
 
 
         boolean conferma = confermaEliminazione(dietaSelezionata.getNome()); // Chiede all'utente una conferma per l'eliminazione della dieta.
-        if (!conferma) { // Se l'utente non conferma (cioè clicca "Annulla").
+        if (!conferma) {
             return; // L'utente ha annullato: Termina l'esecuzione del metodo.
         }
 

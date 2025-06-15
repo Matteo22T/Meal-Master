@@ -1,37 +1,36 @@
 package com.matteotocci.app.controller;
 
-// Importa le classi necessarie per l'applicazione JavaFX e le operazioni del database
-import com.matteotocci.app.model.Alimento; // Modello per l'oggetto Alimento
-import com.matteotocci.app.model.Ricetta; // Modello per l'oggetto Ricetta
-import com.matteotocci.app.model.SQLiteConnessione; // Classe per gestire la connessione al database SQLite
-import com.matteotocci.app.model.Session; // Classe per la gestione della sessione utente
-import javafx.application.Platform; // Per eseguire codice sul thread di UI di JavaFX
-import javafx.collections.FXCollections; // Utility per creare collezioni osservabili
-import javafx.collections.ObservableList; // Lista che notifica i "listener" quando avvengono dei cambiamenti
-import javafx.event.ActionEvent; // Tipo di evento generato dalle azioni dell'utente (es. click su un bottone)
-import javafx.fxml.FXML; // Annotazione per collegare elementi dell'interfaccia utente definiti in FXML al codice Java
-import javafx.fxml.FXMLLoader; // Carica file FXML (layout dell'interfaccia utente)
-import javafx.fxml.Initializable; // AGGIUNTA: Interfaccia per i controller che devono essere inizializzati dopo il caricamento dell'FXML
-import javafx.geometry.Insets; // Per impostare i margini/padding
-import javafx.geometry.Orientation; // Per specificare l'orientamento di elementi come le ScrollBar
-import javafx.scene.Node; // Classe base per tutti i nodi nel grafo della scena (elementi UI)
-import javafx.scene.Parent; // Nodo base per la gerarchia della scena (container di tutti gli elementi UI)
-import javafx.scene.Scene; // Contenitore per tutti i contenuti di una scena
-import javafx.scene.control.*; // Controlli UI standard di JavaFX (Button, CheckBox, ComboBox, TableView, TextField, Spinner, Label, Alert)
-import javafx.scene.control.cell.PropertyValueFactory; // Per collegare le proprietà degli oggetti alle colonne di una TableView
-import javafx.scene.input.MouseButton; // Per identificare il bottone del mouse cliccato
-import javafx.scene.input.MouseEvent; // Tipo di evento generato da interazioni del mouse
-import javafx.scene.layout.HBox; // Layout container orizzontale
-import javafx.scene.layout.VBox; // Layout container verticale
-import javafx.stage.Stage; // La finestra dell'applicazione
+import com.matteotocci.app.model.Alimento;
+import com.matteotocci.app.model.Ricetta;
+import com.matteotocci.app.model.SQLiteConnessione;
+import com.matteotocci.app.model.Session;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-import java.io.IOException; // Eccezione per errori di input/output (es. caricamento file FXML)
-import java.net.URL; // Necessario per Initializable
-import java.sql.*; // Classi per l'interazione con il database
-import java.time.LocalDate; // Per ottenere la data corrente
-import java.util.ArrayList; // Implementazione di List
-import java.util.List; // Interfaccia per liste
-import java.util.ResourceBundle; // Necessario per Initializable
+import java.io.IOException;
+import java.net.URL;
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Controller per la schermata "Aggiungi Pasto".
@@ -39,38 +38,37 @@ import java.util.ResourceBundle; // Necessario per Initializable
  * alimenti o ricette e aggiungerli a un pasto specifico del giorno corrente,
  * aggiornando i totali nutrizionali e salvando le modifiche nel database.
  */
-public class AggiungiPasto implements Initializable { // AGGIUNTA: Implementa l'interfaccia Initializable
+public class AggiungiPasto implements Initializable {
 
-    // --- Elementi dell'interfaccia utente (collegati tramite @FXML) ---
-    @FXML private Button ButtonCercaAlimento; // Bottone per avviare la ricerca di alimenti
-    @FXML private Button ButtonCercaRicetta; // Bottone per avviare la ricerca di ricette
-    @FXML private CheckBox CheckBoxAlimenti; // CheckBox per filtrare gli alimenti (es. "Solo i miei")
-    @FXML private CheckBox CheckBoxRicette; // CheckBox per filtrare le ricette (es. "Solo le mie")
-    @FXML private ComboBox<String> ComboBoxAlimento; // ComboBox per la selezione della categoria degli alimenti
-    @FXML private ComboBox<String> ComboBoxRicetta; // ComboBox per la selezione della categoria delle ricette
-    @FXML private TableColumn<?, ?> brandCol; // Colonna per il brand dell'alimento
-    @FXML private TableColumn<?, ?> calorieCol; // Colonna per le calorie dell'alimento
-    @FXML private TableColumn<?, ?> carboidratiCol; // Colonna per i carboidrati dell'alimento
-    @FXML private TableColumn<?, ?> categoriaColRic; // Colonna per la categoria della ricetta
-    @FXML private Button confermaPastoButton; // Bottone per confermare l'aggiunta di un alimento al pasto
-    @FXML private Button confermaPasto2Button; // Bottone per confermare l'aggiunta di una ricetta al pasto
-    @FXML private VBox contenitoreAlimentiDieta; // Contenitore VBox per visualizzare gli alimenti già aggiunti al pasto
-    @FXML private VBox contenitoreRicetteDieta; // Contenitore VBox per visualizzare le ricette già aggiunte al pasto
-    @FXML private TableColumn<?, ?> descrizioneColRic; // Colonna per la descrizione della ricetta
-    @FXML private TableColumn<?, ?> fibreCol; // Colonna per le fibre dell'alimento
-    @FXML private TableColumn<?, ?> grassiCol; // Colonna per i grassi dell'alimento
-    @FXML private TableColumn<?, ?> grassiSatCol; // Colonna per i grassi saturi dell'alimento
-    @FXML private TableColumn<?, ?> immagineCol; // Colonna per l'immagine dell'alimento
-    @FXML private TableColumn<?, ?> nomeCol; // Colonna per il nome dell'alimento
-    @FXML private TableColumn<?, ?> nomeColRic; // Colonna per il nome della ricetta
-    @FXML private TableColumn<?, ?> proteineCol; // Colonna per le proteine dell'alimento
-    @FXML private Spinner<Integer> quantitaSpinner; // Spinner per selezionare la quantità (in grammi)
-    @FXML private TableColumn<?, ?> saleCol; // Colonna per il sale dell'alimento
-    @FXML private TableView<Alimento> tableViewAlimenti; // TableView per visualizzare la lista degli alimenti
-    @FXML private TableView<Ricetta> tableViewRicette; // TableView per visualizzare la lista delle ricette
-    @FXML private TextField textCercaAlimento; // Campo di testo per la ricerca di alimenti
-    @FXML private TextField textCercaRicetta; // Campo di testo per la ricerca di ricette
-    @FXML private TableColumn<?, ?> zuccheriCol; // Colonna per gli zuccheri dell'alimento
+    @FXML private Button ButtonCercaAlimento;
+    @FXML private Button ButtonCercaRicetta;
+    @FXML private CheckBox CheckBoxAlimenti;
+    @FXML private CheckBox CheckBoxRicette;
+    @FXML private ComboBox<String> ComboBoxAlimento;
+    @FXML private ComboBox<String> ComboBoxRicetta;
+    @FXML private TableColumn<?, ?> brandCol;
+    @FXML private TableColumn<?, ?> calorieCol;
+    @FXML private TableColumn<?, ?> carboidratiCol;
+    @FXML private TableColumn<?, ?> categoriaColRic;
+    @FXML private Button confermaPastoButton;
+    @FXML private Button confermaPasto2Button;
+    @FXML private VBox contenitoreAlimentiDieta;
+    @FXML private VBox contenitoreRicetteDieta;
+    @FXML private TableColumn<?, ?> descrizioneColRic;
+    @FXML private TableColumn<?, ?> fibreCol;
+    @FXML private TableColumn<?, ?> grassiCol;
+    @FXML private TableColumn<?, ?> grassiSatCol;
+    @FXML private TableColumn<?, ?> immagineCol;
+    @FXML private TableColumn<?, ?> nomeCol;
+    @FXML private TableColumn<?, ?> nomeColRic;
+    @FXML private TableColumn<?, ?> proteineCol;
+    @FXML private Spinner<Integer> quantitaSpinner;
+    @FXML private TableColumn<?, ?> saleCol;
+    @FXML private TableView<Alimento> tableViewAlimenti;
+    @FXML private TableView<Ricetta> tableViewRicette;
+    @FXML private TextField textCercaAlimento;
+    @FXML private TextField textCercaRicetta;
+    @FXML private TableColumn<?, ?> zuccheriCol;
 
     // --- Variabili di stato interne ---
     private int offset = 0; // Offset per la paginazione delle ricerche (quanti elementi saltare)
@@ -97,7 +95,7 @@ public class AggiungiPasto implements Initializable { // AGGIUNTA: Implementa l'
      * @param location L'URL del documento FXML che ha dato origine a questo controller.
      * @param resources Le risorse utilizzate per localizzare gli oggetti radice, o null se la radice non è stata localizzata.
      */
-    @Override // ANNOTAZIONE: Indica che questo metodo fa l'override di un metodo dell'interfaccia Initializable
+    @Override
     public void initialize(URL location, ResourceBundle resources) { // MODIFICA: Firma del metodo conforme a Initializable
         // Associa le proprietà dell'oggetto Alimento alle colonne della TableView degli Alimenti
         immagineCol.setCellValueFactory(new PropertyValueFactory<>("immagine"));
@@ -499,18 +497,18 @@ public class AggiungiPasto implements Initializable { // AGGIUNTA: Implementa l'
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/matteotocci/app/DettagliAlimento.fxml"));
             Parent root = loader.load();
 
-            DettagliAlimentoController controller = loader.getController(); // Ottiene il controller
-            controller.setAlimento(alimento); // Passa l'alimento selezionato
+            DettagliAlimentoController controller = loader.getController();
+            controller.setAlimento(alimento);
             controller.setOrigineFXML("AggiungiPasto.fxml");
 
-            Stage stage = new Stage(); // Crea un nuovo Stage
-            stage.setTitle("Dettaglio Alimento"); // Imposta il titolo
-            stage.setScene(new Scene(root)); // Imposta la scena
+            Stage stage = new Stage();
+            stage.setTitle("Dettaglio Alimento");
+            stage.setScene(new Scene(root));
             stage.setResizable(false);
             stage.setFullScreen(false);
-            stage.show(); // Mostra la finestra
+            stage.show();
         } catch (IOException e) {
-            e.printStackTrace(); // Stampa l'errore
+            e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Errore Caricamento", "Impossibile aprire la schermata di dettaglio alimento.", "Dettagli: " + e.getMessage());
         }
     }
@@ -578,11 +576,11 @@ public class AggiungiPasto implements Initializable { // AGGIUNTA: Implementa l'
             if (soloMiei && Session.getUserId() != null) {
                 stmt.setInt(paramIndex++, Session.getUserId());
             }
-            stmt.setInt(paramIndex++, LIMIT); // Imposta il limite
-            stmt.setInt(paramIndex++, offset); // Imposta l'offset
+            stmt.setInt(paramIndex++, LIMIT);
+            stmt.setInt(paramIndex++, offset);
 
-            try (ResultSet rs = stmt.executeQuery()) { // Esegue la query
-                while (rs.next()) { // Itera sui risultati
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
                     // Crea un nuovo oggetto Ricetta con i dati dal database e lo aggiunge alla lista
                     Ricetta ricetta = new Ricetta(
                             rs.getInt("id"),
@@ -989,7 +987,6 @@ public class AggiungiPasto implements Initializable { // AGGIUNTA: Implementa l'
                 }
                 tableViewRicette.setItems(ricette); // Imposta la lista nella TableView
 
-                // Opzionale: Seleziona l'elemento trovato nella tabella e lo scorre in vista
                 if (!ricette.isEmpty()) {
                     tableViewRicette.getSelectionModel().selectFirst();
                     tableViewRicette.scrollTo(ricette.get(0));

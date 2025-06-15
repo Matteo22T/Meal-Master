@@ -1,24 +1,24 @@
 package com.matteotocci.app.controller;
 
-import com.matteotocci.app.model.LoginModel; // Modello per la gestione delle operazioni di login e registrazione (interazione con il database)
-import com.matteotocci.app.model.Session; // Classe per la gestione della sessione utente (es. ID utente loggato)
-import javafx.animation.FadeTransition; // Per creare animazioni di dissolvenza (fade-in/fade-out)
-import javafx.event.ActionEvent; // Tipo di evento generato dalle azioni dell'utente (es. click su un bottone)
-import javafx.fxml.FXML; // Annotazione per collegare elementi dell'interfaccia utente definiti in FXML al codice Java
-import javafx.fxml.FXMLLoader; // Carica file FXML (layout dell'interfaccia utente)
-import javafx.fxml.Initializable; // Interfaccia per i controller che devono essere inizializzati dopo il caricamento dell'FXML
-import javafx.scene.Parent; // Nodo base per la gerarchia della scena (container di tutti gli elementi UI)
-import javafx.scene.Scene; // Contenitore per tutti i contenuti di una scena
-import javafx.scene.control.*; // Controlli UI standard di JavaFX (Button, TextField, PasswordField, RadioButton, ToggleGroup, Alert)
-import javafx.scene.input.KeyCode; // Codici dei tasti della tastiera
-import javafx.scene.input.KeyEvent; // Tipo di evento generato dalla pressione di un tasto
-import javafx.scene.layout.VBox; // Layout container che organizza i suoi figli in una singola colonna verticale
-import javafx.stage.Stage; // La finestra principale dell'applicazione
-import javafx.util.Duration; // Per specificare la durata delle animazioni
+import com.matteotocci.app.model.LoginModel;
+import com.matteotocci.app.model.Session;
+import javafx.animation.FadeTransition;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
-import java.io.IOException; // Eccezione per errori di input/output (es. caricamento file FXML)
-import java.net.URL; // Classe che rappresenta un Uniform Resource Locator (per trovare risorse come file FXML o CSS)
-import java.util.ResourceBundle; // Utilizzato per la localizzazione (non usato esplicitamente qui, ma richiesto da Initializable)
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Controller per la schermata di login e registrazione.

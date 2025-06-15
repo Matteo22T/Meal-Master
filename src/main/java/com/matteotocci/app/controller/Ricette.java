@@ -1,40 +1,36 @@
-package com.matteotocci.app.controller; // Dichiarazione del package in cui si trova la classe del controller.
+package com.matteotocci.app.controller;
 
-// Importazioni delle classi e interfacce necessarie.
-import com.matteotocci.app.model.*; // Importa tutte le classi dal package model (es. Session, Dieta, LoginModel, Ricetta, SQLiteConnessione).
-import javafx.collections.FXCollections; // Utility per creare ObservableList.
-import javafx.collections.ObservableList; // Interfaccia per liste che possono essere osservate da JavaFX per aggiornamenti UI.
-import javafx.event.ActionEvent; // Classe per la gestione degli eventi di azione (es. click su un bottone).
-import javafx.fxml.FXML; // Annotazione per iniettare componenti FXML nel controller.
-import javafx.fxml.FXMLLoader; // Classe per caricare file FXML.
-import javafx.fxml.Initializable; // Interfaccia che i controller devono implementare per l'inizializzazione dopo il caricamento FXML.
-import javafx.geometry.Orientation; // Enum per specificare l'orientamento (es. per le scrollbar).
-import javafx.scene.Node; // Classe base per tutti i nodi nel grafo di scena (es. controlli UI).
-import javafx.scene.Parent; // Classe base per i nodi che hanno figli (usata per la root di una scena FXML).
-import javafx.scene.Scene; // Contenitore per tutti i contenuti di una scena.
-import javafx.scene.control.*; // Importa tutti i controlli UI di JavaFX (Label, ComboBox, CheckBox, TextField, TableView, TableColumn, Alert, ScrollBar).
-import javafx.scene.control.cell.PropertyValueFactory; // Factory per la colonna della tabella che estrae valori da una proprietà.
-import javafx.scene.input.MouseEvent; // Classe per la gestione degli eventi del mouse.
-import javafx.stage.Stage; // Finestra principale dell'applicazione.
+import com.matteotocci.app.model.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
-import java.io.IOException; // Eccezione per errori di I/O.
-import java.net.URL; // Classe per rappresentare un URL (usata per caricare risorse come i CSS).
-import java.sql.*; // Importa tutte le classi SQL (Connection, DriverManager, PreparedStatement, ResultSet, SQLException).
-import java.util.ResourceBundle; // Utilizzato per la localizzazione (non strettamente usato in questo codice, ma richiesto da Initializable).
+import java.io.IOException;
+import java.net.URL;
+import java.sql.*;
+import java.util.ResourceBundle;
 
-// Dichiarazione della classe Ricette, che implementa Initializable per l'inizializzazione dei componenti.
 public class Ricette implements Initializable {
 
-    // Campi annotati con @FXML per l'iniezione dei componenti UI definiti nel file FXML.
-    @FXML private Label nomeUtenteLabelHomePage; // Label per visualizzare il nome dell'utente nella homepage.
-    @FXML private ComboBox<String> categorieRicette; // ComboBox per selezionare le categorie di ricette.
-    @FXML private CheckBox mieiAlimentiCheckBox; // CheckBox per filtrare le ricette create dall'utente.
-    @FXML private TextField cercaRicetta; // Campo di testo per la ricerca di ricette.
-    @FXML private TableView<Ricetta> tableViewRicette; // Tabella per visualizzare le ricette.
-    @FXML private TableColumn<Ricetta, String> nomeCol; // Colonna per il nome della ricetta.
-    @FXML private TableColumn<Ricetta, String> descrizioneCol; // Colonna per la descrizione della ricetta.
-    @FXML private TableColumn<Ricetta, String> categoriaCol; // Colonna per la categoria della ricetta.
-
+    @FXML private Label nomeUtenteLabelHomePage;
+    @FXML private ComboBox<String> categorieRicette;
+    @FXML private CheckBox mieiAlimentiCheckBox;
+    @FXML private TextField cercaRicetta;
+    @FXML private TableView<Ricetta> tableViewRicette;
+    @FXML private TableColumn<Ricetta, String> nomeCol;
+    @FXML private TableColumn<Ricetta, String> descrizioneCol;
+    @FXML private TableColumn<Ricetta, String> categoriaCol;
     private int offset = 0; // Offset per la paginazione dei risultati (caricamento incrementale).
     private final int LIMIT = 50; // Numero massimo di risultati da caricare per volta.
     private boolean isLoading = false; // Flag per prevenire il caricamento multiplo durante lo scrolling.
@@ -419,8 +415,13 @@ public class Ricette implements Initializable {
 
             Stage stage = new Stage(); // Crea una nuova finestra.
             stage.setTitle("Aggiungi Ricetta");
+
+            stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
             stage.setScene(new Scene(root));
-            stage.show(); // Mostra la finestra.
+            stage.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace(); // Stampa l'errore di I/O.

@@ -1,28 +1,29 @@
-package com.matteotocci.app.controller; // Dichiara il package della classe.
+package com.matteotocci.app.controller;
 
-import com.matteotocci.app.model.SQLiteConnessione; // Importa la classe per la connessione al database SQLite.
-import com.matteotocci.app.model.Session; // Importa la classe Session per gestire l'ID utente loggato.
-import javafx.application.Platform; // Importa Platform per eseguire codice sul thread UI di JavaFX.
-import javafx.event.ActionEvent; // Importa ActionEvent per la gestione degli eventi.
-import javafx.fxml.FXML; // Importa l'annotazione FXML.
-import javafx.fxml.FXMLLoader; // Importa FXMLLoader per caricare file FXML.
-import javafx.fxml.Initializable; // Importa l'interfaccia Initializable per l'inizializzazione del controller.
-import javafx.scene.Node; // Importa Node, la classe base per gli elementi del grafo della scena.
-import javafx.scene.Parent; // Importa Parent, la classe base per i nodi contenitori.
-import javafx.scene.Scene; // Importa Scene per la gestione della scena.
-import javafx.scene.control.Button; // Importa la classe Button.
-import javafx.scene.control.Label; // Importa la classe Label.
-import javafx.scene.control.TextField; // Importa la classe TextField.
-import javafx.scene.control.DatePicker; // Importa la classe DatePicker per la selezione delle date.
-import javafx.scene.control.DateCell; // Importa DateCell per personalizzare le celle del DatePicker.
-import javafx.scene.control.Spinner; // Importa la classe Spinner per selezionare valori numerici.
-import javafx.scene.control.SpinnerValueFactory; // Importa SpinnerValueFactory per definire i valori dello Spinner.
-import javafx.stage.Stage; // Importa Stage per la gestione delle finestre.
+import com.matteotocci.app.model.SQLiteConnessione;
+import com.matteotocci.app.model.Session;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.stage.Stage;
 
-import java.io.IOException; // Importa IOException per la gestione degli errori I/O.
-import java.net.URL; // Importa URL (necessario per Initializable).
-import java.sql.*; // Importa tutte le classi SQL (Connection, PreparedStatement, ResultSet, SQLException, Statement).
-import java.time.LocalDate; // Importa LocalDate per lavorare con le date.
+import java.io.IOException;
+import java.net.URL;
+import java.sql.*;
+import java.time.LocalDate;
+
 import java.time.temporal.ChronoUnit; // Importa ChronoUnit per calcolare unità di tempo (es. giorni).
 import java.util.ResourceBundle; // Importa ResourceBundle (necessario per Initializable).
 

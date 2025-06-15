@@ -1,33 +1,33 @@
 package com.matteotocci.app.controller;
 
-// Importa le classi necessarie per l'applicazione JavaFX e le operazioni del database
-import com.matteotocci.app.model.Alimento; // Modello per l'oggetto Alimento
-import com.matteotocci.app.model.IngredienteRicetta; // Modello per l'oggetto IngredienteRicetta
-import com.matteotocci.app.model.SQLiteConnessione; // Classe per gestire la connessione al database SQLite
-import com.matteotocci.app.model.Session; // Classe per la gestione della sessione utente
-import javafx.application.Platform; // Per eseguire codice sul thread di UI di JavaFX
-import javafx.beans.property.SimpleStringProperty; // Utilizzato per PropertyValueFactory di String
-import javafx.collections.FXCollections; // Utility per creare collezioni osservabili
-import javafx.collections.ObservableList; // Lista che notifica i "listener" quando avvengono dei cambiamenti
-import javafx.event.ActionEvent; // Tipo di evento generato dalle azioni dell'utente (es. click su un bottone)
-import javafx.fxml.FXML; // Annotazione per collegare elementi dell'interfaccia utente definiti in FXML al codice Java
-import javafx.fxml.FXMLLoader; // Carica file FXML (layout dell'interfaccia utente)
-import javafx.fxml.Initializable; // Interfaccia per i controller che devono essere inizializzati dopo il caricamento dell'FXML
-import javafx.geometry.Orientation; // Per specificare l'orientamento di elementi come le ScrollBar
-import javafx.scene.Node; // Classe base per tutti i nodi nel grafo della scena (elementi UI)
-import javafx.scene.Parent; // Nodo base per la gerarchia della scena (container di tutti gli elementi UI)
-import javafx.scene.Scene; // Contenitore per tutti i contenuti di una scena
-import javafx.scene.control.*; // Controlli UI standard di JavaFX (Button, TextField, ComboBox, TableView, Label, TextArea, CheckBox, Alert)
-import javafx.scene.control.cell.PropertyValueFactory; // Per collegare le proprietà degli oggetti alle colonne di una TableView
-import javafx.scene.image.ImageView; // Per visualizzare immagini
-import javafx.scene.layout.HBox; // Layout container orizzontale
-import javafx.stage.Stage; // La finestra dell'applicazione
-import javafx.util.Callback; // Utilizzato per le CellFactory delle TableColumn
+import com.matteotocci.app.model.Alimento;
+import com.matteotocci.app.model.IngredienteRicetta;
+import com.matteotocci.app.model.SQLiteConnessione;
+import com.matteotocci.app.model.Session;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 
-import java.io.IOException; // Eccezione per errori di input/output (es. caricamento file FXML)
-import java.net.URL; // Necessario per Initializable
-import java.sql.*; // Classi per l'interazione con il database
-import java.util.ResourceBundle; // Necessario per Initializable
+import java.io.IOException;
+import java.net.URL;
+import java.sql.*;
+import java.util.ResourceBundle;
+
 
 /**
  * Controller per la schermata "Aggiungi Ricetta".
@@ -35,39 +35,39 @@ import java.util.ResourceBundle; // Necessario per Initializable
  * permettendo l'aggiunta di alimenti come ingredienti, il calcolo automatico dei
  * valori nutrizionali totali e il salvataggio della ricetta nel database.
  */
-public class AggiungiRicetteController implements Initializable { // Implementa l'interfaccia Initializable
+public class AggiungiRicetteController implements Initializable {
 
     // --- Elementi dell'interfaccia utente (collegati tramite @FXML) ---
-    @FXML private Button aggiungiAlimento; // Bottone per aggiungere l'alimento selezionato alla ricetta
-    @FXML private Button annulla; // Bottone per annullare l'operazione e chiudere la finestra
-    @FXML private TextField cercaAlimento; // Campo di testo per la ricerca di alimenti nella tabella
-    @FXML private TextField nomeRicetta; // Campo di testo per il nome della ricetta
-    @FXML private TextField quantitaField; // Campo di testo per la quantità dell'ingrediente da aggiungere
-    @FXML private Button salvaRicetta; // Bottone per salvare la ricetta nel database
-    @FXML private ComboBox<String> categoriaComboBox; // ComboBox per la selezione della categoria degli alimenti
-    @FXML private CheckBox mieiAlimentiCheckBox; // CheckBox per filtrare gli alimenti "Solo i miei"
-    @FXML private ComboBox<String> categoriaRicetta; // ComboBox per la selezione della categoria della ricetta
-    @FXML private TextArea descrizioneRicetta; // Area di testo per la descrizione della ricetta
+    @FXML private Button aggiungiAlimento;
+    @FXML private Button annulla;
+    @FXML private TextField cercaAlimento;
+    @FXML private TextField nomeRicetta;
+    @FXML private TextField quantitaField;
+    @FXML private Button salvaRicetta;
+    @FXML private ComboBox<String> categoriaComboBox;
+    @FXML private CheckBox mieiAlimentiCheckBox;
+    @FXML private ComboBox<String> categoriaRicetta;
+    @FXML private TextArea descrizioneRicetta;
 
-    @FXML private TableView<Alimento> tableView; // TableView per visualizzare la lista degli alimenti disponibili
-    @FXML private TableColumn<Alimento, ImageView> immagineCol; // Colonna immagine per la TableView alimenti
-    @FXML private TableColumn<Alimento, String> nomeCol, brandCol; // Colonne nome e brand per la TableView alimenti
-    @FXML private TableColumn<Alimento, Double> calorieCol, proteineCol, carboidratiCol, grassiCol; // Colonne macronutrienti per la TableView alimenti
-    @FXML private TableColumn<Alimento, Double> grassiSatCol, saleCol, fibreCol, zuccheriCol; // Colonne altri valori nutrizionali per la TableView alimenti
+    @FXML private TableView<Alimento> tableView;
+    @FXML private TableColumn<Alimento, ImageView> immagineCol;
+    @FXML private TableColumn<Alimento, String> nomeCol, brandCol;
+    @FXML private TableColumn<Alimento, Double> calorieCol, proteineCol, carboidratiCol, grassiCol;
+    @FXML private TableColumn<Alimento, Double> grassiSatCol, saleCol, fibreCol, zuccheriCol;
 
-    @FXML private Label calorieTotaliLabel; // Etichetta per le calorie totali della ricetta
-    @FXML private Label carboidratiTotaliLabel; // Etichetta per i carboidrati totali della ricetta
-    @FXML private Label fibreTotaliLabel; // Etichetta per le fibre totali della ricetta
-    @FXML private Label grassiSaturiTotaliLabel; // Etichetta per i grassi saturi totali della ricetta
-    @FXML private Label grassiTotaliLabel; // Etichetta per i grassi totali della ricetta
-    @FXML private Label proteineTotaliLabel; // Etichetta per le proteine totali della ricetta
-    @FXML private Label saleTotaliLabel; // Etichetta per il sale totale della ricetta
-    @FXML private Label zuccheriTotaliLabel; // Etichetta per gli zuccheri totali della ricetta
+    @FXML private Label calorieTotaliLabel;
+    @FXML private Label carboidratiTotaliLabel;
+    @FXML private Label fibreTotaliLabel;
+    @FXML private Label grassiSaturiTotaliLabel;
+    @FXML private Label grassiTotaliLabel;
+    @FXML private Label proteineTotaliLabel;
+    @FXML private Label saleTotaliLabel;
+    @FXML private Label zuccheriTotaliLabel;
 
-    @FXML private TableView<IngredienteRicetta> ingredientiTable; // TableView per visualizzare gli ingredienti aggiunti alla ricetta
-    @FXML private TableColumn<IngredienteRicetta, String> ingredienteNomeCol; // Colonna nome ingrediente per la TableView ingredienti
-    @FXML private TableColumn<IngredienteRicetta, Void> azioniCol; // Colonna per le azioni (modifica/elimina) degli ingredienti
-    @FXML private TableColumn<IngredienteRicetta, Number> quantitaCol; // Colonna quantità per la TableView ingredienti
+    @FXML private TableView<IngredienteRicetta> ingredientiTable;
+    @FXML private TableColumn<IngredienteRicetta, String> ingredienteNomeCol;
+    @FXML private TableColumn<IngredienteRicetta, Void> azioniCol;
+    @FXML private TableColumn<IngredienteRicetta, Number> quantitaCol;
 
     // --- Variabili di stato per la paginazione e i totali nutrizionali ---
     private int offset = 0; // Offset per la paginazione delle ricerche nella tabella alimenti
@@ -89,7 +89,7 @@ public class AggiungiRicetteController implements Initializable { // Implementa 
      * @param location L'URL del documento FXML che ha dato origine a questo controller.
      * @param resources Le risorse utilizzate per localizzare gli oggetti radice, o null se la radice non è stata localizzata.
      */
-    @Override // Indica che questo metodo fa l'override di un metodo dell'interfaccia Initializable
+    @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Associa le proprietà dell'oggetto Alimento alle colonne della TableView degli alimenti
         immagineCol.setCellValueFactory(new PropertyValueFactory<>("immagine"));

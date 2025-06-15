@@ -113,7 +113,7 @@
 }
 
 /* ===== PULSANTE AVANTI ===== */
-.button {
+.button-avanti {
     -fx-background-color: linear-gradient(to right, #8B3A3A, #A0464A);
     -fx-text-fill: white;
     -fx-font-size: 16px;
@@ -148,15 +148,6 @@
     -fx-pref-width: 250px;
 }
 
-/* DatePicker per data inizio */
-#dataInizioDatePicker {
-    /* Eredita gli stili da .date-picker */
-}
-
-/* DatePicker per data fine */
-#dataFineDatePicker {
-    /* Eredita gli stili da .date-picker */
-}
 
 /* Pulsante Avanti */
 #avantiButton {
@@ -165,16 +156,6 @@
     -fx-pref-width: 150px;
 }
 
-/* Label dei messaggi di errore */
-#messaggioLabel {
-    -fx-text-fill: #d32f2f;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-background-color: rgba(211,47,47,0.1);
-    -fx-background-radius: 8;
-    -fx-padding: 8 12;
-    -fx-effect: dropshadow(gaussian, rgba(211,47,47,0.2), 5, 0, 0, 1);
-}
 
 /* ===== ANIMAZIONI E TRANSIZIONI ===== */
 .button, .text-field, .date-picker {

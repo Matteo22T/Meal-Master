@@ -1,38 +1,37 @@
-package com.matteotocci.app.controller; // Dichiara il package della classe.
+package com.matteotocci.app.controller;
 
-import javafx.collections.FXCollections; // Importa le utility per creare ObservableList.
-import javafx.collections.ObservableList; // Importa l'interfaccia ObservableList.
-import javafx.event.ActionEvent; // Importa ActionEvent per la gestione degli eventi.
-import javafx.fxml.FXML; // Importa l'annotazione FXML.
-import javafx.fxml.FXMLLoader; // Importa FXMLLoader per caricare file FXML.
-import javafx.fxml.Initializable; // Importa l'interfaccia Initializable per l'inizializzazione del controller.
-import javafx.geometry.Rectangle2D; // Importa Rectangle2D per gestire le dimensioni dello schermo.
-import javafx.scene.Node; // Importa Node, la classe base per gli elementi del grafo della scena.
-import javafx.scene.Parent; // Importa Parent, la classe base per i nodi contenitori.
-import javafx.scene.Scene; // Importa Scene per la gestione della scena.
-import javafx.scene.control.*; // Importa tutti i controlli UI standard (Button, Label, ListView, TextField, TableView, TableColumn, etc.).
-import javafx.scene.control.cell.PropertyValueFactory; // Importa PropertyValueFactory per collegare le colonne della TableView alle proprietà degli oggetti.
-import javafx.scene.input.MouseEvent; // Importa MouseEvent per la gestione degli eventi del mouse.
-import javafx.stage.Screen; // Importa Screen per ottenere informazioni sullo schermo.
-import javafx.stage.Stage; // Importa Stage per la gestione delle finestre.
-import javafx.util.Callback; // Importa Callback, un'interfaccia funzionale generica.
-import javafx.scene.layout.HBox; // Importa HBox per layout orizzontali.
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.scene.layout.HBox;
 
-import java.io.IOException; // Importa IOException per la gestione degli errori I/O.
-import java.net.URL; // Importa URL (necessario per Initializable).
-import java.sql.Connection; // Importa Connection per la connessione al database.
-import java.sql.DriverManager; // Mantenuto se usato da getNomeUtenteDalDatabase: Importa DriverManager per la connessione al database (potrebbe essere sostituito da SQLiteConnessione).
-import java.sql.PreparedStatement; // Importa PreparedStatement per l'esecuzione di query SQL precompilate.
-import java.sql.ResultSet; // Importa ResultSet per leggere i risultati delle query SQL.
-import java.sql.SQLException; // Importa SQLException per gestire errori di database.
-import java.util.ResourceBundle; // Importa ResourceBundle (necessario per Initializable).
+import java.io.IOException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
 
-import com.matteotocci.app.model.Dieta; // Importa la classe Dieta dal modello.
-import com.matteotocci.app.model.SQLiteConnessione; // Importa la classe per la connessione al database SQLite.
-import com.matteotocci.app.model.Session; // Importa la classe Session per gestire l'ID utente loggato.
+import com.matteotocci.app.model.Dieta;
+import com.matteotocci.app.model.SQLiteConnessione;
+import com.matteotocci.app.model.Session;
 
-public class HomePageNutrizionista implements Initializable { // Dichiara la classe HomePageNutrizionista e implementa Initializable.
-
+public class HomePageNutrizionista implements Initializable {
     @FXML
     private Button BottoneDieta; // Bottone FXML per navigare alla sezione Diete.
     @FXML

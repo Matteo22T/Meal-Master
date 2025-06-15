@@ -142,7 +142,6 @@
     -fx-background-color: linear-gradient(to bottom, #ffffff, #f9f2f1);
 }
 
-/* Responsive adjustments */
 @media (max-width: 600px) {
     .details-section {
         -fx-padding: 20;

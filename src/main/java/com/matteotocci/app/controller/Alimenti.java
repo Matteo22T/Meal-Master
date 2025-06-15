@@ -1,33 +1,33 @@
 package com.matteotocci.app.controller;
 
-// Importa le classi necessarie per l'applicazione JavaFX e le operazioni del database
-import com.matteotocci.app.model.LoginModel; // Modello per la gestione del login (es. recupero ruolo utente)
-import com.matteotocci.app.model.Alimento; // Modello per l'oggetto Alimento
-import com.matteotocci.app.model.SQLiteConnessione; // Classe per gestire la connessione al database SQLite
-import com.matteotocci.app.model.Session; // Classe per la gestione della sessione utente (es. ID utente loggato)
-import com.matteotocci.app.model.Dieta; // Modello per l'oggetto Dieta (necessario per recuperare la dieta in Alimenti)
-import javafx.application.Platform; // Per eseguire codice sul thread di UI di JavaFX
-import javafx.collections.FXCollections; // Utility per creare collezioni osservabili
-import javafx.collections.ObservableList; // Lista che notifica i "listener" quando avvengono dei cambiamenti
-import javafx.event.ActionEvent; // Tipo di evento generato dalle azioni dell'utente (es. click su un bottone)
-import javafx.fxml.FXML; // Annotazione per collegare elementi dell'interfaccia utente definiti in FXML al codice Java
-import javafx.fxml.FXMLLoader; // Carica file FXML (layout dell'interfaccia utente)
-import javafx.fxml.Initializable; // AGGIUNTA: Interfaccia per i controller che devono essere inizializzati dopo il caricamento dell'FXML
-import javafx.geometry.Orientation; // Per specificare l'orientamento di elementi come le ScrollBar
-import javafx.scene.Node; // Classe base per tutti i nodi nel grafo della scena (elementi UI)
-import javafx.scene.Parent; // Nodo base per la gerarchia della scena (container di tutti gli elementi UI)
-import javafx.scene.Scene; // Contenitore per tutti i contenuti di una scena
-import javafx.scene.control.*; // Controlli UI standard di JavaFX (Button, ComboBox, CheckBox, TableView, TextField, Label, Alert)
-import javafx.scene.control.cell.PropertyValueFactory; // Per collegare le proprietà degli oggetti alle colonne di una TableView
-import javafx.scene.image.ImageView; // Per visualizzare immagini
-import javafx.scene.input.MouseEvent; // Tipo di evento generato da interazioni del mouse
-import javafx.stage.Stage; // La finestra principale dell'applicazione
+import com.matteotocci.app.model.LoginModel;
+import com.matteotocci.app.model.Alimento;
+import com.matteotocci.app.model.SQLiteConnessione;
+import com.matteotocci.app.model.Session;
+import com.matteotocci.app.model.Dieta;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
-import java.io.IOException; // Eccezione per errori di input/output (es. caricamento file FXML)
-import java.net.URL; // Necessario per Initializable
-import java.sql.*; // Classi per l'interazione con il database
-import java.util.Optional; // Necessario per showAlert
-import java.util.ResourceBundle; // Necessario per Initializable
+import java.io.IOException;
+import java.net.URL;
+import java.sql.*;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
 
 /**
  * Controller per la schermata "Alimenti".
@@ -37,22 +37,20 @@ import java.util.ResourceBundle; // Necessario per Initializable
 public class Alimenti implements Initializable { // AGGIUNTA: Implementa l'interfaccia Initializable
 
     public LoginModel loginModel = new LoginModel(); // Istanza del modello per la gestione del login
-    // Recupera l'email e il ruolo dell'utente loggato.
-    // Nota: queste chiamate a Session.getUserId() qui potrebbero essere null all'avvio molto precoce.
-    // È più sicuro recuperarle dopo l'inizializzazione completa o dove sono effettivamente usate.
+
     String email = loginModel.getEmail(Session.getUserId());
     String ruolo = loginModel.getRuoloUtente(email);
 
     // --- Elementi dell'interfaccia utente (collegati tramite @FXML) ---
-    @FXML private Button BottoneAlimenti; // Bottone per accedere alla sezione Alimenti (auto-referenziale)
-    @FXML private ComboBox<String> categoriaComboBox; // ComboBox per filtrare gli alimenti per categoria
-    @FXML private CheckBox mieiAlimentiCheckBox; // CheckBox per filtrare solo gli alimenti creati dall'utente corrente
-    @FXML private Button BottoneHome; // Bottone per tornare alla Home Page
-    @FXML private Label nomeUtenteLabelHomePage; // Etichetta per mostrare il nome dell'utente loggato
-    @FXML private Button BottoneRicette; // Bottone per accedere alla sezione Ricette
-    @FXML private TextField cercaAlimento; // Campo di testo per la ricerca di alimenti per nome
-    @FXML private TableView<Alimento> tableView; // Tabella per visualizzare la lista degli alimenti
-    @FXML private Button bottoneCerca; // Bottone per avviare la ricerca (associato a handleCercaAlimento)
+    @FXML private Button BottoneAlimenti;
+    @FXML private ComboBox<String> categoriaComboBox;
+    @FXML private CheckBox mieiAlimentiCheckBox;
+    @FXML private Button BottoneHome;
+    @FXML private Label nomeUtenteLabelHomePage;
+    @FXML private Button BottoneRicette;
+    @FXML private TextField cercaAlimento;
+    @FXML private TableView<Alimento> tableView;
+    @FXML private Button bottoneCerca;
 
     // Colonne della TableView per gli alimenti
     @FXML private TableColumn<Alimento, ImageView> immagineCol;
@@ -317,8 +315,8 @@ public class Alimenti implements Initializable { // AGGIUNTA: Implementa l'inter
             controller.setAlimentiController(this); // Passa un riferimento a questo controller
             controller.setOrigineFXML("Alimenti.fxml"); // Imposta la schermata di origine
 
-            Stage stage = new Stage(); // Crea un nuovo Stage (finestra)
-            stage.setTitle("Dettaglio Alimento"); // Imposta il titolo
+            Stage stage = new Stage();
+            stage.setTitle("Dettaglio Alimento");
             Scene scene = new Scene(root);
             stage.setResizable(false);
             stage.setFullScreen(false);
@@ -349,10 +347,15 @@ public class Alimenti implements Initializable { // AGGIUNTA: Implementa l'inter
 
             Stage stage = new Stage(); // Crea un nuovo Stage
             stage.setTitle("Aggiungi Alimento"); // Imposta il titolo
-            stage.setScene(new Scene(root)); // Imposta la scena
+            stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
             stage.setResizable(false);
             stage.setFullScreen(false);
-            stage.show(); // Mostra la finestra
+
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
 
         } catch (IOException e) {
             e.printStackTrace(); // Stampa l'errore

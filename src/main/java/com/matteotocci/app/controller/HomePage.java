@@ -1,45 +1,43 @@
 package com.matteotocci.app.controller;
 
-// Importa le classi necessarie per l'applicazione JavaFX e le operazioni del database
-import com.matteotocci.app.model.Dieta; // Modello per l'oggetto Dieta
-import com.matteotocci.app.model.GiornoDieta; // Modello per l'oggetto GiornoDieta
-import com.matteotocci.app.model.Session; // Classe per la gestione della sessione utente (es. ID utente loggato)
-import com.matteotocci.app.model.SessionGiornoDieta; // Classe per la gestione della sessione del giorno dieta selezionato
-import com.matteotocci.app.model.SQLiteConnessione; // Classe per gestire la connessione al database SQLite
-import javafx.animation.KeyFrame; // Per definire un fotogramma chiave in un'animazione
-import javafx.animation.KeyValue; // Per definire il valore di una proprietà in un KeyFrame
-import javafx.animation.Timeline; // Per creare animazioni basate su una linea temporale
-import javafx.application.Platform; // Per eseguire codice sul thread di UI di JavaFX
-import javafx.collections.FXCollections; // Utility per creare collezioni osservabili
-import javafx.collections.ObservableList; // Lista che notifica i "listener" quando avvengono dei cambiamenti
-import javafx.event.ActionEvent; // Tipo di evento generato dalle azioni dell'utente (es. click su un bottone)
-import javafx.fxml.FXML; // Annotazione per collegare elementi dell'interfaccia utente definiti in FXML al codice Java
-import javafx.fxml.FXMLLoader; // Carica file FXML (layout dell'interfaccia utente)
-import javafx.fxml.Initializable; // AGGIUNTA: Interfaccia per i controller che devono essere inizializzati dopo il caricamento dell'FXML
+import com.matteotocci.app.model.Dieta;
+import com.matteotocci.app.model.GiornoDieta;
+import com.matteotocci.app.model.Session;
+import com.matteotocci.app.model.SessionGiornoDieta;
+import com.matteotocci.app.model.SQLiteConnessione;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node; // Classe base per tutti i nodi nel grafo della scena (elementi UI)
-import javafx.scene.Parent; // Nodo base per la gerarchia della scena (container di tutti gli elementi UI)
-import javafx.scene.Scene; // Contenitore per tutti i contenuti di una scena
-import javafx.scene.control.*; // Controlli UI standard di JavaFX (Button, Label, ComboBox, Alert)
-import javafx.scene.input.MouseEvent; // Tipo di evento generato da interazioni del mouse
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+
 import javafx.scene.shape.Circle; // Elemento grafico circolare (usato per i cerchi di progresso)
-import javafx.scene.text.Font; // Per la gestione dei font
-import javafx.scene.text.Text;
 import javafx.stage.Modality; // Per definire la modalità di una finestra (es. modale)
 import javafx.stage.Screen;
 import javafx.stage.Stage; // La finestra principale dell'applicazione
 import javafx.util.Duration; // Per specificare la durata delle animazioni
 
-import java.io.IOException; // Eccezione per errori di input/output (es. caricamento file FXML)
-import java.sql.Connection; // Interfaccia per la connessione al database
-import java.sql.DriverManager; // Per ottenere una connessione al database
-import java.sql.PreparedStatement; // Per eseguire query SQL precompilate
-import java.sql.ResultSet; // Per leggere i risultati delle query SQL
-import java.sql.SQLException; // Eccezione per errori di database
-import java.time.LocalDate; // Per gestire le date
-import java.util.Optional; // Contenitore che può o meno contenere un valore non nullo
-import java.net.URL; // Necessario per Initializable
-import java.util.ResourceBundle; // Necessario per Initializable
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.Optional;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Controller per la schermata principale (Home Page) dell'applicazione per i clienti.

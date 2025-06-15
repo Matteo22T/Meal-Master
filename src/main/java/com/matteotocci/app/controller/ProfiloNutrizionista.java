@@ -1,57 +1,56 @@
-package com.matteotocci.app.controller; // Dichiara il package a cui appartiene questa classe.
+package com.matteotocci.app.controller;
 
-import com.matteotocci.app.model.Session; // Importa la classe Session, utilizzata per accedere all'ID dell'utente loggato.
-import javafx.event.ActionEvent; // Importa ActionEvent, per gestire gli eventi di azione (es. click su un bottone).
-import javafx.fxml.FXML; // Importa l'annotazione FXML, per collegare gli elementi dell'interfaccia utente definiti in FXML al codice Java.
-import javafx.fxml.FXMLLoader; // Importa FXMLLoader, per caricare file FXML.
-import javafx.fxml.Initializable; // Importa l'interfaccia Initializable, per i controller che devono essere inizializzati dopo il caricamento dell'FXML.
-import javafx.scene.Node; // Importa Node, la classe base per gli elementi del grafo della scena.
-import javafx.scene.Parent; // Importa Parent, la classe base per i nodi contenitori.
-import javafx.scene.Scene; // Importa Scene, per gestire il contenuto di una finestra.
-import javafx.scene.control.*; // Importa tutti i controlli UI standard di JavaFX (Button, Label, TextField, Alert).
-import javafx.scene.image.ImageView; // Importa ImageView, per visualizzare immagini nell'interfaccia.
-import javafx.scene.input.MouseEvent; // Importa MouseEvent, per gestire gli eventi del mouse (es. click su un'immagine).
-import javafx.stage.Stage; // Importa Stage, per gestire le finestre dell'applicazione.
+import com.matteotocci.app.model.Session;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
-import java.io.IOException; // Importa IOException, per gestire gli errori di input/output (es. caricamento FXML).
-import java.net.URL; // Importa URL, necessario per l'interfaccia Initializable.
-import java.sql.Connection; // Importa Connection, per la connessione al database.
-import java.sql.DriverManager; // Importa DriverManager, per gestire i driver JDBC e ottenere connessioni.
-import java.sql.PreparedStatement; // Importa PreparedStatement, per eseguire query SQL precompilate.
-import java.sql.ResultSet; // Importa ResultSet, per leggere i risultati delle query SQL.
-import java.sql.SQLException; // Importa SQLException, per gestire errori del database.
-import java.util.Optional; // Importa Optional, per gestire valori che potrebbero essere assenti (es. risultato di un Alert).
-import java.util.ResourceBundle; // Importa ResourceBundle, necessario per l'interfaccia Initializable.
+import java.io.IOException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
-public class ProfiloNutrizionista implements Initializable { // Dichiara la classe ProfiloNutrizionista e implementa Initializable.
+public class ProfiloNutrizionista implements Initializable {
 
     @FXML
-    private ImageView profileImage; // Campo FXML per l'immagine del profilo.
+    private ImageView profileImage;
     @FXML
-    private Label nomeUtenteSidebarLabel; // Campo FXML per la label del nome utente nella sidebar.
+    private Label nomeUtenteSidebarLabel;
     @FXML
-    private Button ClientiButton; // Campo FXML per il bottone "Clienti".
+    private Button ClientiButton;
     @FXML
-    private Button BottoneAlimenti; // Campo FXML per il bottone "Alimenti".
+    private Button BottoneAlimenti;
     @FXML
-    private Button BottoneDieta; // Campo FXML per il bottone "Diete".
+    private Button BottoneDieta;
     @FXML
-    private Label benvenutoLabel; // Campo FXML per la label di benvenuto.
+    private Label benvenutoLabel;
     @FXML
-    private TextField nomeTextField; // Campo FXML per il campo di testo del nome.
+    private TextField nomeTextField;
     @FXML
-    private TextField cognomeTextField; // Campo FXML per il campo di testo del cognome.
+    private TextField cognomeTextField;
     @FXML
-    private TextField sessoTextField; // Campo FXML per il campo di testo del sesso.
+    private TextField sessoTextField;
     @FXML
-    private TextField dataNascitaTextField; // Campo FXML per il campo di testo della data di nascita.
+    private TextField dataNascitaTextField;
     @FXML
-    private Label modificaPasswordLabel; // Campo FXML per la label "Modifica Password".
+    private Label modificaPasswordLabel;
     @FXML
-    private Button LogoutButton; // Campo FXML per il bottone "Logout".
+    private Button LogoutButton;
     @FXML
-    private Label ruoloUtenteLabel; // Campo FXML per la label del ruolo dell'utente.
-
+    private Label ruoloUtenteLabel;
 
     // Questo metodo initialize viene chiamato automaticamente dopo che i campi FXML sono stati iniettati.
     // È presente un errore qui: si chiama `initialize()` senza parametri, ma dovrebbe avere `URL url, ResourceBundle resourceBundle`
@@ -173,10 +172,15 @@ public class ProfiloNutrizionista implements Initializable { // Dichiara la clas
 
             Stage modificaPasswordStage = new Stage(); // Crea un nuovo Stage per la finestra di modifica password.
             modificaPasswordStage.setTitle("Modifica Password"); // Imposta il titolo della finestra.
-            modificaPasswordStage.setScene(new Scene(modificaPasswordRoot)); // Imposta la scena per il nuovo Stage.
+            modificaPasswordStage.initOwner(((Node)event.getSource()).getScene().getWindow());
+
+            modificaPasswordStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+            modificaPasswordStage.setScene(new Scene(modificaPasswordRoot));
+
             modificaPasswordStage.setResizable(false); // Rende la finestra non ridimensionabile.
             modificaPasswordStage.setFullScreen(false); // Disabilita la modalità a schermo intero.
-            modificaPasswordStage.show(); // Mostra la nuova finestra.
+            modificaPasswordStage.showAndWait();
         } catch (IOException e) { // Cattura l'IOException.
             e.printStackTrace(); // Stampa lo stack trace.
         }

@@ -1,30 +1,30 @@
 package com.matteotocci.app.controller;
 
-import com.matteotocci.app.model.DatiClienteModel; // Modello per la gestione dei dati del cliente (interazione con il database)
-import com.matteotocci.app.model.SQLiteConnessione; // Classe per gestire la connessione al database SQLite
-import javafx.collections.FXCollections; // Utility per creare collezioni osservabili (liste per ChoiceBox)
-import javafx.collections.ObservableList; // Lista che notifica i "listener" quando avvengono dei cambiamenti
-import javafx.event.ActionEvent; // Tipo di evento generato dalle azioni dell'utente (es. click su un bottone)
-import javafx.fxml.FXML; // Annotazione per collegare elementi dell'interfaccia utente definiti in FXML al codice Java
-import javafx.fxml.FXMLLoader; // Carica file FXML (layout dell'interfaccia utente)
+import com.matteotocci.app.model.DatiClienteModel;
+import com.matteotocci.app.model.SQLiteConnessione;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent; // Nodo base per la gerarchia della scena (container di tutti gli elementi UI)
-import javafx.scene.Scene; // Contenitore per tutti i contenuti di una scena
-import javafx.scene.control.*; // Controlli UI standard di JavaFX (Button, DatePicker, ChoiceBox, Label, Slider, Alert)
-import javafx.scene.input.KeyCode; // Codici dei tasti della tastiera
-import javafx.scene.input.KeyEvent; // Tipo di evento generato dalla pressione di un tasto
-import javafx.scene.layout.VBox; // Layout container che organizza i suoi figli in una singola colonna verticale
-import javafx.stage.Stage; // La finestra principale dell'applicazione
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-import java.io.IOException; // Eccezione per errori di input/output (es. caricamento file FXML)
-import java.net.URL; // Classe che rappresenta un Uniform Resource Locator (per trovare risorse come file CSS)
-import java.sql.Connection; // Interfaccia per la connessione al database
-import java.sql.PreparedStatement; // Per eseguire query SQL precompilate
-import java.sql.ResultSet; // Per leggere i risultati delle query SQL
-import java.sql.SQLException; // Eccezione per errori di database
-import java.time.LocalDate; // Per gestire le date
-import java.util.HashMap; // Implementazione di Map per associare nomi a ID
-import java.util.Map; // Interfaccia per mappe
+import java.io.IOException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**

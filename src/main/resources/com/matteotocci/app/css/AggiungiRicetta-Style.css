@@ -448,7 +448,6 @@
     -fx-font-size: 14px;
 }
 
-/* ===== RESPONSIVE ADJUSTMENTS ===== */
 .compact-table .table-cell {
     -fx-padding: 4 2;
     -fx-font-size: 10px;

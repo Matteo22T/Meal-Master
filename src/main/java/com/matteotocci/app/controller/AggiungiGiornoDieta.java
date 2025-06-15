@@ -1,28 +1,29 @@
-package com.matteotocci.app.controller; // Dichiara il package della classe.
-import com.matteotocci.app.model.Dieta; // Importa la classe Dieta dal modello.
-import com.matteotocci.app.model.SQLiteConnessione; // Importa la classe per la connessione SQLite.
-import com.matteotocci.app.model.Alimento; // Importa la classe Alimento dal modello.
-import com.matteotocci.app.model.Ricetta; // Importa la classe Ricetta dal modello.
-import com.matteotocci.app.model.Session; // Importa la classe Session per la gestione dell'utente.
-import javafx.collections.FXCollections; // Importa la classe per utility di collezioni osservabili.
-import javafx.collections.ObservableList; // Importa l'interfaccia per liste osservabili.
-import javafx.event.ActionEvent; // Importa la classe per gli eventi di azione.
-import javafx.fxml.FXML; // Importa l'annotazione FXML per collegare elementi UI.
-import javafx.fxml.FXMLLoader; // Importa la classe per caricare file FXML.
-import javafx.fxml.Initializable; // Importa l'interfaccia Initializable.
-import javafx.scene.Node; // Importa la classe base per i nodi del grafo della scena.
-import javafx.scene.Parent; // Importa la classe Parent per nodi contenitori.
-import javafx.scene.Scene; // Importa la classe Scene per il contenuto di una finestra.
-import javafx.scene.control.*; // Importa tutti i controlli UI standard di JavaFX.
-import javafx.stage.Stage; // Importa la classe Stage per le finestre.
-import javafx.application.Platform; // Importa Platform per eseguire codice sul thread UI di JavaFX.
+package com.matteotocci.app.controller;
+import com.matteotocci.app.model.Dieta;
+import com.matteotocci.app.model.SQLiteConnessione;
+import com.matteotocci.app.model.Alimento;
+import com.matteotocci.app.model.Ricetta;
+import com.matteotocci.app.model.Session;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javafx.application.Platform;
 
-import java.io.IOException; // Importa l'eccezione per errori di input/output.
-import java.net.URL; // Importa la classe URL (necessaria per Initializable).
-import java.sql.*; // Importa tutte le classi SQL (Connection, PreparedStatement, ResultSet, SQLException, Statement).
-import java.util.HashMap; // Importa la classe HashMap per implementazioni di mappe.
-import java.util.Map; // Importa l'interfaccia Map.
-import java.util.ResourceBundle; // Importa la classe ResourceBundle (necessaria per Initializable).
+import java.io.IOException;
+import java.net.URL;
+import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 
 public class AggiungiGiornoDieta implements Initializable { // Dichiara la classe controller e implementa Initializable.
 
@@ -215,23 +216,17 @@ public class AggiungiGiornoDieta implements Initializable { // Dichiara la class
                     aggiungiAlimentoStage.setResizable(false); // Rende lo stage non ridimensionabile.
                     aggiungiAlimentoStage.setFullScreen(false); // Disabilita la modalità a schermo intero.
 
-                    // Chiude la finestra se viene chiusa la principale
-                    ((Stage) ((Node) event.getSource()).getScene().getWindow()).setOnCloseRequest(e -> { // Aggiunge un gestore per la chiusura della finestra principale.
-                        if (aggiungiAlimentoStage != null) { // Se lo stage di aggiunta alimento/ricetta esiste.
-                            aggiungiAlimentoStage.close(); // Lo chiude.
-                        }
-                    });
+                    aggiungiAlimentoStage.initOwner(((Node)event.getSource()).getScene().getWindow());
 
-                    aggiungiAlimentoStage.show(); // Mostra lo stage.
-                }
+                    aggiungiAlimentoStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+                    aggiungiAlimentoStage.showAndWait();                }
 
                 // Aggiorna ogni volta il pasto selezionato
                 if (controllerAggiungi != null) { // Se il controller della finestra di aggiunta esiste.
                     controllerAggiungi.setPastoCorrente(pastoSelezionato); // Aggiorna il pasto corrente nel controller della finestra di aggiunta.
                 }
 
-                // Porta in primo piano
-                aggiungiAlimentoStage.toFront(); // Porta la finestra di aggiunta in primo piano.
 
             } catch (IOException e) { // Cattura l'eccezione IOException.
                 e.printStackTrace(); // Stampa lo stack trace dell'errore.
@@ -334,7 +329,7 @@ public class AggiungiGiornoDieta implements Initializable { // Dichiara la class
             }
         }
 
-        // AGGIUNTO: Calcola totali dalle ricette
+
         if (pastiRicette != null) { // Controllo per assicurare che la mappa delle ricette esista.
             for (ObservableList<RicettaQuantificata> listaRicette : pastiRicette.values()) { // Itera sulle liste di ricette di ogni pasto.
                 for (RicettaQuantificata rq : listaRicette) { // Itera su ogni ricetta quantificata.

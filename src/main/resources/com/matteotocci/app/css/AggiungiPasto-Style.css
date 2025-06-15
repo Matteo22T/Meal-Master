@@ -353,7 +353,6 @@
     -fx-alignment: center;
 }
 
-/* ===== RESPONSIVE ADJUSTMENTS ===== */
 .compact-mode .table-cell {
     -fx-padding: 3 2;
     -fx-font-size: 10px;

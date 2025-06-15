@@ -1,36 +1,34 @@
-package com.matteotocci.app.controller; // Dichiarazione del package in cui si trova la classe del controller.
+package com.matteotocci.app.controller;
 
-// Importazioni delle classi e interfacce necessarie da altri package.
-import com.matteotocci.app.model.Session; // Importa la classe Session per gestire l'ID dell'utente loggato.
-import com.matteotocci.app.model.Dieta; // Importa la classe Dieta, che rappresenta un oggetto dieta.
-import com.matteotocci.app.model.SQLiteConnessione; // Importa la classe SQLiteConnessione per stabilire la connessione al database SQLite.
+import com.matteotocci.app.model.Session;
+import com.matteotocci.app.model.Dieta;
+import com.matteotocci.app.model.SQLiteConnessione;
 
-import javafx.collections.FXCollections; // Utility per creare ObservableList.
-import javafx.collections.ObservableList; // Interfaccia per liste che possono essere osservate da JavaFX per aggiornamenti UI.
-import javafx.event.ActionEvent; // Classe per la gestione degli eventi di azione (es. click su un bottone).
-import javafx.fxml.FXML; // Annotazione per iniettare componenti FXML nel controller.
-import javafx.fxml.FXMLLoader; // Classe per caricare file FXML.
-import javafx.fxml.Initializable; // Interfaccia che i controller devono implementare per l'inizializzazione dopo il caricamento FXML.
-import javafx.scene.Node; // Classe base per tutti i nodi nel grafo di scena (es. controlli UI).
-import javafx.scene.Parent; // Classe base per i nodi che hanno dei figli (es. layout).
-import javafx.scene.Scene; // Contenitore per tutto il contenuto del grafo di scena.
-import javafx.scene.control.*; // Importa tutti i controlli UI di JavaFX (Label, TextField, ComboBox, Alert, Button).
-import javafx.scene.input.MouseEvent; // Classe per la gestione degli eventi del mouse.
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
-import javafx.stage.Stage; // Finestra principale dell'applicazione.
+import javafx.stage.Stage;
 
-import java.io.IOException; // Eccezione per errori di I/O.
-import java.net.URL; // Classe per rappresentare un URL (usata per caricare risorse come i CSS).
-import java.sql.Connection; // Interfaccia per la connessione al database.
-import java.sql.DriverManager; // Classe per la gestione dei driver JDBC (utilizzata per la connessione al database).
-import java.sql.PreparedStatement; // Interfaccia per l'esecuzione di query SQL precompilate.
-import java.sql.ResultSet; // Interfaccia per la gestione dei risultati di una query SQL.
-import java.sql.SQLException; // Classe per la gestione delle eccezioni SQL.
-import java.time.LocalDate; // Classe per rappresentare una data.
-import java.time.format.DateTimeFormatter; // Classe per formattare e parsare date.
-import java.time.format.DateTimeParseException; // Eccezione per errori di parsing della data.
-import java.util.*; // Importa utility generiche come HashMap, List, Optional.
-
+import java.io.IOException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 // Dichiarazione della classe PaginaProfilo, che implementa Initializable per l'inizializzazione dei componenti.
 public class PaginaProfilo implements Initializable{
 
@@ -313,10 +311,15 @@ public class PaginaProfilo implements Initializable{
 
             Stage modificaPasswordStage = new Stage(); // Crea un nuovo Stage per la finestra di modifica password.
             modificaPasswordStage.setTitle("Modifica Password"); // Imposta il titolo della finestra.
-            modificaPasswordStage.setScene(new Scene(modificaPasswordRoot)); // Imposta la scena.
+            modificaPasswordStage.initOwner(((Node)event.getSource()).getScene().getWindow());
+
+            modificaPasswordStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+            modificaPasswordStage.setScene(new Scene(modificaPasswordRoot));
             modificaPasswordStage.setResizable(false); // Impedisce il ridimensionamento della finestra.
             modificaPasswordStage.setFullScreen(false); // Impedisce la modalità a schermo intero.
-            modificaPasswordStage.show(); // Mostra la finestra.
+            modificaPasswordStage.showAndWait();
+
         } catch (IOException e) {
             e.printStackTrace(); // Stampa la traccia dello stack in caso di errore di I/O.
             showAlert(Alert.AlertType.ERROR, "Errore di Caricamento", "Impossibile aprire la schermata di modifica password."); // Mostra un alert di errore.

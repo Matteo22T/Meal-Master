@@ -1,97 +1,95 @@
-package com.matteotocci.app.controller; // Dichiarazione del package in cui si trova la classe del controller.
+package com.matteotocci.app.controller;
 
-// Importazioni delle classi e interfacce necessarie da altri package.
-import com.matteotocci.app.model.*; // Importa tutte le classi dal package model (Session, Dieta, SQLiteConnessione, PastoSpecifico, Pasto, PastoGiornaliero).
-import javafx.beans.property.SimpleStringProperty; // Classe per la gestione di proprietà di stringa semplici, usate per la TableView.
-import javafx.collections.FXCollections; // Utility per creare ObservableList.
-import javafx.collections.ObservableList; // Interfaccia per liste che possono essere osservate da JavaFX per aggiornamenti UI.
-import javafx.event.ActionEvent; // Classe per la gestione degli eventi di azione (es. click su un bottone).
-import javafx.fxml.FXML; // Annotazione per iniettare componenti FXML nel controller.
-import javafx.fxml.Initializable; // Interfaccia che i controller devono implementare per l'inizializzazione dopo il caricamento FXML.
-import javafx.geometry.Pos; // Enum per specificare la posizione di un nodo all'interno di un layout.
-import javafx.scene.Node; // Classe base per tutti i nodi nel grafo di scena (es. controlli UI).
-import javafx.scene.control.*; // Importa tutti i controlli UI di JavaFX (Button, Label, DatePicker, TableView, TableColumn, Alert, TextInputDialog, TableCell).
-import javafx.scene.layout.HBox; // Layout container che organizza i suoi figli in una singola riga orizzontale.
-import javafx.stage.Stage; // Finestra principale dell'applicazione.
-import javafx.util.Callback; // Interfaccia generica di callback, usata per le cell factory delle TableColumn.
-import javafx.util.StringConverter; // Interfaccia per convertire oggetti da e verso stringhe, usata per il DatePicker.
+import com.matteotocci.app.model.Session;
+import com.matteotocci.app.model.SQLiteConnessione;
 
-import java.net.URL; // Classe per rappresentare un URL (usata per caricare risorse come i CSS).
-import java.sql.Connection; // Interfaccia per la connessione al database.
-import java.sql.PreparedStatement; // Interfaccia per l'esecuzione di query SQL precompilate.
-import java.sql.ResultSet; // Interfaccia per la gestione dei risultati di una query SQL.
-import java.time.LocalDate; // Classe per rappresentare una data.
-import java.time.format.DateTimeFormatter; // Classe per formattare e parsare date.
-import java.util.HashMap; // Implementazione della mappa basata su hash table.
-import java.util.Map; // Interfaccia per una mappa chiave-valore.
-import java.util.Optional; // Classe contenitore che può o non può contenere un valore non nullo.
-import java.sql.SQLException; // Classe per la gestione delle eccezioni SQL.
-import java.util.ResourceBundle; // Utilizzato per la localizzazione (non strettamente usato in questo codice, ma richiesto da Initializable).
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
+
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
+
+import com.matteotocci.app.model.*;
 
 
-// Dichiarazione della classe PastiGiornalieri, che implementa Initializable per l'inizializzazione dei componenti.
 public class PastiGiornalieri implements Initializable {
-    // Campi annotati con @FXML per l'iniezione dei componenti UI definiti nel file FXML.
-    @FXML private Button btnPrecedente; // Bottone per navigare al giorno precedente.
-    @FXML private Button btnSuccessivo; // Bottone per navigare al giorno successivo.
-    @FXML private Label lblDataCorrente; // Label per visualizzare la data corrente (es. "Oggi - 13/06/2025").
-    @FXML private DatePicker datePicker; // Componente per selezionare una data.
-    @FXML private Label lblCalorieTotali; // Label per visualizzare le calorie totali del giorno.
-    @FXML private Label lblProteineTotali; // Label per visualizzare le proteine totali del giorno.
-    @FXML private Label lblCarboidratiTotali; // Label per visualizzare i carboidrati totali del giorno.
-    @FXML private Label lblGrassiTotali; // Label per visualizzare i grassi totali del giorno.
+    @FXML private Button btnPrecedente;
+    @FXML private Button btnSuccessivo;
+    @FXML private Label lblDataCorrente;
+    @FXML private DatePicker datePicker;
+    @FXML private Label lblCalorieTotali;
+    @FXML private Label lblProteineTotali;
+    @FXML private Label lblCarboidratiTotali;
+    @FXML private Label lblGrassiTotali;
 
-    // Campi FXML per le tabelle e le label delle calorie per ogni pasto (Colazione, Spuntino, Pranzo, Merenda, Cena).
-    @FXML private Label lblKcalColazione; // Label per le calorie della colazione.
-    @FXML private TableView<PastoSpecifico> tableColazione; // TableView per gli alimenti/ricette della colazione.
-    @FXML private TableColumn<PastoSpecifico, String> colColazioneAlimento; // Colonna per il nome dell'alimento/ricetta nella colazione.
-    @FXML private TableColumn<PastoSpecifico, Double> colColazioneQuantita; // Colonna per la quantità nella colazione.
-    @FXML private TableColumn<PastoSpecifico, Double> colColazioneKcal; // Colonna per le calorie nella colazione.
-    @FXML private TableColumn<PastoSpecifico, Double> colColazioneProteine; // Colonna per le proteine nella colazione.
-    @FXML private TableColumn<PastoSpecifico, Double> colColazioneCarboidrati; // Colonna per i carboidrati nella colazione.
-    @FXML private TableColumn<PastoSpecifico, Double> colColazioneGrassi; // Colonna per i grassi nella colazione.
-    @FXML private TableColumn<PastoSpecifico, Void> colColazioneAzioni; // Colonna per i bottoni di azione (elimina, modifica) nella colazione.
+    @FXML private Label lblKcalColazione;
+    @FXML private TableView<PastoSpecifico> tableColazione;
+    @FXML private TableColumn<PastoSpecifico, String> colColazioneAlimento;
+    @FXML private TableColumn<PastoSpecifico, Double> colColazioneQuantita;
+    @FXML private TableColumn<PastoSpecifico, Double> colColazioneKcal;
+    @FXML private TableColumn<PastoSpecifico, Double> colColazioneProteine;
+    @FXML private TableColumn<PastoSpecifico, Double> colColazioneCarboidrati;
+    @FXML private TableColumn<PastoSpecifico, Double> colColazioneGrassi;
+    @FXML private TableColumn<PastoSpecifico, Void> colColazioneAzioni;
 
-    @FXML private Label lblKcalSpuntino; // Label per le calorie dello spuntino.
-    @FXML private TableView<PastoSpecifico> tableSpuntino; // TableView per gli alimenti/ricette dello spuntino.
-    @FXML private TableColumn<PastoSpecifico, String> colSpuntinoAlimento; // Colonna per il nome dell'alimento/ricetta nello spuntino.
-    @FXML private TableColumn<PastoSpecifico, Double> colSpuntinoQuantita; // Colonna per la quantità nello spuntino.
-    @FXML private TableColumn<PastoSpecifico, Double> colSpuntinoKcal; // Colonna per le calorie nello spuntino.
-    @FXML private TableColumn<PastoSpecifico, Double> colSpuntinoProteine; // Colonna per le proteine nello spuntino.
-    @FXML private TableColumn<PastoSpecifico, Double> colSpuntinoCarboidrati; // Colonna per i carboidrati nello spuntino.
-    @FXML private TableColumn<PastoSpecifico, Double> colSpuntinoGrassi; // Colonna per i grassi nello spuntino.
-    @FXML private TableColumn<PastoSpecifico, Void> colSpuntinoAzioni; // Colonna per i bottoni di azione (elimina, modifica) nello spuntino.
+    @FXML private Label lblKcalSpuntino;
+    @FXML private TableView<PastoSpecifico> tableSpuntino;
+    @FXML private TableColumn<PastoSpecifico, String> colSpuntinoAlimento;
+    @FXML private TableColumn<PastoSpecifico, Double> colSpuntinoQuantita;
+    @FXML private TableColumn<PastoSpecifico, Double> colSpuntinoKcal;
+    @FXML private TableColumn<PastoSpecifico, Double> colSpuntinoProteine;
+    @FXML private TableColumn<PastoSpecifico, Double> colSpuntinoCarboidrati;
+    @FXML private TableColumn<PastoSpecifico, Double> colSpuntinoGrassi;
+    @FXML private TableColumn<PastoSpecifico, Void> colSpuntinoAzioni;
 
-    @FXML private Label lblKcalPranzo; // Label per le calorie del pranzo.
-    @FXML private TableView<PastoSpecifico> tablePranzo; // TableView per gli alimenti/ricette del pranzo.
-    @FXML private TableColumn<PastoSpecifico, String> colPranzoAlimento; // Colonna per il nome dell'alimento/ricetta nel pranzo.
-    @FXML private TableColumn<PastoSpecifico, Double> colPranzoQuantita; // Colonna per la quantità nel pranzo.
-    @FXML private TableColumn<PastoSpecifico, Double> colPranzoKcal; // Colonna per le calorie nel pranzo.
-    @FXML private TableColumn<PastoSpecifico, Double> colPranzoProteine; // Colonna per le proteine nel pranzo.
-    @FXML private TableColumn<PastoSpecifico, Double> colPranzoCarboidrati; // Colonna per i carboidrati nel pranzo.
-    @FXML private TableColumn<PastoSpecifico, Double> colPranzoGrassi; // Colonna per i grassi nel pranzo.
-    @FXML private TableColumn<PastoSpecifico, Void> colPranzoAzioni; // Colonna per i bottoni di azione (elimina, modifica) nel pranzo.
+    @FXML private Label lblKcalPranzo;
+    @FXML private TableView<PastoSpecifico> tablePranzo;
+    @FXML private TableColumn<PastoSpecifico, String> colPranzoAlimento;
+    @FXML private TableColumn<PastoSpecifico, Double> colPranzoQuantita;
+    @FXML private TableColumn<PastoSpecifico, Double> colPranzoKcal;
+    @FXML private TableColumn<PastoSpecifico, Double> colPranzoProteine;
+    @FXML private TableColumn<PastoSpecifico, Double> colPranzoCarboidrati;
+    @FXML private TableColumn<PastoSpecifico, Double> colPranzoGrassi;
+    @FXML private TableColumn<PastoSpecifico, Void> colPranzoAzioni;
 
-    @FXML private Label lblKcalMerenda; // Label per le calorie della merenda.
-    @FXML private TableView<PastoSpecifico> tableMerenda; // TableView per gli alimenti/ricette della merenda.
-    @FXML private TableColumn<PastoSpecifico, String> colMerendaAlimento; // Colonna per il nome dell'alimento/ricetta nella merenda.
-    @FXML private TableColumn<PastoSpecifico, Double> colMerendaQuantita; // Colonna per la quantità nella merenda.
-    @FXML private TableColumn<PastoSpecifico, Double> colMerendaKcal; // Colonna per le calorie nella merenda.
-    @FXML private TableColumn<PastoSpecifico, Double> colMerendaProteine; // Colonna per le proteine nella merenda.
-    @FXML private TableColumn<PastoSpecifico, Double> colMerendaCarboidrati; // Colonna per i carboidrati nella merenda.
-    @FXML private TableColumn<PastoSpecifico, Double> colMerendaGrassi; // Colonna per i grassi nella merenda.
-    @FXML private TableColumn<PastoSpecifico, Void> colMerendaAzioni; // Colonna per i bottoni di azione (elimina, modifica) nella merenda.
+    @FXML private Label lblKcalMerenda;
+    @FXML private TableView<PastoSpecifico> tableMerenda;
+    @FXML private TableColumn<PastoSpecifico, String> colMerendaAlimento;
+    @FXML private TableColumn<PastoSpecifico, Double> colMerendaQuantita;
+    @FXML private TableColumn<PastoSpecifico, Double> colMerendaKcal;
+    @FXML private TableColumn<PastoSpecifico, Double> colMerendaProteine;
+    @FXML private TableColumn<PastoSpecifico, Double> colMerendaCarboidrati;
+    @FXML private TableColumn<PastoSpecifico, Double> colMerendaGrassi;
+    @FXML private TableColumn<PastoSpecifico, Void> colMerendaAzioni;
 
-    @FXML private Label lblKcalCena; // Label per le calorie della cena.
-    @FXML private TableView<PastoSpecifico> tableCena; // TableView per gli alimenti/ricette della cena.
-    @FXML private TableColumn<PastoSpecifico, String> colCenaAlimento; // Colonna per il nome dell'alimento/ricetta nella cena.
-    @FXML private TableColumn<PastoSpecifico, Double> colCenaQuantita; // Colonna per la quantità nella cena.
-    @FXML private TableColumn<PastoSpecifico, Double> colCenaKcal; // Colonna per le calorie nella cena.
-    @FXML private TableColumn<PastoSpecifico, Double> colCenaProteine; // Colonna per le proteine nella cena.
-    @FXML private TableColumn<PastoSpecifico, Double> colCenaCarboidrati; // Colonna per i carboidrati nella cena.
-    @FXML private TableColumn<PastoSpecifico, Double> colCenaGrassi; // Colonna per i grassi nella cena.
-    @FXML private TableColumn<PastoSpecifico, Void> colCenaAzioni; // Colonna per i bottoni di azione (elimina, modifica) nella cena.
-
+    @FXML private Label lblKcalCena;
+    @FXML private TableView<PastoSpecifico> tableCena;
+    @FXML private TableColumn<PastoSpecifico, String> colCenaAlimento;
+    @FXML private TableColumn<PastoSpecifico, Double> colCenaQuantita;
+    @FXML private TableColumn<PastoSpecifico, Double> colCenaKcal;
+    @FXML private TableColumn<PastoSpecifico, Double> colCenaProteine;
+    @FXML private TableColumn<PastoSpecifico, Double> colCenaCarboidrati;
+    @FXML private TableColumn<PastoSpecifico, Double> colCenaGrassi;
+    @FXML private TableColumn<PastoSpecifico, Void> colCenaAzioni;
     private LocalDate dataCorrente; // Variabile per tenere traccia della data attualmente visualizzata.
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy"); // Formattatore per le date.
 

@@ -1,21 +1,21 @@
-package com.matteotocci.app.controller; // Dichiarazione del package in cui si trova la classe del controller.
+package com.matteotocci.app.controller;
 
-// Importazioni delle classi e interfacce necessarie da altri package.
-import com.matteotocci.app.model.*; // Importa tutte le classi dal package model (es. Ricetta, Alimento, Session, SQLiteConnessione).
-import javafx.beans.property.*; // Importa classi per le proprietà osservabili di JavaFX (es. SimpleStringProperty, SimpleDoubleProperty).
-import javafx.event.ActionEvent; // Classe per la gestione degli eventi di azione (es. click su un bottone).
-import javafx.fxml.FXML; // Annotazione per iniettare componenti FXML nel controller.
-import javafx.scene.control.*; // Importa tutti i controlli UI di JavaFX (Label, TextArea, Button, TableView, TableColumn, Alert).
-import javafx.collections.FXCollections; // Utility per creare ObservableList.
-import javafx.collections.ObservableList; // Interfaccia per liste che possono essere osservate da JavaFX per aggiornamenti UI.
-import javafx.scene.control.cell.PropertyValueFactory; // Factory per collegare le proprietà degli oggetti alle colonne della TableView.
-import javafx.stage.Stage; // Finestra principale dell'applicazione.
+import com.matteotocci.app.model.*;
+import javafx.beans.property.*;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
-import java.net.URL; // Classe per rappresentare un URL (usata per caricare risorse come i CSS).
-import java.sql.Connection; // Interfaccia per la connessione al database.
-import java.sql.PreparedStatement; // Interfaccia per l'esecuzione di query SQL precompilate.
-import java.sql.ResultSet; // Interfaccia per la gestione dei risultati di una query SQL.
-import java.sql.SQLException; // Classe per la gestione delle eccezioni SQL.
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 
 // Dichiarazione della classe DettaglioRicettaController. Questo controller gestisce la vista di dettaglio di una ricetta.
 public class DettaglioRicettaController {

@@ -1,23 +1,22 @@
 package com.matteotocci.app.controller;
 
-// Importa le classi necessarie per l'applicazione JavaFX e le operazioni del database
-import com.matteotocci.app.model.Session; // Classe per la gestione della sessione utente (es. ID utente loggato)
-import javafx.event.ActionEvent; // Tipo di evento generato dalle azioni dell'utente (es. click su un bottone)
-import javafx.fxml.FXML; // Annotazione per collegare elementi dell'interfaccia utente definiti in FXML al codice Java
-import javafx.fxml.Initializable; // AGGIUNTA: Interfaccia per i controller che devono essere inizializzati dopo il caricamento dell'FXML
-import javafx.scene.Node; // Classe base per tutti i nodi nel grafo della scena (elementi UI)
-import javafx.scene.control.TextField; // Campo di input testuale
+import com.matteotocci.app.model.Session;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert; // Finestra di dialogo per avvisi o errori
 
 import java.net.URL; // Necessario per Initializable (per trovare risorse come file CSS)
-import java.sql.Connection; // Interfaccia per la connessione al database
+import java.sql.Connection;
 import java.sql.PreparedStatement; // Per eseguire query SQL precompilate
 import java.sql.SQLException; // Eccezione per errori di database
-import java.util.Arrays; // Utility per lavorare con gli array
-import java.util.List; // Interfaccia per liste
+import java.util.Arrays;
+import java.util.List;
 
 import com.matteotocci.app.model.SQLiteConnessione; // Classe per gestire la connessione al database SQLite
-import javafx.stage.Stage; // La finestra dell'applicazione
+import javafx.stage.Stage;
 
 import java.util.ResourceBundle; // Necessario per Initializable (per la localizzazione)
 
@@ -29,8 +28,7 @@ import java.util.ResourceBundle; // Necessario per Initializable (per la localiz
  */
 public class AggiungiAlimentoController implements Initializable { // AGGIUNTA: Implementa l'interfaccia Initializable
 
-    // --- Elementi dell'interfaccia utente (collegati tramite @FXML) ---
-    // Campi di testo per l'inserimento dei dati dell'alimento
+
     @FXML
     private TextField nomeField, brandField, kcalField, proteineField, carboidratiField, grassiField,
             grassiSatField, saleField, fibreField, zuccheriField,
@@ -59,7 +57,7 @@ public class AggiungiAlimentoController implements Initializable { // AGGIUNTA: 
                             textFields.get(index + 1).requestFocus(); // Sposta il focus al campo successivo
                         }
                         break;
-                    case UP: // Se viene premuta la freccia su
+                    case UP:
                         if (index - 1 >= 0) { // Controlla se c'è un campo precedente
                             textFields.get(index - 1).requestFocus(); // Sposta il focus al campo precedente
                         }
@@ -194,15 +192,14 @@ public class AggiungiAlimentoController implements Initializable { // AGGIUNTA: 
      * @param message Il messaggio da visualizzare.
      */
     private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType); // Crea una nuova istanza di Alert
-        alert.setTitle(title); // Imposta il titolo
-        alert.setHeaderText(null); // Non mostra un header text
-        alert.setContentText(message); // Imposta il contenuto
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
 
         // Cerca il file CSS per lo stile personalizzato degli alert
         URL cssUrl = getClass().getResource("/com/matteotocci/app/css/Alert-Dialog-Style.css");
         if (cssUrl != null) {
-            // Se il CSS viene trovato, lo aggiunge al DialogPane dell'alert
             alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
             alert.getDialogPane().getStyleClass().add("dialog-pane"); // Applica la classe di stile base
             // Aggiunge una classe di stile specifica in base al tipo di alert per una maggiore personalizzazione
@@ -216,10 +213,10 @@ public class AggiungiAlimentoController implements Initializable { // AGGIUNTA: 
                 alert.getDialogPane().getStyleClass().add("alert-confirmation");
             }
         } else {
-            System.err.println("CSS file not found: Alert-Dialog-Style.css"); // Messaggio di errore se il CSS non è trovato
+            System.err.println("CSS file not found: Alert-Dialog-Style.css");
         }
 
-        alert.showAndWait(); // Mostra l'avviso e attende che l'utente lo chiuda
+        alert.showAndWait();
     }
 
     /**
