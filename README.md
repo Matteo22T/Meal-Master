@@ -3,7 +3,7 @@
 **Meal-Master** è un'applicazione sviluppata tra maggio e giugno 2025 come progetto finale per il corso di *User Interface Design*.  
 Il team di sviluppo è composto da tre studenti universitari:
 
-- **Matteo Tocci**, 20 anni  
+- **Matteo Tocci**, 20 anni  (Gestione app lato cliente, database, interfaccia e grafica dell'applicazione)
 - **Dario De Paola**, 20 anni  
 - **Adelin Farcas**, 20 anni  
 
